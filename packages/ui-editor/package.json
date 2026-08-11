@@ -1,0 +1,22 @@
+{
+  "name": "@grimoire3d/ui-editor",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@grimoire3d/ir": "*",
+    "@grimoire3d/validator": "*",
+    "@grimoire3d/simulator": "*",
+    "@grimoire3d/save-format": "*",
+    "@grimoire3d/world-compiler": "*",
+    "@grimoire3d/runtime-babylon": "*",
+    "lucide-react": "^0.475.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3"
+  }
+}

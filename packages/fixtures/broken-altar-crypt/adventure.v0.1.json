@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "0.1",
+  "metadata": {
+    "createdAt": "2026-08-08T00:00:00.000Z",
+    "updatedAt": "2026-08-08T00:00:00.000Z",
+    "importedBy": "fixture"
+  },
+  "sourceDocument": {
+    "id": "broken-doc",
+    "title": "Broken Altar Crypt",
+    "pageCount": 2,
+    "sourceFormat": "markdown"
+  },
+  "adventure": {
+    "id": "broken-altar-crypt",
+    "title": "Broken Altar Crypt (Broken Fixture)",
+    "systemProfile": "classic-dungeon",
+    "start": "entry-room",
+    "items": [
+      {
+        "id": "key-behind-door",
+        "name": "Impossible Key",
+        "type": "key",
+        "description": "Placed inside the vault that requires it!"
+      }
+    ],
+    "monsters": [],
+    "npcs": [],
+    "quests": [],
+    "locations": [
+      {
+        "id": "entry-room",
+        "label": "1. Entry Room",
+        "geometry": { "x": 0, "y": 0, "width": 4, "height": 4 },
+        "presentation": { "biome": "crypt", "lighting": "dark", "ambienceTags": [] },
+        "narrative": { "playerFacingDescription": "Entry room.", "gmNotes": [] },
+        "exits": [
+          {
+            "id": "exit-to-vault",
+            "direction": "east",
+            "target": "vault-room",
+            "locked": { "keyItemId": "key-behind-door" }
+          },
+          {
+            "id": "exit-to-dangling",
+            "direction": "north",
+            "target": "non-existent-location-xyz"
+          },
+          {
+            "id": "exit-hidden-impossible",
+            "direction": "west",
+            "target": "secret-room",
+            "visibleWhen": { "kind": "flag", "flag": "unreachable-ghost-flag", "equals": true }
+          }
+        ],
+        "interactables": [],
+        "secrets": []
+      },
+      {
+        "id": "vault-room",
+        "label": "2. Locked Vault",
+        "geometry": { "x": 4, "y": 0, "width": 4, "height": 4 },
+        "presentation": { "biome": "crypt", "lighting": "dark", "ambienceTags": [] },
+        "narrative": { "playerFacingDescription": "Contains key required to open entrance!", "gmNotes": [] },
+        "exits": [
+          {
+            "id": "exit-vault-to-entry",
+            "direction": "west",
+            "target": "entry-room"
+          }
+        ],
+        "interactables": [
+          {
+            "id": "vault-chest",
+            "label": "Vault Chest",
+            "description": "Holds the key.",
+            "onInspectEffects": [{ "kind": "grantItem", "itemId": "key-behind-door" }]
+          }
+        ],
+        "secrets": []
+      }
+    ]
+  }
+}

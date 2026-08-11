@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "0.1",
+  "metadata": {
+    "createdAt": "2026-08-08T00:00:00.000Z",
+    "updatedAt": "2026-08-08T00:00:00.000Z",
+    "importedBy": "fixture"
+  },
+  "sourceDocument": {
+    "id": "secret-branch-doc",
+    "title": "Secret Branch Crypt",
+    "pageCount": 2,
+    "sourceFormat": "markdown"
+  },
+  "adventure": {
+    "id": "secret-branch-crypt",
+    "title": "Secret Branch Crypt",
+    "systemProfile": "classic-dungeon",
+    "start": "start-chambers",
+    "items": [
+      {
+        "id": "master-key",
+        "name": "Master Key",
+        "type": "key",
+        "description": "Found in secret study."
+      }
+    ],
+    "monsters": [],
+    "npcs": [],
+    "quests": [],
+    "locations": [
+      {
+        "id": "start-chambers",
+        "label": "1. Start Chambers",
+        "geometry": { "x": 0, "y": 0, "width": 4, "height": 4 },
+        "presentation": { "biome": "crypt", "lighting": "torchlit", "ambienceTags": [] },
+        "narrative": { "playerFacingDescription": "Main chamber. North exit is locked.", "gmNotes": [] },
+        "exits": [
+          {
+            "id": "exit-start-to-sanctuary",
+            "direction": "north",
+            "target": "sanctuary",
+            "locked": { "keyItemId": "master-key" }
+          },
+          {
+            "id": "exit-start-to-study",
+            "direction": "east",
+            "target": "secret-study",
+            "visibleWhen": { "kind": "flag", "flag": "secret-study-revealed", "equals": true }
+          }
+        ],
+        "interactables": [],
+        "secrets": [
+          {
+            "id": "secret-study-passage",
+            "label": "Hidden Study Door",
+            "perceptionDC": 10,
+            "discovered": false,
+            "revealsExitId": "exit-start-to-study"
+          }
+        ]
+      },
+      {
+        "id": "secret-study",
+        "label": "2. Secret Study",
+        "geometry": { "x": 4, "y": 0, "width": 4, "height": 4 },
+        "presentation": { "biome": "crypt", "lighting": "dark", "ambienceTags": [] },
+        "narrative": { "playerFacingDescription": "Hidden room containing master key.", "gmNotes": [] },
+        "exits": [
+          {
+            "id": "exit-study-to-start",
+            "direction": "west",
+            "target": "start-chambers"
+          }
+        ],
+        "interactables": [
+          {
+            "id": "study-desk",
+            "label": "High Priest Desk",
+            "description": "Contains master key.",
+            "onInspectEffects": [{ "kind": "grantItem", "itemId": "master-key" }]
+          }
+        ],
+        "secrets": []
+      },
+      {
+        "id": "sanctuary",
+        "label": "3. Inner Sanctuary",
+        "geometry": { "x": 0, "y": 4, "width": 4, "height": 4 },
+        "presentation": { "biome": "crypt", "lighting": "torchlit", "ambienceTags": [] },
+        "narrative": { "playerFacingDescription": "Sanctuary objective chamber.", "gmNotes": [] },
+        "exits": [
+          {
+            "id": "exit-sanctuary-to-start",
+            "direction": "south",
+            "target": "start-chambers"
+          }
+        ],
+        "interactables": [],
+        "secrets": []
+      }
+    ]
+  }
+}

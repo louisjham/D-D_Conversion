@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+local-content/b2-benchmark/
+!local-content/README.md
+!local-content/.gitignore

@@ -1,0 +1,15 @@
+{
+  "name": "@grimoire3d/campaign-simulator",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@grimoire3d/campaign-ir": "*",
+    "@grimoire3d/economy-core": "*",
+    "@grimoire3d/faction-director": "*",
+    "@grimoire3d/ir": "*",
+    "@grimoire3d/simulator": "*",
+    "zod": "^3.24.1"
+  }
+}

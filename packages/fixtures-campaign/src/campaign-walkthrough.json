@@ -1,0 +1,16 @@
+[
+  { "type": "VISIT_SERVICE", "serviceId": "broken-shield-tavern" },
+  { "type": "HEAR_RUMOR", "rumorId": "rumor-viper-talisman" },
+  { "type": "VISIT_SERVICE", "serviceId": "border-provisioner" },
+  { "type": "BUY_ITEM", "itemId": "iron-key", "costGold": 10 },
+  { "type": "VISIT_SERVICE", "serviceId": "captain-office" },
+  { "type": "ACCEPT_QUEST", "questId": "quest-sun-talisman" },
+  { "type": "CHOOSE_ROUTE", "routeId": "north-road" },
+  { "type": "BEGIN_TRAVEL" },
+  { "type": "RESOLVE_TRAVEL" },
+  { "type": "ENTER_DUNGEON" },
+  { "type": "RETREAT_FROM_DUNGEON" },
+  { "type": "RETURN_TO_HUB" },
+  { "type": "REST_AT_HUB", "hours": 8 },
+  { "type": "ADVANCE_WORLD_TURN", "hours": 24 }
+]

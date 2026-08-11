@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "baseUrl": ".",
+    "paths": {
+      "@grimoire3d/ir": ["./packages/ir/src/index.ts"],
+      "@grimoire3d/validator": ["./packages/validator/src/index.ts"],
+      "@grimoire3d/rules-core": ["./packages/rules-core/src/index.ts"],
+      "@grimoire3d/simulator": ["./packages/simulator/src/index.ts"],
+      "@grimoire3d/fixtures": ["./packages/fixtures/src/index.ts"],
+      "@grimoire3d/importers": ["./packages/importers/src/index.ts"],
+      "@grimoire3d/save-format": ["./packages/save-format/src/index.ts"],
+      "@grimoire3d/world-compiler": ["./packages/world-compiler/src/index.ts"],
+      "@grimoire3d/ui-editor": ["./packages/ui-editor/src/index.ts"],
+      "@grimoire3d/runtime-babylon": ["./packages/runtime-babylon/src/index.ts"],
+      "@grimoire3d/campaign-ir": ["./packages/campaign-ir/src/index.ts"],
+      "@grimoire3d/economy-core": ["./packages/economy-core/src/index.ts"],
+      "@grimoire3d/faction-director": ["./packages/faction-director/src/index.ts"],
+      "@grimoire3d/campaign-simulator": ["./packages/campaign-simulator/src/index.ts"],
+      "@grimoire3d/fixtures-campaign": ["./packages/fixtures-campaign/src/index.ts"],
+      "@grimoire3d/ui-campaign": ["./packages/ui-campaign/src/index.ts"],
+      "@grimoire3d/visual-logic": ["./packages/visual-logic/src/index.ts"],
+      "@grimoire3d/spell-core": ["./packages/spell-core/src/index.ts"],
+      "@grimoire3d/dialogue-engine": ["./packages/dialogue-engine/src/index.ts"],
+      "@grimoire3d/procedural-generator": ["./packages/procedural-generator/src/index.ts"]
+    }
+  },
+  "include": ["packages/*/src/**/*", "apps/*/src/**/*"]
+}

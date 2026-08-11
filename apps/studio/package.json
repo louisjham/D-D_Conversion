@@ -1,0 +1,39 @@
+{
+  "name": "@grimoire3d/studio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node ../../node_modules/vite/bin/vite.js",
+    "build": "node ../../node_modules/typescript/lib/tsc.js --noEmit && node ../../node_modules/vite/bin/vite.js build",
+    "preview": "node ../../node_modules/vite/bin/vite.js preview"
+  },
+  "dependencies": {
+    "@grimoire3d/ir": "*",
+    "@grimoire3d/validator": "*",
+    "@grimoire3d/simulator": "*",
+    "@grimoire3d/fixtures": "*",
+    "@grimoire3d/importers": "*",
+    "@grimoire3d/save-format": "*",
+    "@grimoire3d/world-compiler": "*",
+    "@grimoire3d/ui-editor": "*",
+    "@grimoire3d/campaign-ir": "*",
+    "@grimoire3d/economy-core": "*",
+    "@grimoire3d/faction-director": "*",
+    "@grimoire3d/campaign-simulator": "*",
+    "@grimoire3d/fixtures-campaign": "*",
+    "@grimoire3d/ui-campaign": "*",
+    "lucide-react": "^0.475.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.5",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.0.5",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0"
+  }
+}

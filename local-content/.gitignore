@@ -1,0 +1,6 @@
+# Ignore all local benchmark content
+b2-benchmark/source/**
+b2-benchmark/extracted/**
+b2-benchmark/reviews/**
+b2-benchmark/generated/**
+b2-benchmark/reports/**

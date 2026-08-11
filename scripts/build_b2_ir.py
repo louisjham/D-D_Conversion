@@ -1,0 +1,1275 @@
+import json
+import os
+from datetime import datetime
+
+locations = [
+    # --- THE KEEP ---
+    {
+        "id": "keep-main-gate",
+        "label": "1. Main Gate",
+        "geometry": {"x": 0, "y": 0, "width": 6, "height": 6},
+        "presentation": {
+            "biome": "keep",
+            "lighting": "day",
+            "ambienceTags": ["fortress", "battlements", "portcullis"]
+        },
+        "narrative": {
+            "playerFacingDescription": "Two 30ft high stone towers with battlements flank a heavy 20ft gatehouse equipped with iron-reinforced portcullis.",
+            "gmNotes": ["Guarded by Corporal of the Guard and 6 guards. Entrants must state business."]
+        },
+        "exits": [
+            {"id": "exit-gate-to-entry-yard", "direction": "north", "target": "keep-entry-yard"},
+            {"id": "exit-gate-to-wilderness", "direction": "south", "target": "wild-borderlands-road"}
+        ],
+        "interactables": [
+            {
+                "id": "main-portcullis",
+                "label": "Iron Portcullis",
+                "description": "Heavy spiked iron gate raised by winches inside the gatehouse towers.",
+                "inspectionCheck": {"ability": "athletics", "dc": 15}
+            }
+        ],
+        "secrets": []
+    },
+    {
+        "id": "keep-entry-yard",
+        "label": "3. Entry Yard",
+        "geometry": {"x": 0, "y": 7, "width": 8, "height": 6},
+        "presentation": {
+            "biome": "keep",
+            "lighting": "day",
+            "ambienceTags": ["paved-courtyard", "busiest-thoroughfare"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A broad paved courtyard lined with stone buildings. Guards pacing the ramparts watch all who pass.",
+            "gmNotes": ["Connects outer Keep buildings to the Inner Gate."]
+        },
+        "exits": [
+            {"id": "exit-entry-yard-to-gate", "direction": "south", "target": "keep-main-gate"},
+            {"id": "exit-entry-yard-to-tavern", "direction": "east", "target": "keep-tavern"},
+            {"id": "exit-entry-yard-to-inner-gate", "direction": "north", "target": "keep-inner-gate"},
+            {"id": "exit-entry-yard-to-bailiff", "direction": "west", "target": "keep-bailiff-tower"},
+            {"id": "exit-entry-yard-to-provisioner", "direction": "down", "target": "keep-provisioner"},
+            {"id": "exit-entry-yard-to-bank", "direction": "up", "target": "keep-bank"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "keep-provisioner",
+        "label": "10. Provisioner & Trade Guild",
+        "geometry": {"x": 9, "y": 0, "width": 6, "height": 6},
+        "presentation": {
+            "biome": "keep",
+            "lighting": "day",
+            "ambienceTags": ["supplies", "crates", "ironmongery"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A bustling general store packed with iron rations, rope, torches, and adventuring supplies.",
+            "gmNotes": ["Merchant offers standard D&D equipment."]
+        },
+        "exits": [
+            {"id": "exit-provisioner-to-entry-yard", "direction": "up", "target": "keep-entry-yard"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "keep-bank",
+        "label": "11. Money Changer & Bank",
+        "geometry": {"x": -7, "y": 0, "width": 5, "height": 5},
+        "presentation": {
+            "biome": "keep",
+            "lighting": "day",
+            "ambienceTags": ["scales", "iron-vault", "guarded"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A heavily guarded stone office with iron bars, scales, and coin vaults for currency conversion.",
+            "gmNotes": ["Exchanges copper/silver for gold coins."]
+        },
+        "exits": [
+            {"id": "exit-bank-to-entry-yard", "direction": "down", "target": "keep-entry-yard"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "keep-bailiff-tower",
+        "label": "6. Bailiff Tower",
+        "geometry": {"x": -7, "y": 7, "width": 5, "height": 5},
+        "presentation": {
+            "biome": "keep",
+            "lighting": "torchlit",
+            "ambienceTags": ["official-records", "superintendent-office"]
+        },
+        "narrative": {
+            "playerFacingDescription": "The headquarters of the Keep superintendent. Scrolls, ledgers, and maps of the border region line the walls.",
+            "gmNotes": ["Bailiff collects taxes and registers adventuring parties."]
+        },
+        "exits": [
+            {"id": "exit-bailiff-to-entry-yard", "direction": "east", "target": "keep-entry-yard"}
+        ],
+        "interactables": [
+            {
+                "id": "keep-tax-ledger",
+                "label": "Keep Ledger",
+                "description": "Heavy leather-bound book listing merchant fees and border bounties.",
+                "inspectionCheck": {"ability": "investigation", "dc": 10}
+            }
+        ],
+        "secrets": []
+    },
+    {
+        "id": "keep-tavern",
+        "label": "8. Tavern & Inn",
+        "geometry": {"x": 9, "y": 7, "width": 6, "height": 6},
+        "presentation": {
+            "biome": "keep",
+            "lighting": "torchlit",
+            "ambienceTags": ["warm-hearth", "ale-casks", "burlap-tables"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A bustling tavern filled with travelers, merchants, and off-duty guards enjoying warm stew and spiced ale.",
+            "gmNotes": ["Prime location for gathering rumors about the Caves of Chaos."]
+        },
+        "exits": [
+            {"id": "exit-tavern-to-entry-yard", "direction": "west", "target": "keep-entry-yard"}
+        ],
+        "interactables": [
+            {
+                "id": "rumor-board",
+                "label": "Adventurers Notice Board",
+                "description": "Nailed parchment notices regarding missing caravans and bounties in the ravine.",
+                "onInspectEffects": [{"kind": "setFlag", "flag": "heard-caves-rumor", "value": True}]
+            }
+        ],
+        "secrets": []
+    },
+    {
+        "id": "keep-inner-gate",
+        "label": "15. Inner Gate",
+        "geometry": {"x": 0, "y": 14, "width": 6, "height": 5},
+        "presentation": {
+            "biome": "keep",
+            "lighting": "day",
+            "ambienceTags": ["fortified-wall", "heavy-iron-doors"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A heavily fortified inner gatehouse separating the outer bailey from the Keep Fortress.",
+            "gmNotes": ["Requires Castellan approval or official business to pass."]
+        },
+        "exits": [
+            {"id": "exit-inner-gate-to-entry-yard", "direction": "south", "target": "keep-entry-yard"},
+            {"id": "exit-inner-gate-to-courtyard", "direction": "north", "target": "keep-inner-courtyard"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "keep-inner-courtyard",
+        "label": "16. Inner Courtyard",
+        "geometry": {"x": 0, "y": 20, "width": 8, "height": 6},
+        "presentation": {
+            "biome": "keep",
+            "lighting": "day",
+            "ambienceTags": ["parade-grounds", "stone-keep"]
+        },
+        "narrative": {
+            "playerFacingDescription": "The central courtyard of the Keep Fortress, surrounded by armories, barracks, and the Castellan Residence.",
+            "gmNotes": ["High guard presence."]
+        },
+        "exits": [
+            {"id": "exit-courtyard-to-inner-gate", "direction": "south", "target": "keep-inner-gate"},
+            {"id": "exit-courtyard-to-castellan", "direction": "north", "target": "keep-castellan-chamber"},
+            {"id": "exit-courtyard-to-chapel", "direction": "west", "target": "keep-chapel"},
+            {"id": "exit-courtyard-to-armory", "direction": "east", "target": "keep-armory"},
+            {"id": "exit-courtyard-to-barracks", "direction": "up", "target": "keep-barracks"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "keep-chapel",
+        "label": "20. Chapel of the Realm",
+        "geometry": {"x": -8, "y": 20, "width": 5, "height": 5},
+        "presentation": {
+            "biome": "keep",
+            "lighting": "day",
+            "ambienceTags": ["stained-glass", "incense", "altar"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A serene stone chapel dedicated to the gods of Law and Light.",
+            "gmNotes": ["Clerics offer healing support to realm defenders."]
+        },
+        "exits": [
+            {"id": "exit-chapel-to-courtyard", "direction": "east", "target": "keep-inner-courtyard"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "keep-armory",
+        "label": "21. Keep Armory",
+        "geometry": {"x": 9, "y": 20, "width": 5, "height": 5},
+        "presentation": {
+            "biome": "keep",
+            "lighting": "day",
+            "ambienceTags": ["racks-of-spears", "iron-mail", "guarded"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A secured armory containing spare crossbows, spears, shields, and chainmail for garrison troops.",
+            "gmNotes": ["Guarded round the clock."]
+        },
+        "exits": [
+            {"id": "exit-armory-to-courtyard", "direction": "west", "target": "keep-inner-courtyard"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "keep-barracks",
+        "label": "22. Garrison Barracks",
+        "geometry": {"x": 9, "y": 27, "width": 6, "height": 6},
+        "presentation": {
+            "biome": "keep",
+            "lighting": "day",
+            "ambienceTags": ["bunk-beds", "footlockers", "off-duty-guards"]
+        },
+        "narrative": {
+            "playerFacingDescription": "Two-story barracks housing the 60 active guards defending the Keep.",
+            "gmNotes": ["Off-duty soldiers resting."]
+        },
+        "exits": [
+            {"id": "exit-barracks-to-courtyard", "direction": "down", "target": "keep-inner-courtyard"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "keep-castellan-chamber",
+        "label": "27. Castellan Chamber",
+        "geometry": {"x": 0, "y": 27, "width": 7, "height": 7},
+        "presentation": {
+            "biome": "keep",
+            "lighting": "torchlit",
+            "ambienceTags": ["tapestries", "oak-desk", "war-map"]
+        },
+        "narrative": {
+            "playerFacingDescription": "The noble hall of the Keep Commander. Rich tapestries and a large tactical map of the Borderlands dominate the chamber.",
+            "gmNotes": ["Castellan issues the quest to clear the Caves of Chaos."]
+        },
+        "exits": [
+            {"id": "exit-castellan-to-courtyard", "direction": "south", "target": "keep-inner-courtyard"}
+        ],
+        "interactables": [
+            {
+                "id": "castellan-war-map",
+                "label": "War Map of the Borderlands",
+                "description": "Detailed map showing the path from the Keep through the wilderness to the Ravine of Chaos.",
+                "onInspectEffects": [
+                    {"kind": "setFlag", "flag": "discovered-ravine-location", "value": True},
+                    {"kind": "grantItem", "itemId": "iron-gate-key"}
+                ]
+            }
+        ],
+        "secrets": []
+    },
+
+    # --- WILDERNESS ---
+    {
+        "id": "wild-borderlands-road",
+        "label": "Wilderness Road",
+        "geometry": {"x": 0, "y": -8, "width": 10, "height": 6},
+        "presentation": {
+            "biome": "forest",
+            "lighting": "day",
+            "ambienceTags": ["dense-woods", "rutted-trail"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A narrow dirt road winding through dense border woodland toward the dark hills.",
+            "gmNotes": ["Chance of wilderness encounters."]
+        },
+        "exits": [
+            {"id": "exit-road-to-gate", "direction": "north", "target": "keep-main-gate"},
+            {"id": "exit-road-to-hermit", "direction": "west", "target": "wild-mad-hermit"},
+            {"id": "exit-road-to-ravine", "direction": "south", "target": "wild-ravine-entrance"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "wild-mad-hermit",
+        "label": "Mad Hermit Hut",
+        "geometry": {"x": -12, "y": -8, "width": 5, "height": 5},
+        "presentation": {
+            "biome": "forest",
+            "lighting": "day",
+            "ambienceTags": ["dilapidated-shack", "weird-totems"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A ramshackle wooden hut surrounded by crude wooden idols and animal skulls.",
+            "gmNotes": ["Mad hermit attacks intruders on sight."]
+        },
+        "exits": [
+            {"id": "exit-hermit-to-road", "direction": "east", "target": "wild-borderlands-road"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "wild-ravine-entrance",
+        "label": "Ravine of Chaos Entrance",
+        "geometry": {"x": 0, "y": -16, "width": 12, "height": 6},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "day",
+            "ambienceTags": ["jagged-cliffs", "dark-cave-mouths"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A steep, rocky ravine with high limestone walls. Multiple dark cave openings pepper the cliff faces at various elevations.",
+            "gmNotes": ["Entrance to the Caves of Chaos A through J."]
+        },
+        "exits": [
+            {"id": "exit-ravine-to-road", "direction": "north", "target": "wild-borderlands-road"},
+            {"id": "exit-ravine-to-cave-a", "direction": "west", "target": "cave-a-entrance"},
+            {"id": "exit-ravine-to-cave-b", "direction": "east", "target": "cave-b-entrance"},
+            {"id": "exit-ravine-to-cave-c", "direction": "south", "target": "cave-c-entrance"},
+            {"id": "exit-ravine-to-cave-d", "direction": "up", "target": "cave-d-entrance"},
+            {"id": "exit-ravine-to-cave-e", "direction": "down", "target": "cave-e-ogre"},
+            {"id": "exit-ravine-to-cave-f", "direction": "north", "target": "cave-f-entrance"},
+            {"id": "exit-ravine-to-cave-g", "direction": "south", "target": "cave-g-entrance"},
+            {"id": "exit-ravine-to-cave-h", "direction": "east", "target": "cave-h-entrance"},
+            {"id": "exit-ravine-to-cave-i", "direction": "west", "target": "cave-i-entrance"},
+            {"id": "exit-ravine-to-cave-j", "direction": "down", "target": "cave-j-entry"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+
+    # --- CAVES OF CHAOS ---
+    # Cave A: Kobold Lair
+    {
+        "id": "cave-a-entrance",
+        "label": "A. Kobold Lair Entrance",
+        "geometry": {"x": -14, "y": -16, "width": 6, "height": 5},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "dark",
+            "ambienceTags": ["low-ceiling", "musky-smell"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A low cave entrance cut into the western cliff face. The scent of damp earth and reptilian musk hangs in the air.",
+            "gmNotes": ["Entrance to Kobold complex."]
+        },
+        "exits": [
+            {"id": "exit-cave-a-to-ravine", "direction": "east", "target": "wild-ravine-entrance"},
+            {"id": "exit-cave-a-to-guard", "direction": "west", "target": "cave-a-guard-room"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "cave-a-guard-room",
+        "label": "A1. Kobold Guard Room",
+        "geometry": {"x": -21, "y": -16, "width": 6, "height": 6},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "torchlit",
+            "ambienceTags": ["smoky-brazier", "crude-benches"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A rough-hewn cavern lit by a smoking brazier. Crude benches and wooden spears rest against the stone walls.",
+            "gmNotes": ["Guarded by Kobold Warriors."]
+        },
+        "exits": [
+            {"id": "exit-a-guard-to-entrance", "direction": "east", "target": "cave-a-entrance"},
+            {"id": "exit-a-guard-to-pit", "direction": "north", "target": "cave-a-pit-trap"}
+        ],
+        "interactables": [],
+        "secrets": [],
+        "encounter": {
+            "id": "encounter-kobold-guards",
+            "trigger": {"kind": "always"},
+            "enemies": [{"monsterTemplateId": "kobold-warrior", "count": 4}],
+            "victoryEffects": [{"kind": "setFlag", "flag": "kobold-guards-defeated", "value": True}]
+        }
+    },
+    {
+        "id": "cave-a-pit-trap",
+        "label": "A2. Covered Pit Trap Room",
+        "geometry": {"x": -21, "y": -9, "width": 6, "height": 6},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "dark",
+            "ambienceTags": ["concealed-floor", "echoing-pit"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A narrow stone passage leading deeper into the cave complex.",
+            "gmNotes": ["Features a 10ft concealed pit trap."]
+        },
+        "exits": [
+            {"id": "exit-pit-to-guard", "direction": "south", "target": "cave-a-guard-room"},
+            {"id": "exit-pit-to-chieftain", "direction": "north", "target": "cave-a-chieftain"}
+        ],
+        "interactables": [
+            {
+                "id": "pit-trap-trigger",
+                "label": "Camouflaged Pit Trap",
+                "description": "A 10ft deep pit covered by hinged wooden boards painted like damp rock.",
+                "inspectionCheck": {"ability": "perception", "dc": 12},
+                "onInspectEffects": [{"kind": "setFlag", "flag": "pit-trap-disarmed", "value": True}]
+            }
+        ],
+        "secrets": []
+    },
+    {
+        "id": "cave-a-chieftain",
+        "label": "A4. Kobold Chieftain Hall",
+        "geometry": {"x": -21, "y": -2, "width": 7, "height": 7},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "torchlit",
+            "ambienceTags": ["bone-throne", "treasure-chest"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A spacious cavern featuring a crude throne constructed from animal bones and a locked wooden chest in the corner.",
+            "gmNotes": ["Chieftain holds brass chest key."]
+        },
+        "exits": [
+            {"id": "exit-chieftain-to-pit", "direction": "south", "target": "cave-a-pit-trap"}
+        ],
+        "interactables": [
+            {
+                "id": "chieftain-chest",
+                "label": "Kobold Treasure Chest",
+                "description": "Heavy iron-bound chest locked with a brass keyhole.",
+                "inspectionCheck": {"ability": "investigation", "dc": 10},
+                "onInspectEffects": [
+                    {"kind": "grantItem", "itemId": "brass-chest-key"},
+                    {"kind": "grantItem", "itemId": "potion-healing-b2"}
+                ]
+            }
+        ],
+        "secrets": [],
+        "encounter": {
+            "id": "encounter-kobold-chief",
+            "trigger": {"kind": "always"},
+            "enemies": [{"monsterTemplateId": "kobold-chieftain", "count": 1}],
+            "victoryEffects": [
+                {"kind": "setFlag", "flag": "kobold-chief-defeated", "value": True},
+                {"kind": "grantItem", "itemId": "brass-chest-key"}
+            ]
+        }
+    },
+
+    # Cave B: Orc Lair
+    {
+        "id": "cave-b-entrance",
+        "label": "B. Orc Lair Entrance",
+        "geometry": {"x": 13, "y": -16, "width": 6, "height": 5},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "dark",
+            "ambienceTags": ["large-arch", "foul-odor"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A broad cave entrance leading east. The smell of roasting meat and foul sweat drifts out.",
+            "gmNotes": ["Orc outer lair."]
+        },
+        "exits": [
+            {"id": "exit-cave-b-to-ravine", "direction": "west", "target": "wild-ravine-entrance"},
+            {"id": "exit-cave-b-to-chieftain", "direction": "east", "target": "cave-b-chieftain"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "cave-b-chieftain",
+        "label": "B9. Orc Chieftain Hall",
+        "geometry": {"x": 20, "y": -16, "width": 7, "height": 7},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "torchlit",
+            "ambienceTags": ["fur-rugs", "iron-weapons"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A large stone chamber hung with animal pelts and captured heraldic shields.",
+            "gmNotes": ["Chieftain guards gold treasures."]
+        },
+        "exits": [
+            {"id": "exit-b-chieftain-to-entrance", "direction": "west", "target": "cave-b-entrance"}
+        ],
+        "interactables": [],
+        "secrets": [],
+        "encounter": {
+            "id": "encounter-orc-chief",
+            "trigger": {"kind": "always"},
+            "enemies": [{"monsterTemplateId": "orc-chieftain", "count": 1}],
+            "victoryEffects": [
+                {"kind": "setFlag", "flag": "orc-chief-defeated", "value": True},
+                {"kind": "grantItem", "itemId": "gold-goblet"}
+            ]
+        }
+    },
+
+    # Cave C: Goblin Lair
+    {
+        "id": "cave-c-entrance",
+        "label": "C. Goblin Lair Entrance",
+        "geometry": {"x": -14, "y": -23, "width": 6, "height": 5},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "dark",
+            "ambienceTags": ["muddy-floor", "high-pitched-chatter"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A narrow limestone opening slick with mud. Squeaking chatter echoes from deep within.",
+            "gmNotes": ["Entrance to Goblin tribe lair."]
+        },
+        "exits": [
+            {"id": "exit-cave-c-to-ravine", "direction": "north", "target": "wild-ravine-entrance"},
+            {"id": "exit-cave-c-to-guard", "direction": "west", "target": "cave-c-guard"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "cave-c-guard",
+        "label": "C11. Goblin Guard Room",
+        "geometry": {"x": -21, "y": -23, "width": 6, "height": 6},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "torchlit",
+            "ambienceTags": ["filthy-mats", "dung-smell"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A low-ceilinged room cluttered with straw pallets and crude wooden shields.",
+            "gmNotes": ["Guarded by Goblin skirmishers."]
+        },
+        "exits": [
+            {"id": "exit-c-guard-to-entrance", "direction": "east", "target": "cave-c-entrance"},
+            {"id": "exit-c-guard-to-chieftain", "direction": "west", "target": "cave-c-chieftain"}
+        ],
+        "interactables": [],
+        "secrets": [],
+        "encounter": {
+            "id": "encounter-goblin-guards",
+            "trigger": {"kind": "always"},
+            "enemies": [{"monsterTemplateId": "goblin-warrior", "count": 3}],
+            "victoryEffects": [{"kind": "setFlag", "flag": "goblin-guards-defeated", "value": True}]
+        }
+    },
+    {
+        "id": "cave-c-chieftain",
+        "label": "C13. Goblin Chieftain Lair",
+        "geometry": {"x": -28, "y": -23, "width": 7, "height": 7},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "torchlit",
+            "ambienceTags": ["rat-skins", "stolen-goods"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A reeking chamber lined with stolen merchant sacks and rat-skin rugs.",
+            "gmNotes": ["Goblin Chief rules here."]
+        },
+        "exits": [
+            {"id": "exit-c-chieftain-to-guard", "direction": "east", "target": "cave-c-guard"}
+        ],
+        "interactables": [
+            {
+                "id": "goblin-stash",
+                "label": "Goblin Loot Stash",
+                "description": "A hollowed out wooden stump containing stolen potions.",
+                "inspectionCheck": {"ability": "investigation", "dc": 11},
+                "onInspectEffects": [
+                    {"kind": "grantItem", "itemId": "potion-invisibility"}
+                ]
+            }
+        ],
+        "secrets": [],
+        "encounter": {
+            "id": "encounter-goblin-chief",
+            "trigger": {"kind": "always"},
+            "enemies": [{"monsterTemplateId": "goblin-chieftain", "count": 1}],
+            "victoryEffects": [{"kind": "setFlag", "flag": "goblin-chief-defeated", "value": True}]
+        }
+    },
+
+    # Cave D: Hobgoblin Lair
+    {
+        "id": "cave-d-entrance",
+        "label": "D. Hobgoblin Lair Entrance",
+        "geometry": {"x": -14, "y": -30, "width": 6, "height": 5},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "dark",
+            "ambienceTags": ["militaristic", "iron-smell"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A square-cut stone archway bearing martial carvings of iron spears.",
+            "gmNotes": ["Entrance to disciplined Hobgoblin clan."]
+        },
+        "exits": [
+            {"id": "exit-cave-d-to-ravine", "direction": "down", "target": "wild-ravine-entrance"},
+            {"id": "exit-cave-d-to-guard", "direction": "west", "target": "cave-d-guard"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "cave-d-guard",
+        "label": "D15. Hobgoblin Guard Post",
+        "geometry": {"x": -21, "y": -30, "width": 6, "height": 6},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "torchlit",
+            "ambienceTags": ["disciplined", "iron-grates"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A clean, orderly guardroom with polished iron pikes and leather armor stands.",
+            "gmNotes": ["Hobgoblin sentries standard patrol."]
+        },
+        "exits": [
+            {"id": "exit-d-guard-to-entrance", "direction": "east", "target": "cave-d-entrance"},
+            {"id": "exit-d-guard-to-armory", "direction": "west", "target": "cave-d-armory"}
+        ],
+        "interactables": [],
+        "secrets": [],
+        "encounter": {
+            "id": "encounter-hobgoblin-guards",
+            "trigger": {"kind": "always"},
+            "enemies": [{"monsterTemplateId": "hobgoblin-guard", "count": 2}],
+            "victoryEffects": [{"kind": "setFlag", "flag": "hobgoblin-guards-defeated", "value": True}]
+        }
+    },
+    {
+        "id": "cave-d-armory",
+        "label": "D18. Hobgoblin Armory",
+        "geometry": {"x": -28, "y": -30, "width": 6, "height": 6},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "torchlit",
+            "ambienceTags": ["weapon-racks", "forged-iron"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A dry stone chamber equipped with weapon racks, shields, and oiling basins.",
+            "gmNotes": ["Contains fine martial equipment."]
+        },
+        "exits": [
+            {"id": "exit-d-armory-to-guard", "direction": "east", "target": "cave-d-guard"},
+            {"id": "exit-d-armory-to-chieftain", "direction": "west", "target": "cave-d-chieftain"}
+        ],
+        "interactables": [
+            {
+                "id": "hobgoblin-shield-rack",
+                "label": "Masterwork Shield Rack",
+                "description": "Heavy wooden rack displaying an engraved magical shield.",
+                "inspectionCheck": {"ability": "investigation", "dc": 12},
+                "onInspectEffects": [
+                    {"kind": "grantItem", "itemId": "shield-plus-one"}
+                ]
+            }
+        ],
+        "secrets": []
+    },
+    {
+        "id": "cave-d-chieftain",
+        "label": "D20. Hobgoblin Chieftain Hall",
+        "geometry": {"x": -35, "y": -30, "width": 7, "height": 7},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "torchlit",
+            "ambienceTags": ["command-table", "banners"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A spacious tactical chamber featuring a heavy oak war table and iron banners.",
+            "gmNotes": ["Hobgoblin Chieftain issues orders from here."]
+        },
+        "exits": [
+            {"id": "exit-d-chieftain-to-armory", "direction": "east", "target": "cave-d-armory"}
+        ],
+        "interactables": [],
+        "secrets": [],
+        "encounter": {
+            "id": "encounter-hobgoblin-chief",
+            "trigger": {"kind": "always"},
+            "enemies": [{"monsterTemplateId": "hobgoblin-chieftain", "count": 1}],
+            "victoryEffects": [{"kind": "setFlag", "flag": "hobgoblin-chief-defeated", "value": True}]
+        }
+    },
+
+    # Cave E: Ogre Cave
+    {
+        "id": "cave-e-ogre",
+        "label": "E24. Ogre Lair",
+        "geometry": {"x": 0, "y": -23, "width": 8, "height": 7},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "dark",
+            "ambienceTags": ["giant-bones", "boulder-barricade"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A massive high-ceilinged cavern littered with gnawed bones and broken wagon wheels.",
+            "gmNotes": ["Solitary Ogre brute resides here."]
+        },
+        "exits": [
+            {"id": "exit-ogre-to-ravine", "direction": "up", "target": "wild-ravine-entrance"}
+        ],
+        "interactables": [],
+        "secrets": [],
+        "encounter": {
+            "id": "encounter-ogre",
+            "trigger": {"kind": "always"},
+            "enemies": [{"monsterTemplateId": "ogre-brute", "count": 1}],
+            "victoryEffects": [
+                {"kind": "setFlag", "flag": "ogre-defeated", "value": True},
+                {"kind": "grantItem", "itemId": "silver-key-ogre"},
+                {"kind": "grantItem", "itemId": "sword-plus-one"}
+            ]
+        }
+    },
+
+    # Cave F: Owlbear Cave
+    {
+        "id": "cave-f-entrance",
+        "label": "F. Shunned Cavern Entrance",
+        "geometry": {"x": 13, "y": -23, "width": 6, "height": 5},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "dark",
+            "ambienceTags": ["claw-marks", "feather-tufts"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A dark natural cave entrance marked by deep claw gouges on the surrounding rock walls.",
+            "gmNotes": ["Avoided by other humanoids in the ravine."]
+        },
+        "exits": [
+            {"id": "exit-cave-f-to-ravine", "direction": "south", "target": "wild-ravine-entrance"},
+            {"id": "exit-cave-f-to-owlbear", "direction": "east", "target": "cave-f-owlbear"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "cave-f-owlbear",
+        "label": "F26. Owlbear Cave",
+        "geometry": {"x": 20, "y": -23, "width": 8, "height": 7},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "dark",
+            "ambienceTags": ["beak-remains", "beast-den"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A foul-smelling den filled with animal bones, crushed skulls, and matted feathers.",
+            "gmNotes": ["Fierce Owlbear attacks anyone entering its nest."]
+        },
+        "exits": [
+            {"id": "exit-owlbear-to-entrance", "direction": "west", "target": "cave-f-entrance"}
+        ],
+        "interactables": [
+            {
+                "id": "owlbear-bone-pile",
+                "label": "Crushed Skeletal Remains",
+                "description": "Remains of an unfortunate adventurer crushed beneath the Owlbear's nest.",
+                "inspectionCheck": {"ability": "perception", "dc": 10},
+                "onInspectEffects": [
+                    {"kind": "grantItem", "itemId": "gem-garnet-cluster"}
+                ]
+            }
+        ],
+        "secrets": [],
+        "encounter": {
+            "id": "encounter-owlbear",
+            "trigger": {"kind": "always"},
+            "enemies": [{"monsterTemplateId": "owlbear-monster", "count": 1}],
+            "victoryEffects": [{"kind": "setFlag", "flag": "owlbear-defeated", "value": True}]
+        }
+    },
+
+    # Cave G: Bugbear Lair
+    {
+        "id": "cave-g-entrance",
+        "label": "G. Bugbear Lair Entrance",
+        "geometry": {"x": 13, "y": -30, "width": 6, "height": 5},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "dark",
+            "ambienceTags": ["steep-incline", "heavy-breathing"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A high cliffside opening accessed by a steep rocky scramble.",
+            "gmNotes": ["Entrance to stealthy Bugbear clan."]
+        },
+        "exits": [
+            {"id": "exit-cave-g-to-ravine", "direction": "north", "target": "wild-ravine-entrance"},
+            {"id": "exit-cave-g-to-guard", "direction": "east", "target": "cave-g-guard"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "cave-g-guard",
+        "label": "G28. Bugbear Guard Room",
+        "geometry": {"x": 20, "y": -30, "width": 6, "height": 6},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "torchlit",
+            "ambienceTags": ["fur-pelts", "heavy-morningstars"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A dark cavern lit by flickering resin torches, lined with thick bear pelts.",
+            "gmNotes": ["Bugbear guards rely on ambush."]
+        },
+        "exits": [
+            {"id": "exit-g-guard-to-entrance", "direction": "west", "target": "cave-g-entrance"},
+            {"id": "exit-g-guard-to-chieftain", "direction": "east", "target": "cave-g-chieftain"}
+        ],
+        "interactables": [],
+        "secrets": [],
+        "encounter": {
+            "id": "encounter-bugbear-guards",
+            "trigger": {"kind": "always"},
+            "enemies": [{"monsterTemplateId": "bugbear-warrior", "count": 2}],
+            "victoryEffects": [{"kind": "setFlag", "flag": "bugbear-guards-defeated", "value": True}]
+        }
+    },
+    {
+        "id": "cave-g-chieftain",
+        "label": "G31. Bugbear Chieftain Hall",
+        "geometry": {"x": 27, "y": -30, "width": 7, "height": 7},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "torchlit",
+            "ambienceTags": ["trophy-skulls", "iron-chests"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A spacious cave decorated with giant skulls and iron-bound chests of plunder.",
+            "gmNotes": ["Bugbear Chieftain resides here."]
+        },
+        "exits": [
+            {"id": "exit-g-chieftain-to-guard", "direction": "west", "target": "cave-g-guard"}
+        ],
+        "interactables": [],
+        "secrets": [],
+        "encounter": {
+            "id": "encounter-bugbear-chief",
+            "trigger": {"kind": "always"},
+            "enemies": [{"monsterTemplateId": "bugbear-chieftain", "count": 1}],
+            "victoryEffects": [{"kind": "setFlag", "flag": "bugbear-chief-defeated", "value": True}]
+        }
+    },
+
+    # Cave H: Minotaur Cave
+    {
+        "id": "cave-h-entrance",
+        "label": "H. Minotaur Lair Entrance",
+        "geometry": {"x": 13, "y": -37, "width": 6, "height": 5},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "dark",
+            "ambienceTags": ["twisting-tunnels", "bellowing-echoes"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A tall, narrow fissure in the cliff face leading into a labyrinth of winding stone passages.",
+            "gmNotes": ["Home of the feared Minotaur of Chaos."]
+        },
+        "exits": [
+            {"id": "exit-cave-h-to-ravine", "direction": "west", "target": "wild-ravine-entrance"},
+            {"id": "exit-cave-h-to-maze", "direction": "east", "target": "cave-h-maze"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "cave-h-maze",
+        "label": "H34. Minotaur Labyrinth",
+        "geometry": {"x": 20, "y": -37, "width": 7, "height": 7},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "dark",
+            "ambienceTags": ["confusing-passages", "blood-stains"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A disorienting web of crisscrossing rock corridors with blood splatters on the walls.",
+            "gmNotes": ["Requires navigation to reach the central shrine."]
+        },
+        "exits": [
+            {"id": "exit-h-maze-to-entrance", "direction": "west", "target": "cave-h-entrance"},
+            {"id": "exit-h-maze-to-chieftain", "direction": "east", "target": "cave-h-chieftain"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "cave-h-chieftain",
+        "label": "H35. Minotaur Shrine",
+        "geometry": {"x": 27, "y": -37, "width": 8, "height": 8},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "torchlit",
+            "ambienceTags": ["horned-altar", "massive-greataxe"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A grand circular cavern featuring a stone altar carved with bull horns and blood grooves.",
+            "gmNotes": ["Minotaur boss fights to the death."]
+        },
+        "exits": [
+            {"id": "exit-h-chieftain-to-maze", "direction": "west", "target": "cave-h-maze"}
+        ],
+        "interactables": [
+            {
+                "id": "minotaur-pedestal",
+                "label": "Horned Altar Pedestal",
+                "description": "Carved granite pedestal bearing a glowing parchment scroll.",
+                "inspectionCheck": {"ability": "arcana", "dc": 12},
+                "onInspectEffects": [
+                    {"kind": "grantItem", "itemId": "scroll-light"}
+                ]
+            }
+        ],
+        "secrets": [],
+        "encounter": {
+            "id": "encounter-minotaur",
+            "trigger": {"kind": "always"},
+            "enemies": [{"monsterTemplateId": "minotaur-boss", "count": 1}],
+            "victoryEffects": [{"kind": "setFlag", "flag": "minotaur-defeated", "value": True}]
+        }
+    },
+
+    # Cave I: Gnoll Lair
+    {
+        "id": "cave-i-entrance",
+        "label": "I. Gnoll Lair Entrance",
+        "geometry": {"x": -14, "y": -37, "width": 6, "height": 5},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "dark",
+            "ambienceTags": ["cackling-sounds", "carrion-odor"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A wide cavern opening from which echoes unsettling, high-pitched cackling and laughing.",
+            "gmNotes": ["Entrance to Gnoll warband."]
+        },
+        "exits": [
+            {"id": "exit-cave-i-to-ravine", "direction": "east", "target": "wild-ravine-entrance"},
+            {"id": "exit-cave-i-to-guard", "direction": "west", "target": "cave-i-guard"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "cave-i-guard",
+        "label": "I37. Gnoll Guard Post",
+        "geometry": {"x": -21, "y": -37, "width": 6, "height": 6},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "torchlit",
+            "ambienceTags": ["gnawed-bones", "flail-weapons"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A foul chamber littered with half-gnawed ribcages and heavy triple-flails.",
+            "gmNotes": ["Gnoll marauders on guard."]
+        },
+        "exits": [
+            {"id": "exit-i-guard-to-entrance", "direction": "east", "target": "cave-i-entrance"},
+            {"id": "exit-i-guard-to-chieftain", "direction": "west", "target": "cave-i-chieftain"}
+        ],
+        "interactables": [],
+        "secrets": [],
+        "encounter": {
+            "id": "encounter-gnoll-guards",
+            "trigger": {"kind": "always"},
+            "enemies": [{"monsterTemplateId": "gnoll-marauder", "count": 2}],
+            "victoryEffects": [{"kind": "setFlag", "flag": "gnoll-guards-defeated", "value": True}]
+        }
+    },
+    {
+        "id": "cave-i-chieftain",
+        "label": "I38. Gnoll Chieftain Hall",
+        "geometry": {"x": -28, "y": -37, "width": 7, "height": 7},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "torchlit",
+            "ambienceTags": ["hyena-pelts", "iron-cage"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A spacious cave lined with hyena pelts and rusted iron cages.",
+            "gmNotes": ["Gnoll Chieftain commands the warband."]
+        },
+        "exits": [
+            {"id": "exit-i-chieftain-to-guard", "direction": "east", "target": "cave-i-guard"}
+        ],
+        "interactables": [],
+        "secrets": [],
+        "encounter": {
+            "id": "encounter-gnoll-chief",
+            "trigger": {"kind": "always"},
+            "enemies": [{"monsterTemplateId": "gnoll-chieftain", "count": 1}],
+            "victoryEffects": [{"kind": "setFlag", "flag": "gnoll-chief-defeated", "value": True}]
+        }
+    },
+
+    # Cave J: Shrine of Chaos (Evil Temple)
+    {
+        "id": "cave-j-entry",
+        "label": "J40. Shrine of Chaos Entry",
+        "geometry": {"x": 0, "y": -32, "width": 8, "height": 6},
+        "presentation": {
+            "biome": "crypt",
+            "lighting": "torchlit",
+            "ambienceTags": ["carved-obsidian", "red-tapers", "unholy-chanting"]
+        },
+        "narrative": {
+            "playerFacingDescription": "Double iron doors carved with demonic runes lead into a stone-pillared hallway draped in red and black silk.",
+            "gmNotes": ["Entrance to the unholy Shrine of Chaos."]
+        },
+        "exits": [
+            {"id": "exit-j-entry-to-ravine", "direction": "up", "target": "wild-ravine-entrance"},
+            {"id": "exit-j-entry-to-torture", "direction": "south", "target": "cave-j-torture"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "cave-j-torture",
+        "label": "J44. Torture Chamber",
+        "geometry": {"x": 0, "y": -39, "width": 7, "height": 7},
+        "presentation": {
+            "biome": "crypt",
+            "lighting": "torchlit",
+            "ambienceTags": ["iron-maiden", "rack", "brazier"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A dark chamber filled with sinister iron implements, racks, and glowing charcoal braziers.",
+            "gmNotes": ["Guarded by cultists."]
+        },
+        "exits": [
+            {"id": "exit-torture-to-entry", "direction": "north", "target": "cave-j-entry"},
+            {"id": "exit-torture-to-altar", "direction": "south", "target": "cave-j-altar"}
+        ],
+        "interactables": [],
+        "secrets": []
+    },
+    {
+        "id": "cave-j-altar",
+        "label": "J47. Altar of Evil Shrine",
+        "geometry": {"x": 0, "y": -47, "width": 9, "height": 8},
+        "presentation": {
+            "biome": "crypt",
+            "lighting": "torchlit",
+            "ambienceTags": ["black-marble-altar", "unholy-bell", "cult-symbols"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A grand vaulted cathedral centered around a massive blood-stained black marble altar.",
+            "gmNotes": ["High Priest of Chaos guards the evil shrine."]
+        },
+        "exits": [
+            {"id": "exit-altar-to-torture", "direction": "north", "target": "cave-j-torture"},
+            {
+                "id": "exit-altar-to-escape",
+                "direction": "south",
+                "target": "escape-tunnel",
+                "locked": {"keyItemId": "silver-key-ogre", "requiredFlag": "high-priest-defeated"},
+                "visibleWhen": {"kind": "flag", "flag": "secret-exit-altar-discovered", "equals": True}
+            }
+        ],
+        "interactables": [
+            {
+                "id": "unholy-altar",
+                "label": "Black Marble Altar",
+                "description": "Monolithic altar carved with blasphemous runes of Chaos.",
+                "inspectionCheck": {"ability": "arcana", "dc": 14},
+                "onInspectEffects": [
+                    {"kind": "setFlag", "flag": "caves-cleared", "value": True},
+                    {"kind": "grantItem", "itemId": "chaos-talisman"}
+                ]
+            }
+        ],
+        "secrets": [
+            {
+                "id": "secret-exit-altar",
+                "label": "Secret Sanctuary Passage",
+                "perceptionDC": 14,
+                "discovered": False,
+                "revealsExitId": "exit-altar-to-escape"
+            }
+        ],
+        "encounter": {
+            "id": "encounter-high-priest",
+            "trigger": {"kind": "always"},
+            "enemies": [
+                {"monsterTemplateId": "high-priest-chaos", "count": 1},
+                {"monsterTemplateId": "chaos-cultist", "count": 2}
+            ],
+            "victoryEffects": [
+                {"kind": "setFlag", "flag": "high-priest-defeated", "value": True},
+                {"kind": "setFlag", "flag": "caves-cleared", "value": True}
+            ]
+        }
+    },
+    {
+        "id": "escape-tunnel",
+        "label": "50. Escape Tunnel to Daylight",
+        "geometry": {"x": 0, "y": -56, "width": 6, "height": 6},
+        "presentation": {
+            "biome": "cavern",
+            "lighting": "day",
+            "ambienceTags": ["fresh-breeze", "sunlight-shafts"]
+        },
+        "narrative": {
+            "playerFacingDescription": "A natural stone tunnel sloping upward into bright daylight and freedom beyond the ravine.",
+            "gmNotes": ["Quest victory room! Escaping wins the game."]
+        },
+        "exits": [
+            {"id": "exit-escape-to-altar", "direction": "north", "target": "cave-j-altar"}
+        ],
+        "interactables": [],
+        "secrets": []
+    }
+]
+
+versioned_adventure = {
+    "schemaVersion": "0.1",
+    "adventure": {
+        "id": "b2-keep-on-the-borderlands",
+        "title": "B2: The Keep on the Borderlands",
+        "systemProfile": "classic-dungeon",
+        "start": "keep-main-gate",
+        "locations": locations,
+        "npcs": [
+            {
+                "id": "castellan",
+                "name": "The Castellan",
+                "disposition": "friendly",
+                "locationId": "keep-castellan-chamber",
+                "dialogueText": "Welcome to the Keep on the Borderlands. Keep the realm safe from the forces of Chaos lurking in the ravine."
+            },
+            {
+                "id": "bailiff",
+                "name": "The Bailiff",
+                "disposition": "friendly",
+                "locationId": "keep-bailiff-tower",
+                "dialogueText": "State your business at the Keep. Pay your taxes and obey the law of the Realm."
+            },
+            {
+                "id": "corporal-gate",
+                "name": "Corporal of the Guard",
+                "disposition": "friendly",
+                "locationId": "keep-main-gate",
+                "dialogueText": "Halt! Who goes there? State your name and business before entering the Keep."
+            },
+            {
+                "id": "mad-hermit",
+                "name": "The Mad Hermit",
+                "disposition": "hostile",
+                "locationId": "wild-mad-hermit",
+                "dialogueText": "Beware the Caves of Chaos! The dark gods call for blood!"
+            }
+        ],
+        "monsters": [
+            {"id": "kobold-warrior", "name": "Kobold Warrior", "hp": 4, "ac": 13, "attackBonus": 2, "damageRoll": "1d4"},
+            {"id": "kobold-chieftain", "name": "Kobold Chieftain", "hp": 12, "ac": 14, "attackBonus": 4, "damageRoll": "1d6+1"},
+            {"id": "orc-warrior", "name": "Orc Warrior", "hp": 6, "ac": 14, "attackBonus": 3, "damageRoll": "1d6+1"},
+            {"id": "orc-chieftain", "name": "Orc Chieftain", "hp": 16, "ac": 15, "attackBonus": 5, "damageRoll": "1d8+2"},
+            {"id": "goblin-warrior", "name": "Goblin Scout", "hp": 4, "ac": 14, "attackBonus": 2, "damageRoll": "1d6"},
+            {"id": "goblin-chieftain", "name": "Goblin Chieftain", "hp": 14, "ac": 15, "attackBonus": 4, "damageRoll": "1d6+1"},
+            {"id": "hobgoblin-guard", "name": "Hobgoblin Guard", "hp": 8, "ac": 15, "attackBonus": 3, "damageRoll": "1d8"},
+            {"id": "hobgoblin-chieftain", "name": "Hobgoblin Chieftain", "hp": 18, "ac": 16, "attackBonus": 5, "damageRoll": "1d8+2"},
+            {"id": "ogre-brute", "name": "Ogre Brute", "hp": 22, "ac": 14, "attackBonus": 6, "damageRoll": "1d10+3"},
+            {"id": "owlbear-monster", "name": "Owlbear", "hp": 26, "ac": 15, "attackBonus": 6, "damageRoll": "1d8+3"},
+            {"id": "bugbear-warrior", "name": "Bugbear Warrior", "hp": 15, "ac": 14, "attackBonus": 4, "damageRoll": "1d8+2"},
+            {"id": "bugbear-chieftain", "name": "Bugbear Chieftain", "hp": 24, "ac": 15, "attackBonus": 5, "damageRoll": "2d4+2"},
+            {"id": "minotaur-boss", "name": "Minotaur of Chaos", "hp": 30, "ac": 14, "attackBonus": 6, "damageRoll": "1d10+3"},
+            {"id": "gnoll-marauder", "name": "Gnoll Marauder", "hp": 10, "ac": 14, "attackBonus": 3, "damageRoll": "1d8+1"},
+            {"id": "gnoll-chieftain", "name": "Gnoll Chieftain", "hp": 20, "ac": 15, "attackBonus": 5, "damageRoll": "1d8+2"},
+            {"id": "chaos-cultist", "name": "Acolyte of Chaos", "hp": 8, "ac": 14, "attackBonus": 3, "damageRoll": "1d6"},
+            {"id": "high-priest-chaos", "name": "High Priest of Chaos", "hp": 28, "ac": 16, "attackBonus": 6, "damageRoll": "1d8+3"},
+            {"id": "giant-spider", "name": "Black Widow Spider", "hp": 14, "ac": 14, "attackBonus": 4, "damageRoll": "1d6+1"}
+        ],
+        "items": [
+            {"id": "iron-gate-key", "name": "Iron Gate Key", "type": "key", "description": "Heavy iron key forged in the Keep smithy.", "valueCoins": 5},
+            {"id": "brass-chest-key", "name": "Brass Chest Key", "type": "key", "description": "Small ornate brass key found on the Kobold Chieftain.", "valueCoins": 10},
+            {"id": "silver-key-ogre", "name": "Silver Key", "type": "key", "description": "Ornate silver key worn around the Ogre's neck.", "valueCoins": 25},
+            {"id": "chaos-talisman", "name": "Chaos Talisman", "type": "quest", "description": "Unholy talisman depicting the symbol of Chaos.", "valueCoins": 200},
+            {"id": "ring-of-protection-b2", "name": "Ring of Protection +1", "type": "armor", "description": "A fine silver band glowing with protective abjuration magic.", "valueCoins": 500},
+            {"id": "potion-healing-b2", "name": "Potion of Healing", "type": "potion", "description": "Vial of crimson liquid that heals wounds upon consumption.", "valueCoins": 50},
+            {"id": "sword-plus-one", "name": "Longsword +1", "type": "weapon", "description": "Well-balanced longsword with a magical edge.", "valueCoins": 400},
+            {"id": "gold-goblet", "name": "Golden Goblet", "type": "treasure", "description": "Intricately chased golden goblet set with garnets.", "valueCoins": 150},
+            {"id": "shield-plus-one", "name": "Shield +1", "type": "armor", "description": "Steel heater shield imbued with protective runes.", "valueCoins": 300},
+            {"id": "potion-invisibility", "name": "Potion of Invisibility", "type": "potion", "description": "Clear liquid that renders the drinker invisible.", "valueCoins": 150},
+            {"id": "scroll-light", "name": "Scroll of Radiant Light", "type": "quest", "description": "Parchment scroll containing an ancient light incantation.", "valueCoins": 100},
+            {"id": "gem-garnet-cluster", "name": "Flawless Garnet Cluster", "type": "treasure", "description": "Handful of uncut red garnets.", "valueCoins": 250}
+        ],
+        "quests": [
+            {
+                "id": "quest-clearing-the-caves",
+                "title": "Clear the Caves of Chaos",
+                "description": "Eradicate the evil humanoids lurking in the ravine to secure the Borderlands.",
+                "completionCondition": {"kind": "flag", "flag": "caves-cleared", "equals": True},
+                "rewards": [{"kind": "grantItem", "itemId": "ring-of-protection-b2"}]
+            },
+            {
+                "id": "quest-defeat-high-priest",
+                "title": "Vanquish the Shrine of Chaos",
+                "description": "Defeat the High Priest of Chaos in the deep temple catacombs.",
+                "completionCondition": {"kind": "flag", "flag": "high-priest-defeated", "equals": True},
+                "rewards": [{"kind": "setFlag", "flag": "escaped-crypt", "value": True}]
+            }
+        ],
+        "randomTables": [
+            {
+                "id": "table-b2-wilderness-encounters",
+                "name": "Wilderness Wandering Encounters",
+                "dice": "1d12",
+                "checkFrequency": "1-in-6 per turn on Wilderness trail",
+                "entries": [
+                    {"range": [1, 2], "result": {"kind": "encounter", "entityId": "kobold-warrior", "count": "2d4", "text": "Kobold Scout Patrol"}},
+                    {"range": [3, 4], "result": {"kind": "encounter", "entityId": "orc-warrior", "count": "1d6", "text": "Orc Scouting Party"}},
+                    {"range": [5, 6], "result": {"kind": "encounter", "entityId": "goblin-warrior", "count": "1d6", "text": "Goblin Scouts"}},
+                    {"range": [7, 8], "result": {"kind": "encounter", "entityId": "giant-spider", "count": "1", "text": "Black Widow Spider"}},
+                    {"range": [9, 10], "result": {"kind": "encounter", "entityId": "chaos-cultist", "count": "1d4", "text": "Chaos Cultist Raiders"}},
+                    {"range": [11, 12], "result": {"kind": "text", "text": "Merchant Caravan escorted by Keep Guards"}}
+                ]
+            },
+            {
+                "id": "table-b2-caves-wandering-monsters",
+                "name": "Caves of Chaos Wandering Monsters",
+                "dice": "1d6",
+                "checkFrequency": "1-in-6 every 2 turns inside Caves",
+                "entries": [
+                    {"range": [1, 2], "result": {"kind": "encounter", "entityId": "kobold-warrior", "count": "1d4", "text": "Kobold Tunnel Guards"}},
+                    {"range": [3, 4], "result": {"kind": "encounter", "entityId": "orc-warrior", "count": "1d4", "text": "Orc Marauders"}},
+                    {"range": [5, 5], "result": {"kind": "encounter", "entityId": "goblin-warrior", "count": "1d4", "text": "Goblin Skirmishers"}},
+                    {"range": [6, 6], "result": {"kind": "encounter", "entityId": "giant-spider", "count": "1", "text": "Wandering Giant Spider"}}
+                ]
+            }
+        ]
+    },
+    "sourceDocument": {
+        "id": "tsr09034-b2",
+        "title": "B2 - The Keep on the Borderlands",
+        "pageCount": 34,
+        "sourceFormat": "pdf"
+    },
+    "metadata": {
+        "createdAt": datetime.now().isoformat(),
+        "updatedAt": datetime.now().isoformat(),
+        "importedBy": "extractor"
+    }
+}
+
+os.makedirs(os.path.join("packages", "fixtures", "src"), exist_ok=True)
+os.makedirs("local-content", exist_ok=True)
+
+out_path_fixtures = os.path.join("packages", "fixtures", "src", "b2KeepOnTheBorderlands.json")
+out_path_local = os.path.join("local-content", "b2-keep-on-the-borderlands.v0.1.json")
+
+with open(out_path_fixtures, "w", encoding="utf-8") as f:
+    json.dump(versioned_adventure, f, indent=2)
+
+with open(out_path_local, "w", encoding="utf-8") as f:
+    json.dump(versioned_adventure, f, indent=2)
+
+print("Successfully generated B2 IR JSON!")
+print("1.", out_path_fixtures)
+print("2.", out_path_local)

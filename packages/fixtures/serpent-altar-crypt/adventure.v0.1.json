@@ -1,0 +1,547 @@
+{
+  "schemaVersion": "0.1",
+  "metadata": {
+    "createdAt": "2026-08-08T00:00:00.000Z",
+    "updatedAt": "2026-08-08T00:00:00.000Z",
+    "importedBy": "fixture"
+  },
+  "sourceDocument": {
+    "id": "serpent-altar-crypt-doc",
+    "title": "The Serpent Altar Crypt",
+    "pageCount": 4,
+    "sourceFormat": "markdown"
+  },
+  "adventure": {
+    "id": "serpent-altar-crypt",
+    "title": "The Serpent Altar Crypt",
+    "systemProfile": "classic-dungeon",
+    "start": "entry-hall",
+    "items": [
+      {
+        "id": "iron-key",
+        "name": "Iron Key",
+        "type": "key",
+        "description": "A heavy, rusted iron key with a serpent emblem.",
+        "provenance": {
+          "sourceId": "serpent-altar-crypt-doc",
+          "page": 1,
+          "quote": "An iron key rests inside a broken wooden chest",
+          "extraction": { "method": "fixture", "confidence": 0.98 },
+          "review": { "status": "accepted" }
+        }
+      },
+      {
+        "id": "ring-of-protection",
+        "name": "Ring of Protection",
+        "type": "treasure",
+        "description": "A silver ring etched with protective runes.",
+        "valueCoins": 150,
+        "provenance": {
+          "sourceId": "serpent-altar-crypt-doc",
+          "page": 2,
+          "quote": "Contains a stone coffer with 150 ancient silver coins and a Ring of Protection.",
+          "extraction": { "method": "fixture", "confidence": 0.95 },
+          "review": { "status": "accepted" }
+        }
+      },
+      {
+        "id": "sun-talisman",
+        "name": "Sun Talisman",
+        "type": "quest",
+        "description": "A radiant golden amulet shining with ancient solar magic.",
+        "provenance": {
+          "sourceId": "serpent-altar-crypt-doc",
+          "page": 3,
+          "quote": "Contains an ornate lectern with a spellbook and a golden sun talisman.",
+          "extraction": { "method": "fixture", "confidence": 0.96 },
+          "review": { "status": "accepted" }
+        }
+      }
+    ],
+    "monsters": [
+      {
+        "id": "giant-viper",
+        "name": "Giant Serpent Viper",
+        "hp": 18,
+        "ac": 13,
+        "attackBonus": 4,
+        "damageRoll": "1d6+2",
+        "provenance": {
+          "sourceId": "serpent-altar-crypt-doc",
+          "page": 3,
+          "quote": "A giant viper guards the sacred altar.",
+          "extraction": { "method": "fixture", "confidence": 0.99 },
+          "review": { "status": "accepted" }
+        }
+      }
+    ],
+    "npcs": [],
+    "quests": [
+      {
+        "id": "escape-crypt",
+        "title": "Escape the Serpent Crypt",
+        "description": "Navigate through the ancient crypt and reach the escape tunnel daylight.",
+        "completionCondition": {
+          "kind": "flag",
+          "flag": "escaped-crypt",
+          "equals": true
+        },
+        "rewards": [
+          { "kind": "setFlag", "flag": "quest-complete-escape-crypt", "value": true }
+        ],
+        "provenance": {
+          "sourceId": "serpent-altar-crypt-doc",
+          "page": 4,
+          "quote": "A rough cavern passage sloping upward toward daylight and freedom!",
+          "extraction": { "method": "fixture", "confidence": 0.95 },
+          "review": { "status": "accepted" }
+        }
+      }
+    ],
+    "locations": [
+      {
+        "id": "entry-hall",
+        "label": "1. Entry Hall",
+        "geometry": { "x": 0, "y": 0, "width": 4, "height": 4 },
+        "presentation": {
+          "biome": "crypt",
+          "lighting": "torchlit",
+          "ambienceTags": ["damp", "chilly", "serpent-carvings"]
+        },
+        "narrative": {
+          "playerFacingDescription": "You step down damp stone stairs into a chilly entry hall filled with flickering torches. Moss-covered relief carvings of coiled serpents line the walls.",
+          "gmNotes": ["Safe starting chamber.", "Entrance stairs lead up to surface."]
+        },
+        "exits": [
+          {
+            "id": "exit-entry-to-guard",
+            "direction": "east",
+            "target": "guard-post",
+            "provenance": {
+              "sourceId": "serpent-altar-crypt-doc",
+              "page": 1,
+              "quote": "Exits lead east into the Guard Post.",
+              "extraction": { "method": "fixture", "confidence": 0.99 },
+              "review": { "status": "accepted" }
+            }
+          }
+        ],
+        "interactables": [],
+        "secrets": [],
+        "provenance": {
+          "sourceId": "serpent-altar-crypt-doc",
+          "page": 1,
+          "quote": "Entry Hall (Room 1)",
+          "extraction": { "method": "fixture", "confidence": 1.0 },
+          "review": { "status": "accepted" }
+        }
+      },
+      {
+        "id": "guard-post",
+        "label": "2. Guard Post",
+        "geometry": { "x": 4, "y": 0, "width": 4, "height": 4 },
+        "presentation": {
+          "biome": "crypt",
+          "lighting": "torchlit",
+          "ambienceTags": ["armory", "cobbles", "skeleton"]
+        },
+        "narrative": {
+          "playerFacingDescription": "An ancient armory and guard station. Rusty halberds lie scattered across cobbles next to an old wooden chest.",
+          "gmNotes": ["Chest contains Iron Key for the Altar Chamber."]
+        },
+        "exits": [
+          {
+            "id": "exit-guard-to-entry",
+            "direction": "west",
+            "target": "entry-hall"
+          },
+          {
+            "id": "exit-guard-to-corridor",
+            "direction": "north",
+            "target": "serpent-corridor"
+          }
+        ],
+        "interactables": [
+          {
+            "id": "wooden-chest",
+            "label": "Broken Wooden Chest",
+            "description": "A splintered oak chest beside a skeleton.",
+            "inspectionCheck": { "ability": "investigation", "dc": 8 },
+            "onInspectEffects": [
+              { "kind": "grantItem", "itemId": "iron-key" }
+            ],
+            "provenance": {
+              "sourceId": "serpent-altar-crypt-doc",
+              "page": 1,
+              "quote": "An iron key rests inside a broken wooden chest beside an old skeleton.",
+              "extraction": { "method": "fixture", "confidence": 0.98 },
+              "review": { "status": "accepted" }
+            }
+          }
+        ],
+        "secrets": [],
+        "provenance": {
+          "sourceId": "serpent-altar-crypt-doc",
+          "page": 1,
+          "quote": "Guard Post (Room 2)",
+          "extraction": { "method": "fixture", "confidence": 1.0 },
+          "review": { "status": "accepted" }
+        }
+      },
+      {
+        "id": "serpent-corridor",
+        "label": "3. Serpent Corridor",
+        "geometry": { "x": 4, "y": 4, "width": 4, "height": 6 },
+        "presentation": {
+          "biome": "crypt",
+          "lighting": "dark",
+          "ambienceTags": ["emerald-eyes", "brass-statues"]
+        },
+        "narrative": {
+          "playerFacingDescription": "A long 30ft hallway decorated with brass snake statues whose eyes glitter with dark emerald glass.",
+          "gmNotes": ["Secret door on east wall requires Perception DC 12."]
+        },
+        "exits": [
+          {
+            "id": "exit-corridor-to-guard",
+            "direction": "south",
+            "target": "guard-post"
+          },
+          {
+            "id": "exit-corridor-to-trap",
+            "direction": "north",
+            "target": "trap-room"
+          },
+          {
+            "id": "exit-corridor-to-treasury",
+            "direction": "east",
+            "target": "secret-treasury",
+            "visibleWhen": { "kind": "flag", "flag": "secret-door-treasury-revealed", "equals": true },
+            "provenance": {
+              "sourceId": "serpent-altar-crypt-doc",
+              "page": 2,
+              "quote": "a hidden secret door leading into the Secret Treasury!",
+              "extraction": { "method": "fixture", "confidence": 0.95 },
+              "review": { "status": "accepted" }
+            }
+          }
+        ],
+        "interactables": [],
+        "secrets": [
+          {
+            "id": "secret-door-treasury",
+            "label": "Seam in Wall (Secret Door)",
+            "perceptionDC": 12,
+            "discovered": false,
+            "revealsExitId": "exit-corridor-to-treasury",
+            "provenance": {
+              "sourceId": "serpent-altar-crypt-doc",
+              "page": 2,
+              "quote": "perception check (DC 12) reveals a faint seam in the east wall",
+              "extraction": { "method": "fixture", "confidence": 0.97 },
+              "review": { "status": "accepted" }
+            }
+          }
+        ],
+        "provenance": {
+          "sourceId": "serpent-altar-crypt-doc",
+          "page": 2,
+          "quote": "Serpent Corridor (Room 3)",
+          "extraction": { "method": "fixture", "confidence": 1.0 },
+          "review": { "status": "accepted" }
+        }
+      },
+      {
+        "id": "secret-treasury",
+        "label": "4. Secret Treasury",
+        "geometry": { "x": 8, "y": 4, "width": 3, "height": 3 },
+        "presentation": {
+          "biome": "crypt",
+          "lighting": "dark",
+          "ambienceTags": ["dusty", "stone-coffer"]
+        },
+        "narrative": {
+          "playerFacingDescription": "A small dusty chamber behind the hidden wall. Contains a stone coffer with silver coins and a shiny ring.",
+          "gmNotes": ["Contains Ring of Protection."]
+        },
+        "exits": [
+          {
+            "id": "exit-treasury-to-corridor",
+            "direction": "west",
+            "target": "serpent-corridor"
+          }
+        ],
+        "interactables": [
+          {
+            "id": "stone-coffer",
+            "label": "Stone Coffer",
+            "description": "A heavy granite box engraved with protective glyphs.",
+            "onInspectEffects": [
+              { "kind": "grantItem", "itemId": "ring-of-protection" }
+            ]
+          }
+        ],
+        "secrets": [],
+        "provenance": {
+          "sourceId": "serpent-altar-crypt-doc",
+          "page": 2,
+          "quote": "Secret Treasury (Room 4)",
+          "extraction": { "method": "fixture", "confidence": 1.0 },
+          "review": { "status": "accepted" }
+        }
+      },
+      {
+        "id": "trap-room",
+        "label": "5. Trap Room",
+        "geometry": { "x": 4, "y": 10, "width": 4, "height": 4 },
+        "presentation": {
+          "biome": "crypt",
+          "lighting": "dark",
+          "ambienceTags": ["flagstones", "pressure-plate"]
+        },
+        "narrative": {
+          "playerFacingDescription": "A wide stone chamber with a suspicious pressure plate set into the center flagstones. To the east stands a heavy iron door.",
+          "gmNotes": ["Pressure plate trap can be disarmed with Investigation DC 10."]
+        },
+        "exits": [
+          {
+            "id": "exit-trap-to-corridor",
+            "direction": "south",
+            "target": "serpent-corridor"
+          },
+          {
+            "id": "exit-trap-to-altar",
+            "direction": "east",
+            "target": "altar-chamber",
+            "locked": {
+              "keyItemId": "iron-key",
+              "pickable": true,
+              "lockpickDC": 14
+            },
+            "provenance": {
+              "sourceId": "serpent-altar-crypt-doc",
+              "page": 2,
+              "quote": "east to the Altar Chamber behind a heavy locked iron door.",
+              "extraction": { "method": "fixture", "confidence": 0.98 },
+              "review": { "status": "accepted" }
+            }
+          }
+        ],
+        "interactables": [
+          {
+            "id": "pressure-plate-trap",
+            "label": "Pressure Plate",
+            "description": "A slightly raised stone tile in the floor.",
+            "inspectionCheck": { "ability": "investigation", "dc": 10 },
+            "onInspectEffects": [
+              { "kind": "setFlag", "flag": "trap-room-disarmed", "value": true }
+            ]
+          }
+        ],
+        "secrets": [],
+        "provenance": {
+          "sourceId": "serpent-altar-crypt-doc",
+          "page": 2,
+          "quote": "Trap Room (Room 5)",
+          "extraction": { "method": "fixture", "confidence": 1.0 },
+          "review": { "status": "accepted" }
+        }
+      },
+      {
+        "id": "altar-chamber",
+        "label": "6. Altar Chamber",
+        "geometry": { "x": 8, "y": 10, "width": 6, "height": 6 },
+        "presentation": {
+          "biome": "crypt",
+          "lighting": "torchlit",
+          "ambienceTags": ["bronze-altar", "sacred", "cathedral"]
+        },
+        "narrative": {
+          "playerFacingDescription": "A dark vaulted cathedral centered around a massive Bronze Serpent Altar. A giant serpent viper coils aggressively upon the altar steps!",
+          "gmNotes": ["Giant serpent viper encounter triggers immediately."]
+        },
+        "exits": [
+          {
+            "id": "exit-altar-to-trap",
+            "direction": "west",
+            "target": "trap-room"
+          },
+          {
+            "id": "exit-altar-to-sanctum",
+            "direction": "north",
+            "target": "high-priest-sanctum"
+          }
+        ],
+        "interactables": [],
+        "secrets": [],
+        "encounter": {
+          "id": "enc-altar-viper",
+          "trigger": { "kind": "always" },
+          "enemies": [{ "monsterTemplateId": "giant-viper", "count": 1 }],
+          "tactics": "Attacks on sight. Strikes furiously when threatened.",
+          "victoryEffects": [
+            { "kind": "setFlag", "flag": "altar-viper-defeated", "value": true }
+          ],
+          "provenance": {
+            "sourceId": "serpent-altar-crypt-doc",
+            "page": 3,
+            "quote": "A giant viper guards the sacred altar.",
+            "extraction": { "method": "fixture", "confidence": 0.99 },
+            "review": { "status": "accepted" }
+          }
+        },
+        "provenance": {
+          "sourceId": "serpent-altar-crypt-doc",
+          "page": 3,
+          "quote": "Altar Chamber (Room 6)",
+          "extraction": { "method": "fixture", "confidence": 1.0 },
+          "review": { "status": "accepted" }
+        }
+      },
+      {
+        "id": "high-priest-sanctum",
+        "label": "7. High Priest Sanctum",
+        "geometry": { "x": 8, "y": 16, "width": 5, "height": 5 },
+        "presentation": {
+          "biome": "crypt",
+          "lighting": "torchlit",
+          "ambienceTags": ["sanctum", "lectern", "talisman"]
+        },
+        "narrative": {
+          "playerFacingDescription": "The private study of the ancient serpent cult leader. An ornate lectern holds a golden sun talisman shining with warm light.",
+          "gmNotes": ["Sun Talisman is located here."]
+        },
+        "exits": [
+          {
+            "id": "exit-sanctum-to-altar",
+            "direction": "south",
+            "target": "altar-chamber"
+          },
+          {
+            "id": "exit-sanctum-to-catacombs",
+            "direction": "east",
+            "target": "catacombs"
+          }
+        ],
+        "interactables": [
+          {
+            "id": "ornate-lectern",
+            "label": "Ornate Lectern",
+            "description": "A wooden lectern carved with celestial symbols.",
+            "onInspectEffects": [
+              { "kind": "grantItem", "itemId": "sun-talisman" }
+            ]
+          }
+        ],
+        "secrets": [],
+        "provenance": {
+          "sourceId": "serpent-altar-crypt-doc",
+          "page": 3,
+          "quote": "High Priest Sanctum (Room 7)",
+          "extraction": { "method": "fixture", "confidence": 1.0 },
+          "review": { "status": "accepted" }
+        }
+      },
+      {
+        "id": "catacombs",
+        "label": "8. Catacombs",
+        "geometry": { "x": 13, "y": 16, "width": 4, "height": 4 },
+        "presentation": {
+          "biome": "crypt",
+          "lighting": "dark",
+          "ambienceTags": ["mummies", "niches", "ancient"]
+        },
+        "narrative": {
+          "playerFacingDescription": "Deep underground catacombs. Niches carved into the stone walls hold ancient mummified remains wrapped in dusty linen.",
+          "gmNotes": ["Eerie quiet passage."]
+        },
+        "exits": [
+          {
+            "id": "exit-catacombs-to-sanctum",
+            "direction": "west",
+            "target": "high-priest-sanctum"
+          },
+          {
+            "id": "exit-catacombs-to-vault",
+            "direction": "north",
+            "target": "flooded-vault"
+          }
+        ],
+        "interactables": [],
+        "secrets": [],
+        "provenance": {
+          "sourceId": "serpent-altar-crypt-doc",
+          "page": 4,
+          "quote": "Catacombs (Room 8)",
+          "extraction": { "method": "fixture", "confidence": 1.0 },
+          "review": { "status": "accepted" }
+        }
+      },
+      {
+        "id": "flooded-vault",
+        "label": "9. Flooded Vault",
+        "geometry": { "x": 13, "y": 20, "width": 5, "height": 4 },
+        "presentation": {
+          "biome": "cavern",
+          "lighting": "dark",
+          "ambienceTags": ["black-water", "flooded", "splashing"]
+        },
+        "narrative": {
+          "playerFacingDescription": "An underground spring has flooded this low chamber with knee-deep black water. Damp moss hangs from the ceiling.",
+          "gmNotes": ["Movement slowed by water."]
+        },
+        "exits": [
+          {
+            "id": "exit-vault-to-catacombs",
+            "direction": "south",
+            "target": "catacombs"
+          },
+          {
+            "id": "exit-vault-to-escape",
+            "direction": "east",
+            "target": "escape-tunnel"
+          }
+        ],
+        "interactables": [],
+        "secrets": [],
+        "provenance": {
+          "sourceId": "serpent-altar-crypt-doc",
+          "page": 4,
+          "quote": "Flooded Vault (Room 9)",
+          "extraction": { "method": "fixture", "confidence": 1.0 },
+          "review": { "status": "accepted" }
+        }
+      },
+      {
+        "id": "escape-tunnel",
+        "label": "10. Escape Tunnel",
+        "geometry": { "x": 18, "y": 20, "width": 4, "height": 4 },
+        "presentation": {
+          "biome": "cavern",
+          "lighting": "day",
+          "ambienceTags": ["daylight", "fresh-air", "freedom"]
+        },
+        "narrative": {
+          "playerFacingDescription": "A rough cavern passage sloping upward toward bright daylight and fresh outdoor air! You have escaped the Serpent Altar Crypt!",
+          "gmNotes": ["Objective reached! Quest completed."]
+        },
+        "exits": [
+          {
+            "id": "exit-escape-to-vault",
+            "direction": "west",
+            "target": "flooded-vault"
+          }
+        ],
+        "interactables": [],
+        "secrets": [],
+        "provenance": {
+          "sourceId": "serpent-altar-crypt-doc",
+          "page": 4,
+          "quote": "Escape Tunnel (Room 10)",
+          "extraction": { "method": "fixture", "confidence": 1.0 },
+          "review": { "status": "accepted" }
+        }
+      }
+    ]
+  }
+}
