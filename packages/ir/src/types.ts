@@ -280,16 +280,21 @@ export const MonsterTemplateSchema = z.object({
   damageRoll: z.string(),
   role: z.enum(["brute", "skirmisher", "soldier", "predator", "caster", "boss"]).optional(),
   size: z.enum(["tiny", "small", "medium", "large", "huge", "gargantuan"]).optional(),
-  creatureType: z.enum(["humanoid", "monstrosity", "beast", "undead", "dragon", "fiend", "aberration", "elemental"]).optional(),
+  creatureType: z
+    .enum(["humanoid", "monstrosity", "beast", "undead", "dragon", "fiend", "aberration", "elemental", "giant", "plant", "ooze", "construct"])
+    .optional(),
   traits: z.array(z.string()).optional(),
   morale: z.number().min(2).max(12).optional(),
   speed: z
-    .object({
-      walk: z.number().default(30),
-      swim: z.number().optional(),
-      climb: z.number().optional(),
-      fly: z.number().optional(),
-    })
+    .union([
+      z.number(),
+      z.object({
+        walk: z.number().default(30),
+        swim: z.number().optional(),
+        climb: z.number().optional(),
+        fly: z.number().optional(),
+      }),
+    ])
     .optional(),
   senses: z.array(z.string()).optional(),
   xpValue: z.number().optional(),

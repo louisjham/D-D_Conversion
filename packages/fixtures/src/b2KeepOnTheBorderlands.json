@@ -53,6 +53,15 @@
             "inspectionCheck": {
               "ability": "athletics",
               "dc": 15
+            },
+            "physical": {
+              "material": "iron",
+              "hardness": 10,
+              "hp": 60,
+              "maxHp": 60,
+              "breakDc": 28,
+              "thicknessInches": 2.0,
+              "weightLbs": 400.0
             }
           }
         ],
@@ -61,7 +70,10 @@
           "move",
           "inspect",
           "rest",
-          "talk"
+          "talk",
+          "forceObject",
+          "attackObject",
+          "useItem"
         ],
         "boundaries": {
           "terrain": "paved",
@@ -285,6 +297,15 @@
             "inspectionCheck": {
               "ability": "investigation",
               "dc": 10
+            },
+            "physical": {
+              "material": "wood",
+              "hardness": 5,
+              "hp": 15,
+              "maxHp": 15,
+              "breakDc": 16,
+              "thicknessInches": 1.5,
+              "weightLbs": 30.0
             }
           }
         ],
@@ -293,7 +314,10 @@
           "move",
           "inspect",
           "rest",
-          "talk"
+          "talk",
+          "forceObject",
+          "attackObject",
+          "useItem"
         ],
         "boundaries": {
           "terrain": "hewn-stone",
@@ -347,7 +371,16 @@
                 "flag": "heard-caves-rumor",
                 "value": true
               }
-            ]
+            ],
+            "physical": {
+              "material": "wood",
+              "hardness": 5,
+              "hp": 15,
+              "maxHp": 15,
+              "breakDc": 16,
+              "thicknessInches": 1.5,
+              "weightLbs": 30.0
+            }
           }
         ],
         "secrets": [],
@@ -355,7 +388,10 @@
           "move",
           "inspect",
           "rest",
-          "talk"
+          "talk",
+          "forceObject",
+          "attackObject",
+          "useItem"
         ],
         "boundaries": {
           "terrain": "hewn-stone",
@@ -681,7 +717,16 @@
                 "kind": "grantItem",
                 "itemId": "iron-gate-key"
               }
-            ]
+            ],
+            "physical": {
+              "material": "wood",
+              "hardness": 5,
+              "hp": 15,
+              "maxHp": 15,
+              "breakDc": 16,
+              "thicknessInches": 1.5,
+              "weightLbs": 30.0
+            }
           }
         ],
         "secrets": [],
@@ -689,7 +734,10 @@
           "move",
           "inspect",
           "rest",
-          "talk"
+          "talk",
+          "forceObject",
+          "attackObject",
+          "useItem"
         ],
         "boundaries": {
           "terrain": "hewn-stone",
@@ -1108,7 +1156,16 @@
                 "flag": "pit-trap-disarmed",
                 "value": true
               }
-            ]
+            ],
+            "physical": {
+              "material": "wood",
+              "hardness": 5,
+              "hp": 15,
+              "maxHp": 15,
+              "breakDc": 16,
+              "thicknessInches": 1.5,
+              "weightLbs": 30.0
+            }
           }
         ],
         "secrets": [],
@@ -1118,7 +1175,10 @@
           "forceDoor",
           "searchTraps",
           "rest",
-          "parley"
+          "parley",
+          "forceObject",
+          "attackObject",
+          "useItem"
         ],
         "boundaries": {
           "terrain": "rough-cavern",
@@ -1192,7 +1252,19 @@
                 "kind": "grantItem",
                 "itemId": "potion-healing-b2"
               }
-            ]
+            ],
+            "physical": {
+              "material": "iron",
+              "hardness": 10,
+              "hp": 30,
+              "maxHp": 30,
+              "breakDc": 23,
+              "thicknessInches": 1.0,
+              "weightLbs": 50.0,
+              "isLocked": true,
+              "lockDc": 15,
+              "keyItemId": "brass-chest-key"
+            }
           }
         ],
         "secrets": [],
@@ -1225,7 +1297,10 @@
           "forceDoor",
           "searchTraps",
           "rest",
-          "parley"
+          "parley",
+          "forceObject",
+          "attackObject",
+          "useItem"
         ],
         "boundaries": {
           "terrain": "rough-cavern",
@@ -1509,7 +1584,10 @@
           "forceDoor",
           "searchTraps",
           "rest",
-          "parley"
+          "parley",
+          "forceObject",
+          "attackObject",
+          "useItem"
         ],
         "boundaries": {
           "terrain": "rough-cavern",
@@ -1570,7 +1648,16 @@
                 "kind": "grantItem",
                 "itemId": "potion-invisibility"
               }
-            ]
+            ],
+            "physical": {
+              "material": "wood",
+              "hardness": 5,
+              "hp": 15,
+              "maxHp": 15,
+              "breakDc": 16,
+              "thicknessInches": 1.5,
+              "weightLbs": 30.0
+            }
           }
         ],
         "secrets": [],
@@ -1599,7 +1686,10 @@
           "forceDoor",
           "searchTraps",
           "rest",
-          "parley"
+          "parley",
+          "forceObject",
+          "attackObject",
+          "useItem"
         ],
         "boundaries": {
           "terrain": "rough-cavern",
@@ -1742,7 +1832,10 @@
           "forceDoor",
           "searchTraps",
           "rest",
-          "parley"
+          "parley",
+          "forceObject",
+          "attackObject",
+          "useItem"
         ],
         "boundaries": {
           "terrain": "rough-cavern",
@@ -1808,7 +1901,16 @@
                 "kind": "grantItem",
                 "itemId": "shield-plus-one"
               }
-            ]
+            ],
+            "physical": {
+              "material": "wood",
+              "hardness": 5,
+              "hp": 15,
+              "maxHp": 15,
+              "breakDc": 16,
+              "thicknessInches": 1.5,
+              "weightLbs": 30.0
+            }
           }
         ],
         "secrets": [],
@@ -1818,7 +1920,10 @@
           "forceDoor",
           "searchTraps",
           "rest",
-          "parley"
+          "parley",
+          "forceObject",
+          "attackObject",
+          "useItem"
         ],
         "boundaries": {
           "terrain": "rough-cavern",
@@ -2095,7 +2200,16 @@
                 "kind": "grantItem",
                 "itemId": "gem-garnet-cluster"
               }
-            ]
+            ],
+            "physical": {
+              "material": "wood",
+              "hardness": 5,
+              "hp": 15,
+              "maxHp": 15,
+              "breakDc": 16,
+              "thicknessInches": 1.5,
+              "weightLbs": 30.0
+            }
           }
         ],
         "secrets": [],
@@ -2124,7 +2238,10 @@
           "forceDoor",
           "searchTraps",
           "rest",
-          "parley"
+          "parley",
+          "forceObject",
+          "attackObject",
+          "useItem"
         ],
         "boundaries": {
           "terrain": "rough-cavern",
@@ -2518,7 +2635,16 @@
                 "kind": "grantItem",
                 "itemId": "scroll-light"
               }
-            ]
+            ],
+            "physical": {
+              "material": "wood",
+              "hardness": 5,
+              "hp": 15,
+              "maxHp": 15,
+              "breakDc": 16,
+              "thicknessInches": 1.5,
+              "weightLbs": 30.0
+            }
           }
         ],
         "secrets": [],
@@ -2547,7 +2673,10 @@
           "forceDoor",
           "searchTraps",
           "rest",
-          "parley"
+          "parley",
+          "forceObject",
+          "attackObject",
+          "useItem"
         ],
         "boundaries": {
           "terrain": "rough-cavern",
@@ -2963,7 +3092,16 @@
                 "kind": "grantItem",
                 "itemId": "chaos-talisman"
               }
-            ]
+            ],
+            "physical": {
+              "material": "stone",
+              "hardness": 8,
+              "hp": 45,
+              "maxHp": 45,
+              "breakDc": 28,
+              "thicknessInches": 3.0,
+              "weightLbs": 500.0
+            }
           }
         ],
         "secrets": [
@@ -3009,7 +3147,10 @@
           "forceDoor",
           "searchTraps",
           "rest",
-          "parley"
+          "parley",
+          "forceObject",
+          "attackObject",
+          "useItem"
         ],
         "boundaries": {
           "terrain": "hewn-stone",
@@ -3119,7 +3260,19 @@
         "hp": 4,
         "ac": 13,
         "attackBonus": 2,
-        "damageRoll": "1d4"
+        "damageRoll": "1d4",
+        "role": "skirmisher",
+        "size": "small",
+        "creatureType": "humanoid",
+        "traits": [
+          "pack-tactics"
+        ],
+        "morale": 7,
+        "speed": 30,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 25
       },
       {
         "id": "kobold-chieftain",
@@ -3127,7 +3280,19 @@
         "hp": 12,
         "ac": 14,
         "attackBonus": 4,
-        "damageRoll": "1d6+1"
+        "damageRoll": "1d6+1",
+        "role": "soldier",
+        "size": "small",
+        "creatureType": "humanoid",
+        "traits": [
+          "pack-tactics"
+        ],
+        "morale": 8,
+        "speed": 30,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 100
       },
       {
         "id": "orc-warrior",
@@ -3135,7 +3300,19 @@
         "hp": 6,
         "ac": 14,
         "attackBonus": 3,
-        "damageRoll": "1d6+1"
+        "damageRoll": "1d6+1",
+        "role": "brute",
+        "size": "medium",
+        "creatureType": "humanoid",
+        "traits": [
+          "reckless"
+        ],
+        "morale": 8,
+        "speed": 30,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 50
       },
       {
         "id": "orc-chieftain",
@@ -3143,7 +3320,19 @@
         "hp": 16,
         "ac": 15,
         "attackBonus": 5,
-        "damageRoll": "1d8+2"
+        "damageRoll": "1d8+2",
+        "role": "boss",
+        "size": "medium",
+        "creatureType": "humanoid",
+        "traits": [
+          "reckless"
+        ],
+        "morale": 9,
+        "speed": 30,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 200
       },
       {
         "id": "goblin-warrior",
@@ -3151,7 +3340,19 @@
         "hp": 4,
         "ac": 14,
         "attackBonus": 2,
-        "damageRoll": "1d6"
+        "damageRoll": "1d6",
+        "role": "skirmisher",
+        "size": "small",
+        "creatureType": "humanoid",
+        "traits": [
+          "nimble-escape"
+        ],
+        "morale": 7,
+        "speed": 30,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 25
       },
       {
         "id": "goblin-chieftain",
@@ -3159,7 +3360,19 @@
         "hp": 14,
         "ac": 15,
         "attackBonus": 4,
-        "damageRoll": "1d6+1"
+        "damageRoll": "1d6+1",
+        "role": "boss",
+        "size": "small",
+        "creatureType": "humanoid",
+        "traits": [
+          "nimble-escape"
+        ],
+        "morale": 8,
+        "speed": 30,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 100
       },
       {
         "id": "hobgoblin-guard",
@@ -3167,7 +3380,19 @@
         "hp": 8,
         "ac": 15,
         "attackBonus": 3,
-        "damageRoll": "1d8"
+        "damageRoll": "1d8",
+        "role": "soldier",
+        "size": "medium",
+        "creatureType": "humanoid",
+        "traits": [
+          "pack-tactics"
+        ],
+        "morale": 9,
+        "speed": 30,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 100
       },
       {
         "id": "hobgoblin-chieftain",
@@ -3175,7 +3400,19 @@
         "hp": 18,
         "ac": 16,
         "attackBonus": 5,
-        "damageRoll": "1d8+2"
+        "damageRoll": "1d8+2",
+        "role": "boss",
+        "size": "medium",
+        "creatureType": "humanoid",
+        "traits": [
+          "pack-tactics"
+        ],
+        "morale": 10,
+        "speed": 30,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 200
       },
       {
         "id": "ogre-brute",
@@ -3183,7 +3420,19 @@
         "hp": 22,
         "ac": 14,
         "attackBonus": 6,
-        "damageRoll": "1d10+3"
+        "damageRoll": "1d10+3",
+        "role": "brute",
+        "size": "large",
+        "creatureType": "giant",
+        "traits": [
+          "reckless"
+        ],
+        "morale": 9,
+        "speed": 40,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 450
       },
       {
         "id": "owlbear-monster",
@@ -3191,7 +3440,20 @@
         "hp": 26,
         "ac": 15,
         "attackBonus": 6,
-        "damageRoll": "1d8+3"
+        "damageRoll": "1d8+3",
+        "role": "predator",
+        "size": "large",
+        "creatureType": "monstrosity",
+        "traits": [
+          "keen-sight-and-smell",
+          "pounce"
+        ],
+        "morale": 10,
+        "speed": 40,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 700
       },
       {
         "id": "bugbear-warrior",
@@ -3199,7 +3461,20 @@
         "hp": 15,
         "ac": 14,
         "attackBonus": 4,
-        "damageRoll": "1d8+2"
+        "damageRoll": "1d8+2",
+        "role": "brute",
+        "size": "medium",
+        "creatureType": "humanoid",
+        "traits": [
+          "surprise-attack",
+          "brute"
+        ],
+        "morale": 9,
+        "speed": 30,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 200
       },
       {
         "id": "bugbear-chieftain",
@@ -3207,7 +3482,20 @@
         "hp": 24,
         "ac": 15,
         "attackBonus": 5,
-        "damageRoll": "2d4+2"
+        "damageRoll": "2d4+2",
+        "role": "boss",
+        "size": "medium",
+        "creatureType": "humanoid",
+        "traits": [
+          "surprise-attack",
+          "brute"
+        ],
+        "morale": 10,
+        "speed": 30,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 450
       },
       {
         "id": "minotaur-boss",
@@ -3215,7 +3503,21 @@
         "hp": 30,
         "ac": 14,
         "attackBonus": 6,
-        "damageRoll": "1d10+3"
+        "damageRoll": "1d10+3",
+        "role": "boss",
+        "size": "large",
+        "creatureType": "monstrosity",
+        "traits": [
+          "charge",
+          "reckless",
+          "labyrinthine-recall"
+        ],
+        "morale": 11,
+        "speed": 40,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 700
       },
       {
         "id": "gnoll-marauder",
@@ -3223,7 +3525,19 @@
         "hp": 10,
         "ac": 14,
         "attackBonus": 3,
-        "damageRoll": "1d8+1"
+        "damageRoll": "1d8+1",
+        "role": "predator",
+        "size": "medium",
+        "creatureType": "humanoid",
+        "traits": [
+          "rampage"
+        ],
+        "morale": 8,
+        "speed": 30,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 100
       },
       {
         "id": "gnoll-chieftain",
@@ -3231,7 +3545,19 @@
         "hp": 20,
         "ac": 15,
         "attackBonus": 5,
-        "damageRoll": "1d8+2"
+        "damageRoll": "1d8+2",
+        "role": "boss",
+        "size": "medium",
+        "creatureType": "humanoid",
+        "traits": [
+          "rampage"
+        ],
+        "morale": 9,
+        "speed": 30,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 450
       },
       {
         "id": "chaos-cultist",
@@ -3239,7 +3565,19 @@
         "hp": 8,
         "ac": 14,
         "attackBonus": 3,
-        "damageRoll": "1d6"
+        "damageRoll": "1d6",
+        "role": "caster",
+        "size": "medium",
+        "creatureType": "humanoid",
+        "traits": [
+          "dark-devotion"
+        ],
+        "morale": 9,
+        "speed": 30,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 50
       },
       {
         "id": "high-priest-chaos",
@@ -3247,7 +3585,20 @@
         "hp": 28,
         "ac": 16,
         "attackBonus": 6,
-        "damageRoll": "1d8+3"
+        "damageRoll": "1d8+3",
+        "role": "boss",
+        "size": "medium",
+        "creatureType": "humanoid",
+        "traits": [
+          "dark-devotion",
+          "divine-smite"
+        ],
+        "morale": 12,
+        "speed": 30,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 1100
       },
       {
         "id": "giant-spider",
@@ -3255,7 +3606,21 @@
         "hp": 14,
         "ac": 14,
         "attackBonus": 4,
-        "damageRoll": "1d6+1"
+        "damageRoll": "1d6+1",
+        "role": "predator",
+        "size": "large",
+        "creatureType": "beast",
+        "traits": [
+          "spider-climb",
+          "web-sense",
+          "web-walker"
+        ],
+        "morale": 8,
+        "speed": 30,
+        "senses": [
+          "darkvision-60ft"
+        ],
+        "xpValue": 200
       }
     ],
     "items": [
@@ -3263,85 +3628,270 @@
         "id": "iron-gate-key",
         "name": "Iron Gate Key",
         "type": "key",
-        "description": "Heavy iron key forged in the Keep smithy.",
-        "valueCoins": 5
+        "description": "Heavy wrought-iron key forged in the Keep smithy.",
+        "valueCoins": 5,
+        "physical": {
+          "material": "iron",
+          "hardness": 10,
+          "hp": 5,
+          "weightLbs": 0.5
+        }
       },
       {
         "id": "brass-chest-key",
         "name": "Brass Chest Key",
         "type": "key",
-        "description": "Small ornate brass key found on the Kobold Chieftain.",
-        "valueCoins": 10
+        "description": "Small ornate bronze-alloy key found on the Kobold Chieftain.",
+        "valueCoins": 10,
+        "physical": {
+          "material": "bronze",
+          "hardness": 9,
+          "hp": 3,
+          "weightLbs": 0.2
+        }
       },
       {
         "id": "silver-key-ogre",
         "name": "Silver Key",
         "type": "key",
-        "description": "Ornate silver key worn around the Ogre's neck.",
-        "valueCoins": 25
+        "description": "Ornate silver-plated steel key worn on a thong around the Ogre's neck.",
+        "valueCoins": 25,
+        "physical": {
+          "material": "steel",
+          "hardness": 10,
+          "hp": 4,
+          "weightLbs": 0.2
+        }
       },
       {
         "id": "chaos-talisman",
         "name": "Chaos Talisman",
         "type": "quest",
-        "description": "Unholy talisman depicting the symbol of Chaos.",
-        "valueCoins": 200
+        "description": "Unholy talisman of cast pig-iron depicting the sprawling eight-pointed symbol of Chaos.",
+        "valueCoins": 200,
+        "physical": {
+          "material": "iron",
+          "hardness": 10,
+          "hp": 6,
+          "weightLbs": 1.0
+        }
       },
       {
         "id": "ring-of-protection-b2",
         "name": "Ring of Protection +1",
         "type": "armor",
-        "description": "A fine silver band glowing with protective abjuration magic.",
-        "valueCoins": 500
+        "description": "A fine mithral band glowing with protective abjuration warding.",
+        "valueCoins": 500,
+        "physical": {
+          "material": "mithral",
+          "hardness": 15,
+          "hp": 5,
+          "weightLbs": 0.1
+        },
+        "armor": {
+          "armorCategory": "light",
+          "acBonus": 1,
+          "specialAbilities": [
+            "abjuration-ward"
+          ]
+        }
       },
       {
         "id": "potion-healing-b2",
         "name": "Potion of Healing",
         "type": "potion",
-        "description": "Vial of crimson liquid that heals wounds upon consumption.",
-        "valueCoins": 50
+        "description": "Vial of crimson restorative elixir sealed with red wax.",
+        "valueCoins": 50,
+        "physical": {
+          "material": "glass",
+          "hardness": 1,
+          "hp": 2,
+          "weightLbs": 0.5
+        }
       },
       {
         "id": "sword-plus-one",
         "name": "Longsword +1",
         "type": "weapon",
-        "description": "Well-balanced longsword with a magical edge.",
-        "valueCoins": 400
-      },
-      {
-        "id": "gold-goblet",
-        "name": "Golden Goblet",
-        "type": "treasure",
-        "description": "Intricately chased golden goblet set with garnets.",
-        "valueCoins": 150
+        "description": "Well-balanced longsword forged of tempered steel with razor keenness.",
+        "valueCoins": 400,
+        "physical": {
+          "material": "steel",
+          "hardness": 10,
+          "hp": 5,
+          "weightLbs": 3.0
+        },
+        "weapon": {
+          "damageDice": "1d8",
+          "damageType": "slashing",
+          "enhancementBonus": 1,
+          "properties": [
+            "versatile"
+          ],
+          "material": "steel"
+        }
       },
       {
         "id": "shield-plus-one",
         "name": "Shield +1",
         "type": "armor",
-        "description": "Steel heater shield imbued with protective runes.",
-        "valueCoins": 300
+        "description": "Steel heater shield emblazoned with the Keep's falcon crest and warding runes.",
+        "valueCoins": 300,
+        "physical": {
+          "material": "steel",
+          "hardness": 10,
+          "hp": 15,
+          "weightLbs": 6.0
+        },
+        "armor": {
+          "armorCategory": "shield",
+          "acBonus": 3,
+          "armorCheckPenalty": 0,
+          "arcaneSpellFailure": 5,
+          "material": "steel"
+        }
       },
       {
         "id": "potion-invisibility",
         "name": "Potion of Invisibility",
         "type": "potion",
-        "description": "Clear liquid that renders the drinker invisible.",
-        "valueCoins": 150
+        "description": "Clear shimmering liquid that renders the imbiber invisible.",
+        "valueCoins": 150,
+        "physical": {
+          "material": "glass",
+          "hardness": 1,
+          "hp": 2,
+          "weightLbs": 0.5
+        }
+      },
+      {
+        "id": "item-crowbar",
+        "name": "Iron Crowbar",
+        "type": "tool",
+        "description": "Sturdy iron pry bar. Grants +2 circumstance bonus on Strength checks to burst open stuck doors and chests.",
+        "valueCoins": 2,
+        "physical": {
+          "material": "iron",
+          "hardness": 10,
+          "hp": 10,
+          "weightLbs": 5.0
+        },
+        "tool": {
+          "category": "crowbar",
+          "bonusSkill": "athletics",
+          "bonusAmount": 2
+        }
+      },
+      {
+        "id": "item-thieves-tools",
+        "name": "Thieves' Tools",
+        "type": "tool",
+        "description": "Set of fine steel picks, skeleton keys, and tension bars for manipulating locks.",
+        "valueCoins": 25,
+        "physical": {
+          "material": "steel",
+          "hardness": 10,
+          "hp": 5,
+          "weightLbs": 1.0
+        },
+        "tool": {
+          "category": "thieves-tools",
+          "bonusSkill": "sleight-of-hand",
+          "bonusAmount": 2
+        }
+      },
+      {
+        "id": "item-bladefire",
+        "name": "Flask of Bladefire",
+        "type": "alchemical",
+        "description": "Adhesive liquid that coats blades with searing blue fire for 1d6 rounds (+1 fire damage).",
+        "valueCoins": 20,
+        "physical": {
+          "material": "glass",
+          "hardness": 1,
+          "hp": 2,
+          "weightLbs": 1.0
+        },
+        "alchemical": {
+          "substanceType": "bladefire",
+          "damageDice": "1",
+          "damageType": "fire",
+          "durationRounds": 4
+        }
+      },
+      {
+        "id": "item-stonebreaker-acid",
+        "name": "Flask of Stonebreaker Acid",
+        "type": "alchemical",
+        "description": "Emerald-green corrosive acid that eats through stone structures, dealing 3d10 damage and ignoring hardness.",
+        "valueCoins": 20,
+        "physical": {
+          "material": "glass",
+          "hardness": 1,
+          "hp": 2,
+          "weightLbs": 1.0
+        },
+        "alchemical": {
+          "substanceType": "stonebreaker-acid",
+          "damageDice": "3d10",
+          "damageType": "acid"
+        }
+      },
+      {
+        "id": "item-gravebane",
+        "name": "Gravebane Pellet",
+        "type": "alchemical",
+        "description": "Aromatic incense repelling undead creatures within a 5-foot radius (DC 12 Will save).",
+        "valueCoins": 50,
+        "physical": {
+          "material": "cloth",
+          "hardness": 0,
+          "hp": 1,
+          "weightLbs": 0.5
+        },
+        "alchemical": {
+          "substanceType": "gravebane",
+          "saveDc": 12
+        }
+      },
+      {
+        "id": "gold-goblet",
+        "name": "Golden Goblet",
+        "type": "treasure",
+        "description": "Chased golden goblet set with garnets.",
+        "valueCoins": 150,
+        "physical": {
+          "material": "bronze",
+          "hardness": 9,
+          "hp": 5,
+          "weightLbs": 1.5
+        }
+      },
+      {
+        "id": "gem-garnet-cluster",
+        "name": "Flawless Garnet Cluster",
+        "type": "treasure",
+        "description": "Cluster of blood-red garnets.",
+        "valueCoins": 250,
+        "physical": {
+          "material": "stone",
+          "hardness": 8,
+          "hp": 5,
+          "weightLbs": 0.5
+        }
       },
       {
         "id": "scroll-light",
         "name": "Scroll of Radiant Light",
         "type": "quest",
         "description": "Parchment scroll containing an ancient light incantation.",
-        "valueCoins": 100
-      },
-      {
-        "id": "gem-garnet-cluster",
-        "name": "Flawless Garnet Cluster",
-        "type": "treasure",
-        "description": "Handful of uncut red garnets.",
-        "valueCoins": 250
+        "valueCoins": 100,
+        "physical": {
+          "material": "paper",
+          "hardness": 0,
+          "hp": 2,
+          "weightLbs": 0.1
+        }
       }
     ],
     "quests": [
@@ -3523,8 +4073,8 @@
     "sourceFormat": "pdf"
   },
   "metadata": {
-    "createdAt": "2026-11-02T01:21:18.547145",
-    "updatedAt": "2026-11-02T01:21:18.547145",
+    "createdAt": "2026-11-02T02:13:02.385575",
+    "updatedAt": "2026-11-02T02:13:02.385575",
     "importedBy": "extractor"
   }
 }

@@ -1275,6 +1275,87 @@ def enrich_b2_with_phb_dmg_rules(locs):
                 exit["doorState"] = "closed"
                 exit["listenNotice"] = "Deep guttural roars and iron weapon blades striking practice posts."
 
+        # 3. Object Characteristics (Arms & Equipment Guide)
+        for inter in loc.get("interactables", []):
+            iid = inter["id"]
+            label_lower = inter.get("label", "").lower()
+            desc_lower = inter.get("description", "").lower()
+
+            if "portcullis" in iid or "portcullis" in label_lower:
+                inter["physical"] = {
+                    "material": "iron",
+                    "hardness": 10,
+                    "hp": 60,
+                    "maxHp": 60,
+                    "breakDc": 28,
+                    "thicknessInches": 2.0,
+                    "weightLbs": 400.0
+                }
+            elif "bronze" in desc_lower or "bronze" in label_lower:
+                inter["physical"] = {
+                    "material": "bronze",
+                    "hardness": 9,
+                    "hp": 40,
+                    "maxHp": 40,
+                    "breakDc": 26,
+                    "thicknessInches": 1.5,
+                    "weightLbs": 150.0
+                }
+            elif "stone" in desc_lower or "altar" in iid or "monolith" in iid or "statue" in desc_lower:
+                inter["physical"] = {
+                    "material": "stone",
+                    "hardness": 8,
+                    "hp": 45,
+                    "maxHp": 45,
+                    "breakDc": 28,
+                    "thicknessInches": 3.0,
+                    "weightLbs": 500.0
+                }
+            elif "chest" in iid or "chest" in label_lower or "coffer" in label_lower:
+                is_iron = "iron" in desc_lower or "iron" in label_lower
+                mat = "iron" if is_iron else "wood"
+                inter["physical"] = {
+                    "material": mat,
+                    "hardness": 10 if is_iron else 5,
+                    "hp": 30 if is_iron else 15,
+                    "maxHp": 30 if is_iron else 15,
+                    "breakDc": 23 if is_iron else 17,
+                    "thicknessInches": 1.0,
+                    "weightLbs": 50.0 if is_iron else 20.0,
+                    "isLocked": True,
+                    "lockDc": 15
+                }
+                if "kobold" in iid or "a-chieftain" in lid:
+                    inter["physical"]["keyItemId"] = "brass-chest-key"
+                elif "ogre" in iid or "cave-e" in lid:
+                    inter["physical"]["keyItemId"] = "silver-key-ogre"
+            elif "iron" in desc_lower or "anvil" in iid or "strongbox" in iid:
+                inter["physical"] = {
+                    "material": "iron",
+                    "hardness": 10,
+                    "hp": 40,
+                    "maxHp": 40,
+                    "breakDc": 24,
+                    "thicknessInches": 1.5,
+                    "weightLbs": 120.0
+                }
+            else:
+                inter["physical"] = {
+                    "material": "wood",
+                    "hardness": 5,
+                    "hp": 15,
+                    "maxHp": 15,
+                    "breakDc": 16,
+                    "thicknessInches": 1.5,
+                    "weightLbs": 30.0
+                }
+
+        # Add physical interaction actions
+        if loc.get("interactables") or any(e.get("forceDC") for e in loc.get("exits", [])):
+            for act in ["forceObject", "attackObject", "useItem"]:
+                if act not in loc["availableActions"]:
+                    loc["availableActions"].append(act)
+
 enrich_b2_with_phb_dmg_rules(locations)
 
 versioned_adventure = {
@@ -1316,38 +1397,452 @@ versioned_adventure = {
             }
         ],
         "monsters": [
-            {"id": "kobold-warrior", "name": "Kobold Warrior", "hp": 4, "ac": 13, "attackBonus": 2, "damageRoll": "1d4"},
-            {"id": "kobold-chieftain", "name": "Kobold Chieftain", "hp": 12, "ac": 14, "attackBonus": 4, "damageRoll": "1d6+1"},
-            {"id": "orc-warrior", "name": "Orc Warrior", "hp": 6, "ac": 14, "attackBonus": 3, "damageRoll": "1d6+1"},
-            {"id": "orc-chieftain", "name": "Orc Chieftain", "hp": 16, "ac": 15, "attackBonus": 5, "damageRoll": "1d8+2"},
-            {"id": "goblin-warrior", "name": "Goblin Scout", "hp": 4, "ac": 14, "attackBonus": 2, "damageRoll": "1d6"},
-            {"id": "goblin-chieftain", "name": "Goblin Chieftain", "hp": 14, "ac": 15, "attackBonus": 4, "damageRoll": "1d6+1"},
-            {"id": "hobgoblin-guard", "name": "Hobgoblin Guard", "hp": 8, "ac": 15, "attackBonus": 3, "damageRoll": "1d8"},
-            {"id": "hobgoblin-chieftain", "name": "Hobgoblin Chieftain", "hp": 18, "ac": 16, "attackBonus": 5, "damageRoll": "1d8+2"},
-            {"id": "ogre-brute", "name": "Ogre Brute", "hp": 22, "ac": 14, "attackBonus": 6, "damageRoll": "1d10+3"},
-            {"id": "owlbear-monster", "name": "Owlbear", "hp": 26, "ac": 15, "attackBonus": 6, "damageRoll": "1d8+3"},
-            {"id": "bugbear-warrior", "name": "Bugbear Warrior", "hp": 15, "ac": 14, "attackBonus": 4, "damageRoll": "1d8+2"},
-            {"id": "bugbear-chieftain", "name": "Bugbear Chieftain", "hp": 24, "ac": 15, "attackBonus": 5, "damageRoll": "2d4+2"},
-            {"id": "minotaur-boss", "name": "Minotaur of Chaos", "hp": 30, "ac": 14, "attackBonus": 6, "damageRoll": "1d10+3"},
-            {"id": "gnoll-marauder", "name": "Gnoll Marauder", "hp": 10, "ac": 14, "attackBonus": 3, "damageRoll": "1d8+1"},
-            {"id": "gnoll-chieftain", "name": "Gnoll Chieftain", "hp": 20, "ac": 15, "attackBonus": 5, "damageRoll": "1d8+2"},
-            {"id": "chaos-cultist", "name": "Acolyte of Chaos", "hp": 8, "ac": 14, "attackBonus": 3, "damageRoll": "1d6"},
-            {"id": "high-priest-chaos", "name": "High Priest of Chaos", "hp": 28, "ac": 16, "attackBonus": 6, "damageRoll": "1d8+3"},
-            {"id": "giant-spider", "name": "Black Widow Spider", "hp": 14, "ac": 14, "attackBonus": 4, "damageRoll": "1d6+1"}
+            {
+                "id": "kobold-warrior",
+                "name": "Kobold Warrior",
+                "hp": 4,
+                "ac": 13,
+                "attackBonus": 2,
+                "damageRoll": "1d4",
+                "role": "skirmisher",
+                "size": "small",
+                "creatureType": "humanoid",
+                "traits": ["pack-tactics"],
+                "morale": 7,
+                "speed": 30,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 25
+            },
+            {
+                "id": "kobold-chieftain",
+                "name": "Kobold Chieftain",
+                "hp": 12,
+                "ac": 14,
+                "attackBonus": 4,
+                "damageRoll": "1d6+1",
+                "role": "soldier",
+                "size": "small",
+                "creatureType": "humanoid",
+                "traits": ["pack-tactics"],
+                "morale": 8,
+                "speed": 30,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 100
+            },
+            {
+                "id": "orc-warrior",
+                "name": "Orc Warrior",
+                "hp": 6,
+                "ac": 14,
+                "attackBonus": 3,
+                "damageRoll": "1d6+1",
+                "role": "brute",
+                "size": "medium",
+                "creatureType": "humanoid",
+                "traits": ["reckless"],
+                "morale": 8,
+                "speed": 30,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 50
+            },
+            {
+                "id": "orc-chieftain",
+                "name": "Orc Chieftain",
+                "hp": 16,
+                "ac": 15,
+                "attackBonus": 5,
+                "damageRoll": "1d8+2",
+                "role": "boss",
+                "size": "medium",
+                "creatureType": "humanoid",
+                "traits": ["reckless"],
+                "morale": 9,
+                "speed": 30,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 200
+            },
+            {
+                "id": "goblin-warrior",
+                "name": "Goblin Scout",
+                "hp": 4,
+                "ac": 14,
+                "attackBonus": 2,
+                "damageRoll": "1d6",
+                "role": "skirmisher",
+                "size": "small",
+                "creatureType": "humanoid",
+                "traits": ["nimble-escape"],
+                "morale": 7,
+                "speed": 30,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 25
+            },
+            {
+                "id": "goblin-chieftain",
+                "name": "Goblin Chieftain",
+                "hp": 14,
+                "ac": 15,
+                "attackBonus": 4,
+                "damageRoll": "1d6+1",
+                "role": "boss",
+                "size": "small",
+                "creatureType": "humanoid",
+                "traits": ["nimble-escape"],
+                "morale": 8,
+                "speed": 30,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 100
+            },
+            {
+                "id": "hobgoblin-guard",
+                "name": "Hobgoblin Guard",
+                "hp": 8,
+                "ac": 15,
+                "attackBonus": 3,
+                "damageRoll": "1d8",
+                "role": "soldier",
+                "size": "medium",
+                "creatureType": "humanoid",
+                "traits": ["pack-tactics"],
+                "morale": 9,
+                "speed": 30,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 100
+            },
+            {
+                "id": "hobgoblin-chieftain",
+                "name": "Hobgoblin Chieftain",
+                "hp": 18,
+                "ac": 16,
+                "attackBonus": 5,
+                "damageRoll": "1d8+2",
+                "role": "boss",
+                "size": "medium",
+                "creatureType": "humanoid",
+                "traits": ["pack-tactics"],
+                "morale": 10,
+                "speed": 30,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 200
+            },
+            {
+                "id": "ogre-brute",
+                "name": "Ogre Brute",
+                "hp": 22,
+                "ac": 14,
+                "attackBonus": 6,
+                "damageRoll": "1d10+3",
+                "role": "brute",
+                "size": "large",
+                "creatureType": "giant",
+                "traits": ["reckless"],
+                "morale": 9,
+                "speed": 40,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 450
+            },
+            {
+                "id": "owlbear-monster",
+                "name": "Owlbear",
+                "hp": 26,
+                "ac": 15,
+                "attackBonus": 6,
+                "damageRoll": "1d8+3",
+                "role": "predator",
+                "size": "large",
+                "creatureType": "monstrosity",
+                "traits": ["keen-sight-and-smell", "pounce"],
+                "morale": 10,
+                "speed": 40,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 700
+            },
+            {
+                "id": "bugbear-warrior",
+                "name": "Bugbear Warrior",
+                "hp": 15,
+                "ac": 14,
+                "attackBonus": 4,
+                "damageRoll": "1d8+2",
+                "role": "brute",
+                "size": "medium",
+                "creatureType": "humanoid",
+                "traits": ["surprise-attack", "brute"],
+                "morale": 9,
+                "speed": 30,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 200
+            },
+            {
+                "id": "bugbear-chieftain",
+                "name": "Bugbear Chieftain",
+                "hp": 24,
+                "ac": 15,
+                "attackBonus": 5,
+                "damageRoll": "2d4+2",
+                "role": "boss",
+                "size": "medium",
+                "creatureType": "humanoid",
+                "traits": ["surprise-attack", "brute"],
+                "morale": 10,
+                "speed": 30,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 450
+            },
+            {
+                "id": "minotaur-boss",
+                "name": "Minotaur of Chaos",
+                "hp": 30,
+                "ac": 14,
+                "attackBonus": 6,
+                "damageRoll": "1d10+3",
+                "role": "boss",
+                "size": "large",
+                "creatureType": "monstrosity",
+                "traits": ["charge", "reckless", "labyrinthine-recall"],
+                "morale": 11,
+                "speed": 40,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 700
+            },
+            {
+                "id": "gnoll-marauder",
+                "name": "Gnoll Marauder",
+                "hp": 10,
+                "ac": 14,
+                "attackBonus": 3,
+                "damageRoll": "1d8+1",
+                "role": "predator",
+                "size": "medium",
+                "creatureType": "humanoid",
+                "traits": ["rampage"],
+                "morale": 8,
+                "speed": 30,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 100
+            },
+            {
+                "id": "gnoll-chieftain",
+                "name": "Gnoll Chieftain",
+                "hp": 20,
+                "ac": 15,
+                "attackBonus": 5,
+                "damageRoll": "1d8+2",
+                "role": "boss",
+                "size": "medium",
+                "creatureType": "humanoid",
+                "traits": ["rampage"],
+                "morale": 9,
+                "speed": 30,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 450
+            },
+            {
+                "id": "chaos-cultist",
+                "name": "Acolyte of Chaos",
+                "hp": 8,
+                "ac": 14,
+                "attackBonus": 3,
+                "damageRoll": "1d6",
+                "role": "caster",
+                "size": "medium",
+                "creatureType": "humanoid",
+                "traits": ["dark-devotion"],
+                "morale": 9,
+                "speed": 30,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 50
+            },
+            {
+                "id": "high-priest-chaos",
+                "name": "High Priest of Chaos",
+                "hp": 28,
+                "ac": 16,
+                "attackBonus": 6,
+                "damageRoll": "1d8+3",
+                "role": "boss",
+                "size": "medium",
+                "creatureType": "humanoid",
+                "traits": ["dark-devotion", "divine-smite"],
+                "morale": 12,
+                "speed": 30,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 1100
+            },
+            {
+                "id": "giant-spider",
+                "name": "Black Widow Spider",
+                "hp": 14,
+                "ac": 14,
+                "attackBonus": 4,
+                "damageRoll": "1d6+1",
+                "role": "predator",
+                "size": "large",
+                "creatureType": "beast",
+                "traits": ["spider-climb", "web-sense", "web-walker"],
+                "morale": 8,
+                "speed": 30,
+                "senses": ["darkvision-60ft"],
+                "xpValue": 200
+            }
         ],
         "items": [
-            {"id": "iron-gate-key", "name": "Iron Gate Key", "type": "key", "description": "Heavy iron key forged in the Keep smithy.", "valueCoins": 5},
-            {"id": "brass-chest-key", "name": "Brass Chest Key", "type": "key", "description": "Small ornate brass key found on the Kobold Chieftain.", "valueCoins": 10},
-            {"id": "silver-key-ogre", "name": "Silver Key", "type": "key", "description": "Ornate silver key worn around the Ogre's neck.", "valueCoins": 25},
-            {"id": "chaos-talisman", "name": "Chaos Talisman", "type": "quest", "description": "Unholy talisman depicting the symbol of Chaos.", "valueCoins": 200},
-            {"id": "ring-of-protection-b2", "name": "Ring of Protection +1", "type": "armor", "description": "A fine silver band glowing with protective abjuration magic.", "valueCoins": 500},
-            {"id": "potion-healing-b2", "name": "Potion of Healing", "type": "potion", "description": "Vial of crimson liquid that heals wounds upon consumption.", "valueCoins": 50},
-            {"id": "sword-plus-one", "name": "Longsword +1", "type": "weapon", "description": "Well-balanced longsword with a magical edge.", "valueCoins": 400},
-            {"id": "gold-goblet", "name": "Golden Goblet", "type": "treasure", "description": "Intricately chased golden goblet set with garnets.", "valueCoins": 150},
-            {"id": "shield-plus-one", "name": "Shield +1", "type": "armor", "description": "Steel heater shield imbued with protective runes.", "valueCoins": 300},
-            {"id": "potion-invisibility", "name": "Potion of Invisibility", "type": "potion", "description": "Clear liquid that renders the drinker invisible.", "valueCoins": 150},
-            {"id": "scroll-light", "name": "Scroll of Radiant Light", "type": "quest", "description": "Parchment scroll containing an ancient light incantation.", "valueCoins": 100},
-            {"id": "gem-garnet-cluster", "name": "Flawless Garnet Cluster", "type": "treasure", "description": "Handful of uncut red garnets.", "valueCoins": 250}
+            {
+                "id": "iron-gate-key",
+                "name": "Iron Gate Key",
+                "type": "key",
+                "description": "Heavy wrought-iron key forged in the Keep smithy.",
+                "valueCoins": 5,
+                "physical": {"material": "iron", "hardness": 10, "hp": 5, "weightLbs": 0.5}
+            },
+            {
+                "id": "brass-chest-key",
+                "name": "Brass Chest Key",
+                "type": "key",
+                "description": "Small ornate bronze-alloy key found on the Kobold Chieftain.",
+                "valueCoins": 10,
+                "physical": {"material": "bronze", "hardness": 9, "hp": 3, "weightLbs": 0.2}
+            },
+            {
+                "id": "silver-key-ogre",
+                "name": "Silver Key",
+                "type": "key",
+                "description": "Ornate silver-plated steel key worn on a thong around the Ogre's neck.",
+                "valueCoins": 25,
+                "physical": {"material": "steel", "hardness": 10, "hp": 4, "weightLbs": 0.2}
+            },
+            {
+                "id": "chaos-talisman",
+                "name": "Chaos Talisman",
+                "type": "quest",
+                "description": "Unholy talisman of cast pig-iron depicting the sprawling eight-pointed symbol of Chaos.",
+                "valueCoins": 200,
+                "physical": {"material": "iron", "hardness": 10, "hp": 6, "weightLbs": 1.0}
+            },
+            {
+                "id": "ring-of-protection-b2",
+                "name": "Ring of Protection +1",
+                "type": "armor",
+                "description": "A fine mithral band glowing with protective abjuration warding.",
+                "valueCoins": 500,
+                "physical": {"material": "mithral", "hardness": 15, "hp": 5, "weightLbs": 0.1},
+                "armor": {"armorCategory": "light", "acBonus": 1, "specialAbilities": ["abjuration-ward"]}
+            },
+            {
+                "id": "potion-healing-b2",
+                "name": "Potion of Healing",
+                "type": "potion",
+                "description": "Vial of crimson restorative elixir sealed with red wax.",
+                "valueCoins": 50,
+                "physical": {"material": "glass", "hardness": 1, "hp": 2, "weightLbs": 0.5}
+            },
+            {
+                "id": "sword-plus-one",
+                "name": "Longsword +1",
+                "type": "weapon",
+                "description": "Well-balanced longsword forged of tempered steel with razor keenness.",
+                "valueCoins": 400,
+                "physical": {"material": "steel", "hardness": 10, "hp": 5, "weightLbs": 3.0},
+                "weapon": {
+                    "damageDice": "1d8",
+                    "damageType": "slashing",
+                    "enhancementBonus": 1,
+                    "properties": ["versatile"],
+                    "material": "steel"
+                }
+            },
+            {
+                "id": "shield-plus-one",
+                "name": "Shield +1",
+                "type": "armor",
+                "description": "Steel heater shield emblazoned with the Keep's falcon crest and warding runes.",
+                "valueCoins": 300,
+                "physical": {"material": "steel", "hardness": 10, "hp": 15, "weightLbs": 6.0},
+                "armor": {
+                    "armorCategory": "shield",
+                    "acBonus": 3,
+                    "armorCheckPenalty": 0,
+                    "arcaneSpellFailure": 5,
+                    "material": "steel"
+                }
+            },
+            {
+                "id": "potion-invisibility",
+                "name": "Potion of Invisibility",
+                "type": "potion",
+                "description": "Clear shimmering liquid that renders the imbiber invisible.",
+                "valueCoins": 150,
+                "physical": {"material": "glass", "hardness": 1, "hp": 2, "weightLbs": 0.5}
+            },
+            {
+                "id": "item-crowbar",
+                "name": "Iron Crowbar",
+                "type": "tool",
+                "description": "Sturdy iron pry bar. Grants +2 circumstance bonus on Strength checks to burst open stuck doors and chests.",
+                "valueCoins": 2,
+                "physical": {"material": "iron", "hardness": 10, "hp": 10, "weightLbs": 5.0},
+                "tool": {"category": "crowbar", "bonusSkill": "athletics", "bonusAmount": 2}
+            },
+            {
+                "id": "item-thieves-tools",
+                "name": "Thieves' Tools",
+                "type": "tool",
+                "description": "Set of fine steel picks, skeleton keys, and tension bars for manipulating locks.",
+                "valueCoins": 25,
+                "physical": {"material": "steel", "hardness": 10, "hp": 5, "weightLbs": 1.0},
+                "tool": {"category": "thieves-tools", "bonusSkill": "sleight-of-hand", "bonusAmount": 2}
+            },
+            {
+                "id": "item-bladefire",
+                "name": "Flask of Bladefire",
+                "type": "alchemical",
+                "description": "Adhesive liquid that coats blades with searing blue fire for 1d6 rounds (+1 fire damage).",
+                "valueCoins": 20,
+                "physical": {"material": "glass", "hardness": 1, "hp": 2, "weightLbs": 1.0},
+                "alchemical": {"substanceType": "bladefire", "damageDice": "1", "damageType": "fire", "durationRounds": 4}
+            },
+            {
+                "id": "item-stonebreaker-acid",
+                "name": "Flask of Stonebreaker Acid",
+                "type": "alchemical",
+                "description": "Emerald-green corrosive acid that eats through stone structures, dealing 3d10 damage and ignoring hardness.",
+                "valueCoins": 20,
+                "physical": {"material": "glass", "hardness": 1, "hp": 2, "weightLbs": 1.0},
+                "alchemical": {"substanceType": "stonebreaker-acid", "damageDice": "3d10", "damageType": "acid"}
+            },
+            {
+                "id": "item-gravebane",
+                "name": "Gravebane Pellet",
+                "type": "alchemical",
+                "description": "Aromatic incense repelling undead creatures within a 5-foot radius (DC 12 Will save).",
+                "valueCoins": 50,
+                "physical": {"material": "cloth", "hardness": 0, "hp": 1, "weightLbs": 0.5},
+                "alchemical": {"substanceType": "gravebane", "saveDc": 12}
+            },
+            {
+                "id": "gold-goblet",
+                "name": "Golden Goblet",
+                "type": "treasure",
+                "description": "Chased golden goblet set with garnets.",
+                "valueCoins": 150,
+                "physical": {"material": "bronze", "hardness": 9, "hp": 5, "weightLbs": 1.5}
+            },
+            {
+                "id": "gem-garnet-cluster",
+                "name": "Flawless Garnet Cluster",
+                "type": "treasure",
+                "description": "Cluster of blood-red garnets.",
+                "valueCoins": 250,
+                "physical": {"material": "stone", "hardness": 8, "hp": 5, "weightLbs": 0.5}
+            },
+            {
+                "id": "scroll-light",
+                "name": "Scroll of Radiant Light",
+                "type": "quest",
+                "description": "Parchment scroll containing an ancient light incantation.",
+                "valueCoins": 100,
+                "physical": {"material": "paper", "hardness": 0, "hp": 2, "weightLbs": 0.1}
+            }
         ],
         "quests": [
             {

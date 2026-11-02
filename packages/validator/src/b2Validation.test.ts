@@ -118,4 +118,89 @@ describe("B2: The Keep on the Borderlands IR Validation & Simulation", () => {
     expect(trapRes.success).toBe(true);
     expect(trapRes.message).toMatch(/10-foot covered pit trap|No active triggers or pitfalls detected/);
   });
+
+  it("6. Verifies Arms & Equipment Guide object physics, sunder, crowbar forcing, and Monster Manual tactical profiles in B2", () => {
+    const adv = b2KeepOnTheBorderlands as VersionedAdventure;
+
+    // A. Verify Monster Manual 2024 Tactical Archetypes in B2
+    const kobold = adv.adventure.monsters.find((m) => m.id === "kobold-warrior");
+    expect(kobold).toBeDefined();
+    expect(kobold?.role).toBe("skirmisher");
+    expect(kobold?.traits).toContain("pack-tactics");
+    expect(kobold?.morale).toBe(7);
+
+    const orc = adv.adventure.monsters.find((m) => m.id === "orc-warrior");
+    expect(orc).toBeDefined();
+    expect(orc?.role).toBe("brute");
+    expect(orc?.traits).toContain("reckless");
+    expect(orc?.morale).toBe(8);
+
+    const minotaur = adv.adventure.monsters.find((m) => m.id === "minotaur-boss");
+    expect(minotaur).toBeDefined();
+    expect(minotaur?.role).toBe("boss");
+    expect(minotaur?.traits).toContain("charge");
+    expect(minotaur?.traits).toContain("labyrinthine-recall");
+
+    const highPriest = adv.adventure.monsters.find((m) => m.id === "high-priest-chaos");
+    expect(highPriest).toBeDefined();
+    expect(highPriest?.role).toBe("boss");
+    expect(highPriest?.traits).toContain("dark-devotion");
+    expect(highPriest?.morale).toBe(12);
+
+    // B. Verify Arms & Equipment Guide Physical Object Properties
+    const gateLoc = adv.adventure.locations.find((l) => l.id === "keep-main-gate");
+    const portcullis = gateLoc?.interactables.find((i) => i.id === "main-portcullis");
+    expect(portcullis?.physical).toBeDefined();
+    expect(portcullis?.physical?.material).toBe("iron");
+    expect(portcullis?.physical?.hardness).toBe(10);
+    expect(portcullis?.physical?.hp).toBe(60);
+    expect(portcullis?.physical?.breakDc).toBe(28);
+
+    const koboldChieftainLoc = adv.adventure.locations.find((l) => l.id === "cave-a-chieftain");
+    const chest = koboldChieftainLoc?.interactables.find((i) => i.id === "chieftain-chest");
+    expect(chest?.physical).toBeDefined();
+    expect(chest?.physical?.material).toBe("iron");
+    expect(chest?.physical?.hardness).toBe(10);
+    expect(chest?.physical?.breakDc).toBe(23);
+    expect(chest?.physical?.isLocked).toBe(true);
+    expect(chest?.physical?.keyItemId).toBe("brass-chest-key");
+
+    // C. Simulate Arms & Equipment Guide Actions in B2
+    const engine = new SimulatorEngine(adv, 42);
+
+    // 1. Force the Kobold Chieftain's locked chest with a crowbar
+    engine.state.currentLocationId = "cave-a-chieftain";
+    engine.executeAction({ type: "PICKUP_ITEM", itemId: "item-crowbar" });
+
+    const crowbarRes = engine.executeAction({
+      kind: "useItem",
+      itemId: "item-crowbar",
+      targetId: "chieftain-chest",
+    });
+    expect(crowbarRes.message).toContain("Break check on");
+    expect(crowbarRes.message).toContain("Tool (2)"); // Crowbar circumstance bonus
+
+    // 2. Attack Iron Portcullis with Adamantine Greatsword (hardness bypass)
+    engine.state.currentLocationId = "keep-main-gate";
+    engine.executeAction({ type: "PICKUP_ITEM", itemId: "item-adamantine-greatsword" });
+    const sunderRes = engine.executeAction({
+      kind: "attackObject",
+      targetId: "main-portcullis",
+      weaponItemId: "item-adamantine-greatsword",
+    });
+    expect(sunderRes.success).toBe(true);
+    expect(sunderRes.message).toContain("Hardness (10) was bypassed!");
+
+    // 3. Dissolve Stone Altar in Cave J Shrine with Stonebreaker Acid
+    engine.state.currentLocationId = "cave-j-altar";
+    engine.executeAction({ type: "PICKUP_ITEM", itemId: "item-stonebreaker-acid" });
+    const acidRes = engine.executeAction({
+      kind: "useItem",
+      itemId: "item-stonebreaker-acid",
+      targetId: "unholy-altar",
+    });
+    expect(acidRes.success).toBe(true);
+    expect(acidRes.message).toContain("Stonebreaker Acid");
+    expect(acidRes.message).toContain("Hardness (8) was bypassed!");
+  });
 });
