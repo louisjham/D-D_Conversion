@@ -5,6 +5,7 @@ import {
   MonsterTemplate,
   Item,
   Encounter,
+  Provenance,
 } from "@grimoire3d/ir";
 import { SeededRNG } from "@grimoire3d/rules-core";
 import { validateAdventure } from "@grimoire3d/validator";
@@ -13,6 +14,7 @@ import {
   GeneratorOptionsSchema,
   RoomRole,
   TopologyPattern,
+  GENERATOR_VERSION,
 } from "./types";
 
 interface EdgeDef {
@@ -59,6 +61,21 @@ export class ProceduralGenerator {
         ? "crypt"
         : "keep";
 
+    const createProvenance = (entityId: string, templateId?: string): Provenance => ({
+      sourceId: `proc-${opts.seed}-${entityId}`,
+      extraction: {
+        method: "procedural",
+        generator: {
+          version: GENERATOR_VERSION,
+          seed: opts.seed,
+          templateId: templateId || pattern,
+        },
+      },
+      review: {
+        status: "accepted",
+      },
+    });
+
     // 1. Build Room Nodes & Topology Edges
     const { nodes, edges } = this.buildTopologyGraph(opts.roomCount, pattern, rng, opts.includeKeyLockPuzzle);
 
@@ -71,6 +88,7 @@ export class ProceduralGenerator {
         type: "key",
         description: "A heavy brass key designed to unlock the sealed inner sanctum.",
         valueCoins: 25,
+        provenance: createProvenance(keyItemId, "item-key"),
       });
     }
 
@@ -89,6 +107,7 @@ export class ProceduralGenerator {
         attackBonus: minionAtk,
         damageRoll: `1d6+${Math.floor(opts.targetPartyLevel / 2)}`,
         xpValue: 50,
+        provenance: createProvenance("proc-minion", "monster-guard"),
       },
       {
         id: "proc-boss",
@@ -99,6 +118,7 @@ export class ProceduralGenerator {
         damageRoll: `1d8+${opts.targetPartyLevel}`,
         role: "boss",
         xpValue: 450,
+        provenance: createProvenance("proc-boss", "monster-overlord"),
       },
     ];
 
@@ -132,6 +152,7 @@ export class ProceduralGenerator {
           direction: dir,
           target: targetId,
           locked: isDoorLocked ? { keyItemId } : undefined,
+          provenance: createProvenance(`exit-${node.id}-to-${targetId}`, isDoorLocked ? "exit-locked" : "exit-normal"),
         };
 
         if (edge.isSecret) {
@@ -151,6 +172,7 @@ export class ProceduralGenerator {
           id: `exit-${node.id}-to-escape`,
           direction: "down",
           target: "escape-tunnel",
+          provenance: createProvenance(`exit-${node.id}-to-escape`, "exit-escape"),
         });
       }
 
@@ -162,6 +184,7 @@ export class ProceduralGenerator {
           label: "Iron Chest",
           description: "A heavy iron chest holding the brass key to the inner sanctuary.",
           onInspectEffects: [{ kind: "grantItem" as const, itemId: keyItemId }],
+          provenance: createProvenance(`chest-key-${node.id}`, "interactable-chest-key"),
         });
       } else if (node.hasChest) {
         interactables.push({
@@ -169,6 +192,7 @@ export class ProceduralGenerator {
           label: "Jeweled Coffer",
           description: "An ancient chest filled with silver ingots and gemstones.",
           onInspectEffects: [{ kind: "setFlag" as const, flag: `found-treasure-${node.id}`, value: true }],
+          provenance: createProvenance(`treasure-chest-${node.id}`, "interactable-chest-treasure"),
         });
       }
 
@@ -182,6 +206,7 @@ export class ProceduralGenerator {
           perceptionDC: 12,
           discovered: false,
           revealsExitId: `exit-${node.id}-to-${sEdge.to}`,
+          provenance: createProvenance(`secret-door-${sEdge.from}`, "secret-door"),
         });
       }
 
@@ -196,12 +221,14 @@ export class ProceduralGenerator {
             { kind: "setFlag", flag: "proc-boss-defeated", value: true },
             { kind: "setFlag", flag: "caves-cleared", value: true },
           ],
+          provenance: createProvenance("proc-boss-encounter", "encounter-boss"),
         };
       } else if (node.encounterType === "minion") {
         encounter = {
           id: `proc-encounter-${node.id}`,
           trigger: { kind: "always" },
           enemies: [{ monsterTemplateId: "proc-minion", count: Math.max(1, rng.rollDice(2)) }],
+          provenance: createProvenance(`proc-encounter-${node.id}`, "encounter-minion"),
         };
       }
 
@@ -239,6 +266,7 @@ export class ProceduralGenerator {
         secrets,
         encounter,
         boundaries,
+        provenance: createProvenance(node.id, `room-${node.role}`),
       });
     }
 
@@ -259,6 +287,7 @@ export class ProceduralGenerator {
       exits: [],
       interactables: [],
       secrets: [],
+      provenance: createProvenance("escape-tunnel", "room-escape"),
     });
 
     const vAdventure: VersionedAdventure = {

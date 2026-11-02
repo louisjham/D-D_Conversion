@@ -14,10 +14,17 @@ export const ProvenanceSchema = z.object({
     })
     .optional(),
   extraction: z.object({
-    method: z.enum(["manual", "fixture", "llm"]),
+    method: z.enum(["manual", "fixture", "llm", "procedural"]),
     model: z.string().optional(),
     runId: z.string().optional(),
     confidence: z.number().min(0).max(1).optional(),
+    generator: z
+      .object({
+        version: z.string(),
+        seed: z.number(),
+        templateId: z.string().optional(),
+      })
+      .optional(),
   }),
   review: z.object({
     status: z.enum(["unreviewed", "accepted", "edited", "rejected"]),

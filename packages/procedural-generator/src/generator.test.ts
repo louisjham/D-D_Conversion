@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { ProceduralGenerator, TopologyPattern } from "./index";
+import { ProceduralGenerator, TopologyPattern, GENERATOR_VERSION } from "./index";
 import { validateAdventure } from "@grimoire3d/validator";
 import { WorldCompiler } from "@grimoire3d/world-compiler";
 import { SimulatorEngine } from "@grimoire3d/simulator";
@@ -148,5 +148,59 @@ describe("@grimoire3d/procedural-generator — Constraint-Based Topology Generat
     const layout = WorldCompiler.compile(vAdv);
     expect(layout.rooms.length).toBeGreaterThan(8);
     expect(layout.portals.length).toBeGreaterThan(6);
+  });
+
+  it("7. Generated entities have provenance.extraction.method === 'procedural' and match input seed", () => {
+    const seed = 4242;
+    const vAdv = ProceduralGenerator.generateAdventure({ seed, roomCount: 10, includeKeyLockPuzzle: true });
+
+    // 1. Locations and their sub-entities
+    expect(vAdv.adventure.locations.length).toBeGreaterThan(0);
+    for (const loc of vAdv.adventure.locations) {
+      expect(loc.provenance).toBeDefined();
+      expect(loc.provenance?.extraction.method).toBe("procedural");
+      expect(loc.provenance?.extraction.generator?.seed).toBe(seed);
+      expect(loc.provenance?.extraction.generator?.version).toBe(GENERATOR_VERSION);
+
+      // Exits on each location
+      for (const exit of loc.exits) {
+        expect(exit.provenance).toBeDefined();
+        expect(exit.provenance?.extraction.method).toBe("procedural");
+        expect(exit.provenance?.extraction.generator?.seed).toBe(seed);
+        expect(exit.provenance?.extraction.generator?.version).toBe(GENERATOR_VERSION);
+      }
+
+      // Interactables
+      for (const inter of loc.interactables) {
+        expect(inter.provenance).toBeDefined();
+        expect(inter.provenance?.extraction.method).toBe("procedural");
+        expect(inter.provenance?.extraction.generator?.seed).toBe(seed);
+      }
+
+      // Secrets
+      for (const secret of loc.secrets) {
+        expect(secret.provenance).toBeDefined();
+        expect(secret.provenance?.extraction.method).toBe("procedural");
+        expect(secret.provenance?.extraction.generator?.seed).toBe(seed);
+      }
+    }
+
+    // 2. Items
+    expect(vAdv.adventure.items.length).toBeGreaterThan(0);
+    for (const item of vAdv.adventure.items) {
+      expect(item.provenance).toBeDefined();
+      expect(item.provenance?.extraction.method).toBe("procedural");
+      expect(item.provenance?.extraction.generator?.seed).toBe(seed);
+      expect(item.provenance?.extraction.generator?.version).toBe(GENERATOR_VERSION);
+    }
+
+    // 3. Monsters
+    expect(vAdv.adventure.monsters.length).toBeGreaterThan(0);
+    for (const monster of vAdv.adventure.monsters) {
+      expect(monster.provenance).toBeDefined();
+      expect(monster.provenance?.extraction.method).toBe("procedural");
+      expect(monster.provenance?.extraction.generator?.seed).toBe(seed);
+      expect(monster.provenance?.extraction.generator?.version).toBe(GENERATOR_VERSION);
+    }
   });
 });

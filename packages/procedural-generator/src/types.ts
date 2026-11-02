@@ -39,3 +39,5 @@ export const GeneratorOptionsSchema = z.object({
   topologyPattern: TopologyPatternSchema.default("b2-hybrid"),
 });
 export type GeneratorOptions = z.infer<typeof GeneratorOptionsSchema>;
+
+export const GENERATOR_VERSION = "2.1.0";
