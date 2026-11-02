@@ -1,0 +1,7002 @@
+{
+  "padded": {
+    "id": "padded",
+    "name": "Padded",
+    "type": "armor",
+    "valueCoins": 5,
+    "description": "Padded armor consists of quilted layers of cloth and batting.",
+    "physical": {
+      "weightLbs": 8,
+      "material": "cloth"
+    },
+    "armor": {
+      "armorCategory": "light",
+      "acBonus": 11,
+      "specialAbilities": [
+        "stealth-disadvantage"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "leather": {
+    "id": "leather",
+    "name": "Leather",
+    "type": "armor",
+    "valueCoins": 10,
+    "description": "The breastplate and shoulder protectors of this armor are made of leather that has been stiffened by being boiled in oil.",
+    "physical": {
+      "weightLbs": 10,
+      "material": "leather"
+    },
+    "armor": {
+      "armorCategory": "light",
+      "acBonus": 11
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "studded-leather": {
+    "id": "studded-leather",
+    "name": "Studded Leather",
+    "type": "armor",
+    "valueCoins": 45,
+    "description": "Made from tough but flexible leather, studded leather is reinforced with close-set rivets or spikes.",
+    "physical": {
+      "weightLbs": 13,
+      "material": "leather"
+    },
+    "armor": {
+      "armorCategory": "light",
+      "acBonus": 12
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "hide": {
+    "id": "hide",
+    "name": "Hide",
+    "type": "armor",
+    "valueCoins": 10,
+    "description": "This crude armor consists of thick furs and pelts.",
+    "physical": {
+      "weightLbs": 12,
+      "material": "leather"
+    },
+    "armor": {
+      "armorCategory": "medium",
+      "acBonus": 12,
+      "maxDexBonus": 2
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "chain-shirt": {
+    "id": "chain-shirt",
+    "name": "Chain Shirt",
+    "type": "armor",
+    "valueCoins": 50,
+    "description": "Made of interlocking metal rings, a chain shirt is worn between layers of clothing or leather.",
+    "physical": {
+      "weightLbs": 20,
+      "material": "steel"
+    },
+    "armor": {
+      "armorCategory": "medium",
+      "acBonus": 13,
+      "maxDexBonus": 2
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "scale-mail": {
+    "id": "scale-mail",
+    "name": "Scale Mail",
+    "type": "armor",
+    "valueCoins": 50,
+    "description": "This armor consists of a coat and leggings of leather covered with overlapping pieces of metal.",
+    "physical": {
+      "weightLbs": 45,
+      "material": "steel"
+    },
+    "armor": {
+      "armorCategory": "medium",
+      "acBonus": 14,
+      "maxDexBonus": 2,
+      "specialAbilities": [
+        "stealth-disadvantage"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "breastplate": {
+    "id": "breastplate",
+    "name": "Breastplate",
+    "type": "armor",
+    "valueCoins": 400,
+    "description": "This armor consists of a fitted metal chest piece worn with supple leather.",
+    "physical": {
+      "weightLbs": 20,
+      "material": "steel"
+    },
+    "armor": {
+      "armorCategory": "medium",
+      "acBonus": 14,
+      "maxDexBonus": 2
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "half-plate": {
+    "id": "half-plate",
+    "name": "Half Plate",
+    "type": "armor",
+    "valueCoins": 750,
+    "description": "Half plate consists of shaped metal plates that cover most of the wearer's body.",
+    "physical": {
+      "weightLbs": 40,
+      "material": "steel"
+    },
+    "armor": {
+      "armorCategory": "medium",
+      "acBonus": 15,
+      "maxDexBonus": 2,
+      "specialAbilities": [
+        "stealth-disadvantage"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "ring-mail": {
+    "id": "ring-mail",
+    "name": "Ring Mail",
+    "type": "armor",
+    "valueCoins": 30,
+    "description": "This armor is leather armor with heavy rings sewn into it.",
+    "physical": {
+      "weightLbs": 40,
+      "material": "steel"
+    },
+    "armor": {
+      "armorCategory": "heavy",
+      "acBonus": 14,
+      "maxDexBonus": 0,
+      "specialAbilities": [
+        "stealth-disadvantage"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "chain-mail": {
+    "id": "chain-mail",
+    "name": "Chain Mail",
+    "type": "armor",
+    "valueCoins": 75,
+    "description": "Made of interlocking metal rings, chain mail includes a gauntlet and layer of quilted fabric under the mail.",
+    "physical": {
+      "weightLbs": 55,
+      "material": "steel"
+    },
+    "armor": {
+      "armorCategory": "heavy",
+      "acBonus": 16,
+      "maxDexBonus": 0,
+      "specialAbilities": [
+        "stealth-disadvantage",
+        "str-13"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "splint": {
+    "id": "splint",
+    "name": "Splint",
+    "type": "armor",
+    "valueCoins": 200,
+    "description": "This armor is made of narrow vertical strips of metal riveted to a backing of leather.",
+    "physical": {
+      "weightLbs": 60,
+      "material": "steel"
+    },
+    "armor": {
+      "armorCategory": "heavy",
+      "acBonus": 17,
+      "maxDexBonus": 0,
+      "specialAbilities": [
+        "stealth-disadvantage",
+        "str-15"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "plate": {
+    "id": "plate",
+    "name": "Plate",
+    "type": "armor",
+    "valueCoins": 1500,
+    "description": "Plate consists of shaped, interlocking metal plates to cover the entire body.",
+    "physical": {
+      "weightLbs": 65,
+      "material": "steel"
+    },
+    "armor": {
+      "armorCategory": "heavy",
+      "acBonus": 18,
+      "maxDexBonus": 0,
+      "specialAbilities": [
+        "stealth-disadvantage",
+        "str-15"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "shield": {
+    "id": "shield",
+    "name": "Shield",
+    "type": "shield",
+    "valueCoins": 10,
+    "description": "A shield is made from wood or metal and is carried in one hand.",
+    "physical": {
+      "weightLbs": 6,
+      "material": "wood"
+    },
+    "armor": {
+      "armorCategory": "shield",
+      "acBonus": 2
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "club": {
+    "id": "club",
+    "name": "Club",
+    "type": "weapon",
+    "valueCoins": 0.1,
+    "description": "A simple wooden club.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "wood"
+    },
+    "weapon": {
+      "damageDice": "1d4",
+      "damageType": "bludgeoning",
+      "properties": [
+        "light"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "dagger": {
+    "id": "dagger",
+    "name": "Dagger",
+    "type": "weapon",
+    "valueCoins": 2,
+    "description": "A sharp steel dagger suited for stabbing or throwing.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d4",
+      "damageType": "piercing",
+      "properties": [
+        "finesse",
+        "light",
+        "thrown (range 20/60)"
+      ],
+      "rangeFt": 20
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "greatclub": {
+    "id": "greatclub",
+    "name": "Greatclub",
+    "type": "weapon",
+    "valueCoins": 0.2,
+    "description": "A two-handed wooden club.",
+    "physical": {
+      "weightLbs": 10,
+      "material": "wood"
+    },
+    "weapon": {
+      "damageDice": "1d8",
+      "damageType": "bludgeoning",
+      "properties": [
+        "two-handed"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "handaxe": {
+    "id": "handaxe",
+    "name": "Handaxe",
+    "type": "weapon",
+    "valueCoins": 5,
+    "description": "A light woodcutting and combat axe.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d6",
+      "damageType": "slashing",
+      "properties": [
+        "light",
+        "thrown (range 20/60)"
+      ],
+      "rangeFt": 20
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "javelin": {
+    "id": "javelin",
+    "name": "Javelin",
+    "type": "weapon",
+    "valueCoins": 0.5,
+    "description": "A light spear designed primarily for casting.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "wood"
+    },
+    "weapon": {
+      "damageDice": "1d6",
+      "damageType": "piercing",
+      "properties": [
+        "thrown (range 30/120)"
+      ],
+      "rangeFt": 30
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "light-hammer": {
+    "id": "light-hammer",
+    "name": "Light Hammer",
+    "type": "weapon",
+    "valueCoins": 2,
+    "description": "A small war hammer suitable for melee or throwing.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d4",
+      "damageType": "bludgeoning",
+      "properties": [
+        "light",
+        "thrown (range 20/60)"
+      ],
+      "rangeFt": 20
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "mace": {
+    "id": "mace",
+    "name": "Mace",
+    "type": "weapon",
+    "valueCoins": 5,
+    "description": "A heavy metal flanged mace.",
+    "physical": {
+      "weightLbs": 4,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d6",
+      "damageType": "bludgeoning",
+      "properties": []
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "quarterstaff": {
+    "id": "quarterstaff",
+    "name": "Quarterstaff",
+    "type": "weapon",
+    "valueCoins": 0.2,
+    "description": "A simple length of polished hardwood.",
+    "physical": {
+      "weightLbs": 4,
+      "material": "wood"
+    },
+    "weapon": {
+      "damageDice": "1d6",
+      "damageType": "bludgeoning",
+      "properties": [
+        "versatile (1d8)"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "sickle": {
+    "id": "sickle",
+    "name": "Sickle",
+    "type": "weapon",
+    "valueCoins": 1,
+    "description": "A curved farming blade repurposed for close combat.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d4",
+      "damageType": "slashing",
+      "properties": [
+        "light"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "spear": {
+    "id": "spear",
+    "name": "Spear",
+    "type": "weapon",
+    "valueCoins": 1,
+    "description": "A pointed shaft of wood tipped with a steel spearhead.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d6",
+      "damageType": "piercing",
+      "properties": [
+        "thrown (range 20/60)",
+        "versatile (1d8)"
+      ],
+      "rangeFt": 20
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "crossbow-light": {
+    "id": "crossbow-light",
+    "name": "Light Crossbow",
+    "type": "weapon",
+    "valueCoins": 25,
+    "description": "A light mechanical bow with a lever crank.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "wood"
+    },
+    "weapon": {
+      "damageDice": "1d8",
+      "damageType": "piercing",
+      "properties": [
+        "ammunition (range 80/320)",
+        "loading",
+        "two-handed"
+      ],
+      "rangeFt": 80
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "dart": {
+    "id": "dart",
+    "name": "Dart",
+    "type": "weapon",
+    "valueCoins": 0.05,
+    "description": "A small weighted throwing dart.",
+    "physical": {
+      "weightLbs": 0.25,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d4",
+      "damageType": "piercing",
+      "properties": [
+        "finesse",
+        "thrown (range 20/60)"
+      ],
+      "rangeFt": 20
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "shortbow": {
+    "id": "shortbow",
+    "name": "Shortbow",
+    "type": "weapon",
+    "valueCoins": 25,
+    "description": "A compact wooden recurve bow.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "wood"
+    },
+    "weapon": {
+      "damageDice": "1d6",
+      "damageType": "piercing",
+      "properties": [
+        "ammunition (range 80/320)",
+        "two-handed"
+      ],
+      "rangeFt": 80
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "sling": {
+    "id": "sling",
+    "name": "Sling",
+    "type": "weapon",
+    "valueCoins": 0.1,
+    "description": "A simple leather strap used to fling bullets or stones.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "leather"
+    },
+    "weapon": {
+      "damageDice": "1d4",
+      "damageType": "bludgeoning",
+      "properties": [
+        "ammunition (range 30/120)"
+      ],
+      "rangeFt": 30
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "battleaxe": {
+    "id": "battleaxe",
+    "name": "Battleaxe",
+    "type": "weapon",
+    "valueCoins": 10,
+    "description": "A broad-bladed martial axe designed for one or two hands.",
+    "physical": {
+      "weightLbs": 4,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d8",
+      "damageType": "slashing",
+      "properties": [
+        "versatile (1d10)"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "flail": {
+    "id": "flail",
+    "name": "Flail",
+    "type": "weapon",
+    "valueCoins": 10,
+    "description": "A spiked steel ball attached to a haft by a short chain.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d8",
+      "damageType": "bludgeoning",
+      "properties": []
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "glaive": {
+    "id": "glaive",
+    "name": "Glaive",
+    "type": "weapon",
+    "valueCoins": 20,
+    "description": "A polearm consisting of a curved single-edged blade on the end of a long pole.",
+    "physical": {
+      "weightLbs": 6,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d10",
+      "damageType": "slashing",
+      "properties": [
+        "heavy",
+        "reach",
+        "two-handed"
+      ],
+      "rangeFt": 10
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "greataxe": {
+    "id": "greataxe",
+    "name": "Greataxe",
+    "type": "weapon",
+    "valueCoins": 30,
+    "description": "A massive two-handed executioner's axe.",
+    "physical": {
+      "weightLbs": 7,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d12",
+      "damageType": "slashing",
+      "properties": [
+        "heavy",
+        "two-handed"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "greatsword": {
+    "id": "greatsword",
+    "name": "Greatsword",
+    "type": "weapon",
+    "valueCoins": 50,
+    "description": "A massive two-handed sword with a broad double-edged blade.",
+    "physical": {
+      "weightLbs": 6,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "2d6",
+      "damageType": "slashing",
+      "properties": [
+        "heavy",
+        "two-handed"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "halberd": {
+    "id": "halberd",
+    "name": "Halberd",
+    "type": "weapon",
+    "valueCoins": 20,
+    "description": "A polearm combining an axe blade with a spear point and back-hook.",
+    "physical": {
+      "weightLbs": 6,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d10",
+      "damageType": "slashing",
+      "properties": [
+        "heavy",
+        "reach",
+        "two-handed"
+      ],
+      "rangeFt": 10
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "lance": {
+    "id": "lance",
+    "name": "Lance",
+    "type": "weapon",
+    "valueCoins": 10,
+    "description": "A long thrusting spear used by mounted warriors.",
+    "physical": {
+      "weightLbs": 6,
+      "material": "wood"
+    },
+    "weapon": {
+      "damageDice": "1d12",
+      "damageType": "piercing",
+      "properties": [
+        "reach",
+        "special"
+      ],
+      "rangeFt": 10
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "longsword": {
+    "id": "longsword",
+    "name": "Longsword",
+    "type": "weapon",
+    "valueCoins": 15,
+    "description": "A versatile double-edged straight sword with a crossguard.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d8",
+      "damageType": "slashing",
+      "properties": [
+        "versatile (1d10)"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "maul": {
+    "id": "maul",
+    "name": "Maul",
+    "type": "weapon",
+    "valueCoins": 10,
+    "description": "A massive two-handed sledgehammer designed for crushing armor.",
+    "physical": {
+      "weightLbs": 10,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "2d6",
+      "damageType": "bludgeoning",
+      "properties": [
+        "heavy",
+        "two-handed"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "morningstar": {
+    "id": "morningstar",
+    "name": "Morningstar",
+    "type": "weapon",
+    "valueCoins": 15,
+    "description": "A spiked metal ball mounted solidly atop a wooden haft.",
+    "physical": {
+      "weightLbs": 4,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d8",
+      "damageType": "piercing",
+      "properties": []
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "pike": {
+    "id": "pike",
+    "name": "Pike",
+    "type": "weapon",
+    "valueCoins": 5,
+    "description": "A very long thrusting spear used in infantry formations.",
+    "physical": {
+      "weightLbs": 18,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d10",
+      "damageType": "piercing",
+      "properties": [
+        "heavy",
+        "reach",
+        "two-handed"
+      ],
+      "rangeFt": 10
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "rapier": {
+    "id": "rapier",
+    "name": "Rapier",
+    "type": "weapon",
+    "valueCoins": 25,
+    "description": "A slender, sharply pointed sword designed for fast thrusts.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d8",
+      "damageType": "piercing",
+      "properties": [
+        "finesse"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "scimitar": {
+    "id": "scimitar",
+    "name": "Scimitar",
+    "type": "weapon",
+    "valueCoins": 25,
+    "description": "A curved, single-edged sword optimized for slashing agility.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d6",
+      "damageType": "slashing",
+      "properties": [
+        "finesse",
+        "light"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "shortsword": {
+    "id": "shortsword",
+    "name": "Shortsword",
+    "type": "weapon",
+    "valueCoins": 10,
+    "description": "A short, pointed thrusting sword.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d6",
+      "damageType": "piercing",
+      "properties": [
+        "finesse",
+        "light"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "trident": {
+    "id": "trident",
+    "name": "Trident",
+    "type": "weapon",
+    "valueCoins": 5,
+    "description": "A three-pronged barbed spear.",
+    "physical": {
+      "weightLbs": 4,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d6",
+      "damageType": "piercing",
+      "properties": [
+        "thrown (range 20/60)",
+        "versatile (1d8)"
+      ],
+      "rangeFt": 20
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "war-pick": {
+    "id": "war-pick",
+    "name": "War Pick",
+    "type": "weapon",
+    "valueCoins": 5,
+    "description": "A pointed military pick designed to pierce heavy plate.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d8",
+      "damageType": "piercing",
+      "properties": []
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "warhammer": {
+    "id": "warhammer",
+    "name": "Warhammer",
+    "type": "weapon",
+    "valueCoins": 15,
+    "description": "A versatile war hammer with a flat striking face and back spike.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d8",
+      "damageType": "bludgeoning",
+      "properties": [
+        "versatile (1d10)"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "whip": {
+    "id": "whip",
+    "name": "Whip",
+    "type": "weapon",
+    "valueCoins": 2,
+    "description": "A flexible braided leather whip.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "leather"
+    },
+    "weapon": {
+      "damageDice": "1d4",
+      "damageType": "slashing",
+      "properties": [
+        "finesse",
+        "reach"
+      ],
+      "rangeFt": 10
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "blowgun": {
+    "id": "blowgun",
+    "name": "Blowgun",
+    "type": "weapon",
+    "valueCoins": 10,
+    "description": "A hollow tube through which poisoned needles can be fired.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "wood"
+    },
+    "weapon": {
+      "damageDice": "1",
+      "damageType": "piercing",
+      "properties": [
+        "ammunition (range 25/100)",
+        "loading"
+      ],
+      "rangeFt": 25
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "crossbow-hand": {
+    "id": "crossbow-hand",
+    "name": "Hand Crossbow",
+    "type": "weapon",
+    "valueCoins": 75,
+    "description": "A one-handed compact crossbow.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d6",
+      "damageType": "piercing",
+      "properties": [
+        "ammunition (range 30/120)",
+        "light",
+        "loading"
+      ],
+      "rangeFt": 30
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "crossbow-heavy": {
+    "id": "crossbow-heavy",
+    "name": "Heavy Crossbow",
+    "type": "weapon",
+    "valueCoins": 50,
+    "description": "A powerful two-handed crossbow spanning with high tension.",
+    "physical": {
+      "weightLbs": 18,
+      "material": "steel"
+    },
+    "weapon": {
+      "damageDice": "1d10",
+      "damageType": "piercing",
+      "properties": [
+        "ammunition (range 100/400)",
+        "heavy",
+        "loading",
+        "two-handed"
+      ],
+      "rangeFt": 100
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "longbow": {
+    "id": "longbow",
+    "name": "Longbow",
+    "type": "weapon",
+    "valueCoins": 50,
+    "description": "A tall bow drawing tremendous force over great distances.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "wood"
+    },
+    "weapon": {
+      "damageDice": "1d8",
+      "damageType": "piercing",
+      "properties": [
+        "ammunition (range 150/600)",
+        "heavy",
+        "two-handed"
+      ],
+      "rangeFt": 150
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "net": {
+    "id": "net",
+    "name": "Net",
+    "type": "weapon",
+    "valueCoins": 1,
+    "description": "A weighted rope net used to ensnare targets.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "cloth"
+    },
+    "weapon": {
+      "damageDice": "0",
+      "damageType": "bludgeoning",
+      "properties": [
+        "special",
+        "thrown (range 5/15)"
+      ],
+      "rangeFt": 5
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "abacus": {
+    "id": "abacus",
+    "name": "Abacus",
+    "type": "tool",
+    "valueCoins": 2,
+    "description": "A calculating tool consisting of beads on rods.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "acid-vial": {
+    "id": "acid-vial",
+    "name": "Acid (vial)",
+    "type": "alchemical",
+    "valueCoins": 25,
+    "description": "As an action, splash this vial on a target within 5 feet or throw it up to 20 feet. Deals 2d6 acid damage on hit.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "glass"
+    },
+    "alchemical": {
+      "substanceType": "acid-flask",
+      "damageDice": "2d6",
+      "damageType": "acid"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "alchemists-fire-flask": {
+    "id": "alchemists-fire-flask",
+    "name": "Alchemist's Fire (flask)",
+    "type": "alchemical",
+    "valueCoins": 50,
+    "description": "Sticky fluid that ignites when exposed to air. Deals 1d4 fire damage per turn until extinguished.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "glass"
+    },
+    "alchemical": {
+      "substanceType": "alchemists-fire",
+      "damageDice": "1d4",
+      "damageType": "fire",
+      "durationRounds": 10
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "arrows-20": {
+    "id": "arrows-20",
+    "name": "Arrows (20)",
+    "type": "consumable",
+    "valueCoins": 1,
+    "description": "A bundle of twenty fletched arrows for a bow.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "blowgun-needles-50": {
+    "id": "blowgun-needles-50",
+    "name": "Blowgun Needles (50)",
+    "type": "consumable",
+    "valueCoins": 1,
+    "description": "A case containing fifty thin needles for a blowgun.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "crossbow-bolts-20": {
+    "id": "crossbow-bolts-20",
+    "name": "Crossbow Bolts (20)",
+    "type": "consumable",
+    "valueCoins": 1,
+    "description": "A quiver of twenty crossbow bolts.",
+    "physical": {
+      "weightLbs": 1.5,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "sling-bullets-20": {
+    "id": "sling-bullets-20",
+    "name": "Sling Bullets (20)",
+    "type": "consumable",
+    "valueCoins": 0.04,
+    "description": "A pouch of twenty lead bullets for a sling.",
+    "physical": {
+      "weightLbs": 1.5,
+      "material": "iron"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "antitoxin-vial": {
+    "id": "antitoxin-vial",
+    "name": "Antitoxin (vial)",
+    "type": "alchemical",
+    "valueCoins": 50,
+    "description": "Drinking this liquid grants advantage on saving throws against poison for 1 hour.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "glass"
+    },
+    "alchemical": {
+      "substanceType": "clearbreath",
+      "effectDescription": "Advantage on poison saving throws for 1 hour."
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "arcane-focus-crystal": {
+    "id": "arcane-focus-crystal",
+    "name": "Crystal",
+    "type": "tool",
+    "valueCoins": 10,
+    "description": "An arcane focus crystal used to channel magical energies.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "stone"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "arcane-focus-orb": {
+    "id": "arcane-focus-orb",
+    "name": "Orb",
+    "type": "tool",
+    "valueCoins": 20,
+    "description": "A polished glass or crystalline orb used as an arcane focus.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "glass"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "arcane-focus-rod": {
+    "id": "arcane-focus-rod",
+    "name": "Rod",
+    "type": "tool",
+    "valueCoins": 10,
+    "description": "A metallic rod engraved with runes used as an arcane focus.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "arcane-focus-staff": {
+    "id": "arcane-focus-staff",
+    "name": "Staff",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "A specially constructed wooden staff serving as an arcane focus.",
+    "physical": {
+      "weightLbs": 4,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "arcane-focus-wand": {
+    "id": "arcane-focus-wand",
+    "name": "Wand",
+    "type": "tool",
+    "valueCoins": 10,
+    "description": "A carved wand-like length of wood used to focus arcane spells.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "backpack": {
+    "id": "backpack",
+    "name": "Backpack",
+    "type": "container",
+    "valueCoins": 2,
+    "description": "A sturdy leather backpack able to hold 1 cubic foot or 30 pounds of gear.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "ball-bearings-bag-of-1000": {
+    "id": "ball-bearings-bag-of-1000",
+    "name": "Ball Bearings (bag of 1,000)",
+    "type": "consumable",
+    "valueCoins": 1,
+    "description": "Cover a 10-foot-square area; moving creatures must make a DC 10 Dex saving throw or fall prone.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "barrel": {
+    "id": "barrel",
+    "name": "Barrel",
+    "type": "container",
+    "valueCoins": 2,
+    "description": "A wooden barrel holding 40 gallons of liquid or 4 cubic feet of solid material.",
+    "physical": {
+      "weightLbs": 70,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "basket": {
+    "id": "basket",
+    "name": "Basket",
+    "type": "container",
+    "valueCoins": 0.4,
+    "description": "A woven wicker basket capable of holding 2 cubic feet or 40 pounds.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "bedroll": {
+    "id": "bedroll",
+    "name": "Bedroll",
+    "type": "consumable",
+    "valueCoins": 1,
+    "description": "A padded wool roll for sleeping in the wilderness.",
+    "physical": {
+      "weightLbs": 7,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "bell": {
+    "id": "bell",
+    "name": "Bell",
+    "type": "consumable",
+    "valueCoins": 1,
+    "description": "A small brass bell that chimes clearly.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "bronze"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "blanket": {
+    "id": "blanket",
+    "name": "Blanket",
+    "type": "consumable",
+    "valueCoins": 0.5,
+    "description": "A thick woven wool blanket.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "block-and-tackle": {
+    "id": "block-and-tackle",
+    "name": "Block and Tackle",
+    "type": "tool",
+    "valueCoins": 1,
+    "description": "A set of pulleys allowing hoisting of up to four times normal lifting capacity.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "steel"
+    },
+    "tool": {
+      "category": "crowbar"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "book": {
+    "id": "book",
+    "name": "Book",
+    "type": "tool",
+    "valueCoins": 25,
+    "description": "A bound volume of lore, diagrams, or poetry with parchment pages.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "paper"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "bottle-glass": {
+    "id": "bottle-glass",
+    "name": "Bottle, Glass",
+    "type": "container",
+    "valueCoins": 2,
+    "description": "A 1.5-pint glass bottle with a cork stopper.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "glass"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "bucket": {
+    "id": "bucket",
+    "name": "Bucket",
+    "type": "container",
+    "valueCoins": 0.05,
+    "description": "A rope-handled wooden bucket holding 3 gallons of liquid.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "caltrops-bag-of-20": {
+    "id": "caltrops-bag-of-20",
+    "name": "Caltrops (bag of 20)",
+    "type": "consumable",
+    "valueCoins": 1,
+    "description": "Cover a 5-foot square. Entering creatures take 1 piercing damage and lose 10 ft speed on failed DC 15 Dex save.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "candle": {
+    "id": "candle",
+    "name": "Candle",
+    "type": "consumable",
+    "valueCoins": 0.01,
+    "description": "Sheds bright light in a 5-foot radius and dim light for an additional 5 feet for 1 hour.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "case-crossbow-bolt": {
+    "id": "case-crossbow-bolt",
+    "name": "Case, Crossbow Bolt",
+    "type": "container",
+    "valueCoins": 1,
+    "description": "Holds up to twenty crossbow bolts securely.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "case-map-or-scroll": {
+    "id": "case-map-or-scroll",
+    "name": "Case, Map or Scroll",
+    "type": "container",
+    "valueCoins": 1,
+    "description": "Cylindrical leather tube holding up to ten rolled sheets.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "chain-10-feet": {
+    "id": "chain-10-feet",
+    "name": "Chain (10 feet)",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "A heavy 10-foot iron chain with 10 HP; burst with DC 20 Strength check.",
+    "physical": {
+      "weightLbs": 10,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "chalk-1-piece": {
+    "id": "chalk-1-piece",
+    "name": "Chalk (1 piece)",
+    "type": "consumable",
+    "valueCoins": 0.01,
+    "description": "A stick of soft white limestone chalk for marking stone or wood.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "stone"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "chest": {
+    "id": "chest",
+    "name": "Chest",
+    "type": "container",
+    "valueCoins": 5,
+    "description": "A sturdy wooden chest holding up to 12 cubic feet or 300 pounds of gear.",
+    "physical": {
+      "weightLbs": 25,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "climbers-kit": {
+    "id": "climbers-kit",
+    "name": "Climber's Kit",
+    "type": "tool",
+    "valueCoins": 25,
+    "description": "Includes pitons, boot tips, gloves, and a harness to anchor oneself while climbing.",
+    "physical": {
+      "weightLbs": 12,
+      "material": "steel"
+    },
+    "tool": {
+      "category": "climbers-kit"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "clothes-common": {
+    "id": "clothes-common",
+    "name": "Clothes, Common",
+    "type": "consumable",
+    "valueCoins": 0.5,
+    "description": "Simple wool and linen peasant garb.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "clothes-costume": {
+    "id": "clothes-costume",
+    "name": "Clothes, Costume",
+    "type": "consumable",
+    "valueCoins": 5,
+    "description": "Theatrical costumes for disguise, performance, or court masquerade.",
+    "physical": {
+      "weightLbs": 4,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "clothes-fine": {
+    "id": "clothes-fine",
+    "name": "Clothes, Fine",
+    "type": "consumable",
+    "valueCoins": 15,
+    "description": "Expensive silk and velvet tailored garments with ornate embroidery.",
+    "physical": {
+      "weightLbs": 6,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "clothes-travelers": {
+    "id": "clothes-travelers",
+    "name": "Clothes, Traveler's",
+    "type": "consumable",
+    "valueCoins": 2,
+    "description": "Resilient outdoor traveling clothes with boots, wool cloak, and gloves.",
+    "physical": {
+      "weightLbs": 4,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "component-pouch": {
+    "id": "component-pouch",
+    "name": "Component Pouch",
+    "type": "container",
+    "valueCoins": 25,
+    "description": "A waterproof belt pouch holding spellcasting material components.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "crowbar": {
+    "id": "crowbar",
+    "name": "Crowbar",
+    "type": "tool",
+    "valueCoins": 2,
+    "description": "Grants advantage to Strength checks where leverage can be applied.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "steel"
+    },
+    "tool": {
+      "category": "crowbar",
+      "advantageOnCheck": true
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "druidic-focus-sprig-of-mistletoe": {
+    "id": "druidic-focus-sprig-of-mistletoe",
+    "name": "Sprig of Mistletoe",
+    "type": "tool",
+    "valueCoins": 1,
+    "description": "A sacred cutting of mistletoe harvested under the full moon.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "druidic-focus-totem": {
+    "id": "druidic-focus-totem",
+    "name": "Totem",
+    "type": "tool",
+    "valueCoins": 1,
+    "description": "A sacred carving of feathers, fur, and bone serving as a druidic focus.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "druidic-focus-wooden-staff": {
+    "id": "druidic-focus-wooden-staff",
+    "name": "Wooden Staff",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "A living hardwood staff channel for nature magic.",
+    "physical": {
+      "weightLbs": 4,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "druidic-focus-yew-wand": {
+    "id": "druidic-focus-yew-wand",
+    "name": "Yew Wand",
+    "type": "tool",
+    "valueCoins": 10,
+    "description": "A wand carved from old growth yew wood.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "fishing-tackle": {
+    "id": "fishing-tackle",
+    "name": "Fishing Tackle",
+    "type": "tool",
+    "valueCoins": 1,
+    "description": "Wooden rod, silken line, bobbers, steel hooks, and lead sinkers.",
+    "physical": {
+      "weightLbs": 4,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "flask-or-tankard": {
+    "id": "flask-or-tankard",
+    "name": "Flask or Tankard",
+    "type": "container",
+    "valueCoins": 0.02,
+    "description": "A tin or ceramic flask holding 1 pint of liquid.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "grappling-hook": {
+    "id": "grappling-hook",
+    "name": "Grappling Hook",
+    "type": "tool",
+    "valueCoins": 2,
+    "description": "A three-pronged iron hook tied to a rope to scale walls.",
+    "physical": {
+      "weightLbs": 4,
+      "material": "steel"
+    },
+    "tool": {
+      "category": "grappling-hook"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "hammer": {
+    "id": "hammer",
+    "name": "Hammer",
+    "type": "tool",
+    "valueCoins": 1,
+    "description": "A one-handed iron hammer for driving pitons or construction.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "hammer-sledge": {
+    "id": "hammer-sledge",
+    "name": "Hammer, Sledge",
+    "type": "tool",
+    "valueCoins": 2,
+    "description": "A heavy two-handed sledgehammer for demolition.",
+    "physical": {
+      "weightLbs": 10,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "healers-kit": {
+    "id": "healers-kit",
+    "name": "Healer's Kit",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "Pouch of leather containing bandages, salves, and splints. Has 10 uses to stabilize a dying creature.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "leather"
+    },
+    "tool": {
+      "category": "healers-kit"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "holy-symbol-amulet": {
+    "id": "holy-symbol-amulet",
+    "name": "Holy Symbol (Amulet)",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "A holy amulet depicting a deity or pantheon.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "holy-symbol-emblem": {
+    "id": "holy-symbol-emblem",
+    "name": "Holy Symbol (Emblem)",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "A holy emblem emblazoned or engraved upon a shield.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "holy-symbol-reliquary": {
+    "id": "holy-symbol-reliquary",
+    "name": "Holy Symbol (Reliquary)",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "A tiny locket or box holding a sacred relic fragment.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "holy-water-flask": {
+    "id": "holy-water-flask",
+    "name": "Holy Water (flask)",
+    "type": "alchemical",
+    "valueCoins": 25,
+    "description": "Water blessed by a priest. Deals 2d6 radiant damage to fiends or undead on hit.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "glass"
+    },
+    "alchemical": {
+      "substanceType": "holy-water",
+      "damageDice": "2d6",
+      "damageType": "holy"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "hourglass": {
+    "id": "hourglass",
+    "name": "Hourglass",
+    "type": "tool",
+    "valueCoins": 25,
+    "description": "A sand glass measuring the passage of sixty minutes.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "glass"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "hunting-trap": {
+    "id": "hunting-trap",
+    "name": "Hunting Trap",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "A heavy steel spring jaw trap clamped to the ground.",
+    "physical": {
+      "weightLbs": 25,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "ink-1-ounce-bottle": {
+    "id": "ink-1-ounce-bottle",
+    "name": "Ink (1 ounce bottle)",
+    "type": "consumable",
+    "valueCoins": 10,
+    "description": "A small glass vial filled with dark black gall ink.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "glass"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "ink-pen": {
+    "id": "ink-pen",
+    "name": "Ink Pen",
+    "type": "tool",
+    "valueCoins": 0.02,
+    "description": "A hollow quill feather or steel-nibbed calligraphy pen.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "jug-or-pitcher": {
+    "id": "jug-or-pitcher",
+    "name": "Jug or Pitcher",
+    "type": "container",
+    "valueCoins": 0.02,
+    "description": "A ceramic pitcher holding 1 gallon of liquid.",
+    "physical": {
+      "weightLbs": 4,
+      "material": "stone"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "ladder-10-foot": {
+    "id": "ladder-10-foot",
+    "name": "Ladder (10-foot)",
+    "type": "tool",
+    "valueCoins": 0.1,
+    "description": "A 10-foot wooden runged ladder.",
+    "physical": {
+      "weightLbs": 25,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "lamp": {
+    "id": "lamp",
+    "name": "Lamp",
+    "type": "tool",
+    "valueCoins": 0.5,
+    "description": "An oil lamp casting bright light in a 15-foot radius for 6 hours on 1 pint of oil.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "lantern-bullseye": {
+    "id": "lantern-bullseye",
+    "name": "Lantern, Bullseye",
+    "type": "tool",
+    "valueCoins": 10,
+    "description": "A hooded lantern that casts a bright cone of light in a 60-foot line.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "lantern-hooded": {
+    "id": "lantern-hooded",
+    "name": "Lantern, Hooded",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "Casts bright light in a 30-foot radius; shutter can dim light to 5-foot radius.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "lock": {
+    "id": "lock",
+    "name": "Lock",
+    "type": "tool",
+    "valueCoins": 10,
+    "description": "An iron lock with a keyed tumbler; picked with a DC 15 Dex check with thieves' tools.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "steel",
+      "isLocked": true,
+      "lockDc": 15
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "magnifying-glass": {
+    "id": "magnifying-glass",
+    "name": "Magnifying Glass",
+    "type": "tool",
+    "valueCoins": 100,
+    "description": "Convex glass lens granting advantage on ability checks to appraise or examine tiny objects.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "glass"
+    },
+    "tool": {
+      "category": "magnifying-glass",
+      "advantageOnCheck": true
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "manacles": {
+    "id": "manacles",
+    "name": "Manacles",
+    "type": "tool",
+    "valueCoins": 2,
+    "description": "Iron wrist restraints with key; escaped with DC 20 Dex or burst with DC 20 Str.",
+    "physical": {
+      "weightLbs": 6,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "mess-kit": {
+    "id": "mess-kit",
+    "name": "Mess Kit",
+    "type": "tool",
+    "valueCoins": 0.2,
+    "description": "Tin cup and cutlery clamped together for camp cooking.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "mirror-steel": {
+    "id": "mirror-steel",
+    "name": "Mirror, Steel",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "A polished plate of reflective steel for peering around corners.",
+    "physical": {
+      "weightLbs": 0.5,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "oil-flask": {
+    "id": "oil-flask",
+    "name": "Oil (flask)",
+    "type": "consumable",
+    "valueCoins": 0.1,
+    "description": "Pint of combustible lamp oil. Burns for 6 hours or covers 5-foot square dealing 5 fire damage when ignited.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "glass"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "paper-one-sheet": {
+    "id": "paper-one-sheet",
+    "name": "Paper (one sheet)",
+    "type": "consumable",
+    "valueCoins": 0.2,
+    "description": "A single sheet of pressed cotton or linen paper.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "paper"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "parchment-one-sheet": {
+    "id": "parchment-one-sheet",
+    "name": "Parchment (one sheet)",
+    "type": "consumable",
+    "valueCoins": 0.1,
+    "description": "A single piece of dried, scraped animal skin parchment.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "perfume-vial": {
+    "id": "perfume-vial",
+    "name": "Perfume (vial)",
+    "type": "consumable",
+    "valueCoins": 5,
+    "description": "A tiny vial of fragrant aromatic oils.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "glass"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "pick-miners": {
+    "id": "pick-miners",
+    "name": "Pick, Miner's",
+    "type": "tool",
+    "valueCoins": 2,
+    "description": "A heavy double-ended steel pick used in mining and tunneling.",
+    "physical": {
+      "weightLbs": 10,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "piton": {
+    "id": "piton",
+    "name": "Piton",
+    "type": "tool",
+    "valueCoins": 0.05,
+    "description": "A steel wedge with a loop for piton hammer insertion and rope anchoring.",
+    "physical": {
+      "weightLbs": 0.25,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "poison-basic-vial": {
+    "id": "poison-basic-vial",
+    "name": "Poison, Basic (vial)",
+    "type": "alchemical",
+    "valueCoins": 100,
+    "description": "Apply to weapon or ammunition; struck creature must make DC 10 Con save or take 1d4 poison damage.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "glass"
+    },
+    "alchemical": {
+      "substanceType": "bladefire",
+      "damageDice": "1d4",
+      "damageType": "acid"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "pole-10-foot": {
+    "id": "pole-10-foot",
+    "name": "Pole (10-foot)",
+    "type": "tool",
+    "valueCoins": 0.05,
+    "description": "A 10-foot wooden pole used to prod floors for pit traps or test depths.",
+    "physical": {
+      "weightLbs": 7,
+      "material": "wood"
+    },
+    "tool": {
+      "category": "10-foot-pole"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "pot-iron": {
+    "id": "pot-iron",
+    "name": "Pot, Iron",
+    "type": "container",
+    "valueCoins": 2,
+    "description": "A heavy cast iron pot holding up to 1 gallon.",
+    "physical": {
+      "weightLbs": 10,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "potion-of-healing": {
+    "id": "potion-of-healing",
+    "name": "Potion of Healing",
+    "type": "potion",
+    "valueCoins": 50,
+    "description": "A character who drinks the magical red fluid in this vial regains 2d4 + 2 hit points.",
+    "physical": {
+      "weightLbs": 0.5,
+      "material": "glass"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "pouch": {
+    "id": "pouch",
+    "name": "Pouch",
+    "type": "container",
+    "valueCoins": 0.5,
+    "description": "A cloth or leather belt pouch holding up to 1/5 cubic foot or 6 pounds of coins.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "quiver": {
+    "id": "quiver",
+    "name": "Quiver",
+    "type": "container",
+    "valueCoins": 1,
+    "description": "A leather arrow quiver holding up to twenty arrows.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "ram-portable": {
+    "id": "ram-portable",
+    "name": "Ram, Portable",
+    "type": "tool",
+    "valueCoins": 4,
+    "description": "An iron-shod wooden ram granting a +4 bonus to Strength checks to break down doors.",
+    "physical": {
+      "weightLbs": 35,
+      "material": "wood"
+    },
+    "tool": {
+      "category": "portable-ram",
+      "bonusAmount": 4
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "rations-1-day": {
+    "id": "rations-1-day",
+    "name": "Rations (1 day)",
+    "type": "consumable",
+    "valueCoins": 0.5,
+    "description": "Compact dry foods suitable for travel including jerky, dried fruit, hardtack, and nuts.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "robes": {
+    "id": "robes",
+    "name": "Robes",
+    "type": "consumable",
+    "valueCoins": 1,
+    "description": "Flowing vestments worn by wizards, scholars, and clerics.",
+    "physical": {
+      "weightLbs": 4,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "rope-hempen-50-feet": {
+    "id": "rope-hempen-50-feet",
+    "name": "Rope, Hempen (50 feet)",
+    "type": "consumable",
+    "valueCoins": 1,
+    "description": "50 feet of hemp rope with 2 hit points that can be burst with a DC 17 Strength check.",
+    "physical": {
+      "weightLbs": 10,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "rope-silk-50-feet": {
+    "id": "rope-silk-50-feet",
+    "name": "Rope, Silk (50 feet)",
+    "type": "consumable",
+    "valueCoins": 10,
+    "description": "50 feet of lightweight woven silk rope with 2 hit points; burst with DC 17 Strength check.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "sack": {
+    "id": "sack",
+    "name": "Sack",
+    "type": "container",
+    "valueCoins": 0.01,
+    "description": "A burlap sack holding up to 1 cubic foot or 30 pounds.",
+    "physical": {
+      "weightLbs": 0.5,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "scale-merchants": {
+    "id": "scale-merchants",
+    "name": "Scale, Merchant's",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "A brass balance scale with accurate weights to measure precious metals and spices.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "bronze"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "sealing-wax": {
+    "id": "sealing-wax",
+    "name": "Sealing Wax",
+    "type": "consumable",
+    "valueCoins": 0.5,
+    "description": "A bar of colored wax melted to stamp personal signet seals on parchment.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "shovel": {
+    "id": "shovel",
+    "name": "Shovel",
+    "type": "tool",
+    "valueCoins": 2,
+    "description": "An iron spade with a long wooden handle.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "signal-whistle": {
+    "id": "signal-whistle",
+    "name": "Signal Whistle",
+    "type": "tool",
+    "valueCoins": 0.05,
+    "description": "A loud metal whistle audible across great distances.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "bronze"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "signet-ring": {
+    "id": "signet-ring",
+    "name": "Signet Ring",
+    "type": "treasure",
+    "valueCoins": 5,
+    "description": "An engraved personal crest ring used to press seals in hot wax.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "soap": {
+    "id": "soap",
+    "name": "Soap",
+    "type": "consumable",
+    "valueCoins": 0.02,
+    "description": "A bar of scented lye soap.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "spellbook": {
+    "id": "spellbook",
+    "name": "Spellbook",
+    "type": "tool",
+    "valueCoins": 50,
+    "description": "A leather-bound tome of 100 blank vellum pages for recording wizard spells.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "spikes-iron-10": {
+    "id": "spikes-iron-10",
+    "name": "Spikes, Iron (10)",
+    "type": "tool",
+    "valueCoins": 1,
+    "description": "Ten heavy iron wedges for spiking doors shut or wedging traps.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "spyglass": {
+    "id": "spyglass",
+    "name": "Spyglass",
+    "type": "tool",
+    "valueCoins": 1000,
+    "description": "Brass telescoping lenses magnifying distant objects by two times.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "bronze"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "tent-two-person": {
+    "id": "tent-two-person",
+    "name": "Tent, Two-Person",
+    "type": "tool",
+    "valueCoins": 2,
+    "description": "A canvas shelter with collapsible poles accommodating two medium travelers.",
+    "physical": {
+      "weightLbs": 20,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "tinderbox": {
+    "id": "tinderbox",
+    "name": "Tinderbox",
+    "type": "tool",
+    "valueCoins": 0.5,
+    "description": "A brass box holding flint, steel, and dry tinder used to start fires.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "torch": {
+    "id": "torch",
+    "name": "Torch",
+    "type": "consumable",
+    "valueCoins": 0.01,
+    "description": "A wooden stick wrapped with pitch-soaked cloth. Burns for 1 hour shedding bright light in a 20-foot radius.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "vial": {
+    "id": "vial",
+    "name": "Vial",
+    "type": "container",
+    "valueCoins": 1,
+    "description": "A glass vial capable of holding 4 ounces of liquid.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "glass"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "waterskin": {
+    "id": "waterskin",
+    "name": "Waterskin",
+    "type": "container",
+    "valueCoins": 0.2,
+    "description": "A cured leather bladder holding 4 pints of liquid.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "whetstone": {
+    "id": "whetstone",
+    "name": "Whetstone",
+    "type": "tool",
+    "valueCoins": 0.01,
+    "description": "A flat abrasive stone for sharpening blades and axes.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "stone"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "brass-key": {
+    "id": "brass-key",
+    "name": "Brass Key",
+    "type": "key",
+    "valueCoins": 2,
+    "description": "A finely notched brass key designed to open locked dungeon mechanisms.",
+    "physical": {
+      "weightLbs": 0.2,
+      "material": "bronze"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "iron-key": {
+    "id": "iron-key",
+    "name": "Iron Key",
+    "type": "key",
+    "valueCoins": 1,
+    "description": "A heavy forged iron key capable of turning ancient tumbler locks.",
+    "physical": {
+      "weightLbs": 0.2,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "skeleton-key": {
+    "id": "skeleton-key",
+    "name": "Skeleton Key",
+    "type": "key",
+    "valueCoins": 50,
+    "description": "A master key filed down to open multiple lock wards.",
+    "physical": {
+      "weightLbs": 0.2,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "alchemists-supplies": {
+    "id": "alchemists-supplies",
+    "name": "Alchemist's Supplies",
+    "type": "tool",
+    "valueCoins": 50,
+    "description": "Glass beakers, burners, mixing rods, and reagents for alchemy.",
+    "physical": {
+      "weightLbs": 8,
+      "material": "glass"
+    },
+    "tool": {
+      "category": "thieves-tools"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "brewers-supplies": {
+    "id": "brewers-supplies",
+    "name": "Brewer's Supplies",
+    "type": "tool",
+    "valueCoins": 20,
+    "description": "Fermentation siphons, hydrometer, yeast cultures, and mash paddles.",
+    "physical": {
+      "weightLbs": 9,
+      "material": "wood"
+    },
+    "tool": {
+      "category": "thieves-tools"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "calligraphers-supplies": {
+    "id": "calligraphers-supplies",
+    "name": "Calligrapher's Supplies",
+    "type": "tool",
+    "valueCoins": 10,
+    "description": "Specialized quills, vellum, ruling pens, and colored inks.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "wood"
+    },
+    "tool": {
+      "category": "forgers-kit"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "carpenters-tools": {
+    "id": "carpenters-tools",
+    "name": "Carpenter's Tools",
+    "type": "tool",
+    "valueCoins": 8,
+    "description": "Saws, chisels, planes, claw hammers, and plumb lines.",
+    "physical": {
+      "weightLbs": 6,
+      "material": "steel"
+    },
+    "tool": {
+      "category": "hacksaw"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "cartographers-tools": {
+    "id": "cartographers-tools",
+    "name": "Cartographer's Tools",
+    "type": "tool",
+    "valueCoins": 15,
+    "description": "Calipers, compass, drafting rulers, and parchment scrolls.",
+    "physical": {
+      "weightLbs": 6,
+      "material": "bronze"
+    },
+    "tool": {
+      "category": "forgers-kit"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "cobblers-tools": {
+    "id": "cobblers-tools",
+    "name": "Cobbler's Tools",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "Leather knives, awls, stitching ponies, and lasts.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "steel"
+    },
+    "tool": {
+      "category": "thieves-tools"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "cooks-utensils": {
+    "id": "cooks-utensils",
+    "name": "Cook's Utensils",
+    "type": "tool",
+    "valueCoins": 1,
+    "description": "Iron pans, seasoning pouches, knives, and ladle.",
+    "physical": {
+      "weightLbs": 8,
+      "material": "steel"
+    },
+    "tool": {
+      "category": "thieves-tools"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "glassblowers-tools": {
+    "id": "glassblowers-tools",
+    "name": "Glassblower's Tools",
+    "type": "tool",
+    "valueCoins": 30,
+    "description": "Blowpipe, tweezers, marver plate, and shaping blocks.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "steel"
+    },
+    "tool": {
+      "category": "thieves-tools"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "jewelers-tools": {
+    "id": "jewelers-tools",
+    "name": "Jeweler's Tools",
+    "type": "tool",
+    "valueCoins": 25,
+    "description": "Precision loupe, jeweler's saw, files, and stone tweezers.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "tool": {
+      "category": "magnifying-glass"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "leatherworkers-tools": {
+    "id": "leatherworkers-tools",
+    "name": "Leatherworker's Tools",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "Punches, skiving blades, needles, and waxing blocks.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "steel"
+    },
+    "tool": {
+      "category": "thieves-tools"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "masons-tools": {
+    "id": "masons-tools",
+    "name": "Mason's Tools",
+    "type": "tool",
+    "valueCoins": 10,
+    "description": "Trowel, stone chisels, square, and mallet.",
+    "physical": {
+      "weightLbs": 8,
+      "material": "steel"
+    },
+    "tool": {
+      "category": "crowbar"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "painters-supplies": {
+    "id": "painters-supplies",
+    "name": "Painter's Supplies",
+    "type": "tool",
+    "valueCoins": 10,
+    "description": "Canvas palette, pig-bristle brushes, linseed oil, and pigment cakes.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "wood"
+    },
+    "tool": {
+      "category": "forgers-kit"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "potters-tools": {
+    "id": "potters-tools",
+    "name": "Potter's Tools",
+    "type": "tool",
+    "valueCoins": 10,
+    "description": "Trimming ribs, loop tools, wire cutter, and sponge.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "wood"
+    },
+    "tool": {
+      "category": "thieves-tools"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "smiths-tools": {
+    "id": "smiths-tools",
+    "name": "Smith's Tools",
+    "type": "tool",
+    "valueCoins": 20,
+    "description": "Tongs, forging hammer, cold chisels, and wire brush.",
+    "physical": {
+      "weightLbs": 8,
+      "material": "steel"
+    },
+    "tool": {
+      "category": "crowbar"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "tinkers-tools": {
+    "id": "tinkers-tools",
+    "name": "Tinker's Tools",
+    "type": "tool",
+    "valueCoins": 50,
+    "description": "Miniature saws, copper rivets, clockwork springs, and pliers.",
+    "physical": {
+      "weightLbs": 10,
+      "material": "steel"
+    },
+    "tool": {
+      "category": "thieves-tools"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "weavers-tools": {
+    "id": "weavers-tools",
+    "name": "Weaver's Tools",
+    "type": "tool",
+    "valueCoins": 1,
+    "description": "Shuttle, tapestry needles, comb, and thread snips.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "wood"
+    },
+    "tool": {
+      "category": "thieves-tools"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "woodcarvers-tools": {
+    "id": "woodcarvers-tools",
+    "name": "Woodcarver's Tools",
+    "type": "tool",
+    "valueCoins": 1,
+    "description": "Carving gouges, detail knives, and sharpening oil.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "steel"
+    },
+    "tool": {
+      "category": "hacksaw"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "disguise-kit": {
+    "id": "disguise-kit",
+    "name": "Disguise Kit",
+    "type": "tool",
+    "valueCoins": 25,
+    "description": "Cosmetics, hair dye, wigs, and props for altering physical appearance.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "cloth"
+    },
+    "tool": {
+      "category": "forgers-kit"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "forgery-kit": {
+    "id": "forgery-kit",
+    "name": "Forgery Kit",
+    "type": "tool",
+    "valueCoins": 15,
+    "description": "Parchment scraps, specialty inks, sealing wax, and blank signets for duplicating documents.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "paper"
+    },
+    "tool": {
+      "category": "forgers-kit"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "dice-set": {
+    "id": "dice-set",
+    "name": "Dice Set",
+    "type": "tool",
+    "valueCoins": 0.1,
+    "description": "Carved bone or wooden dice for gambling games.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "bone"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "dragonchess-set": {
+    "id": "dragonchess-set",
+    "name": "Dragonchess Set",
+    "type": "tool",
+    "valueCoins": 1,
+    "description": "Three-tiered strategy chess board with dragon, hero, and elemental figurines.",
+    "physical": {
+      "weightLbs": 0.5,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "playing-card-set": {
+    "id": "playing-card-set",
+    "name": "Playing Card Set",
+    "type": "tool",
+    "valueCoins": 0.5,
+    "description": "A 54-card illustrated linen deck for gambling games.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "paper"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "three-dragon-ante-set": {
+    "id": "three-dragon-ante-set",
+    "name": "Three-Dragon Ante Set",
+    "type": "tool",
+    "valueCoins": 1,
+    "description": "A complete deck of cards for playing the popular tavern game Three-Dragon Ante.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "paper"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "herbalism-kit": {
+    "id": "herbalism-kit",
+    "name": "Herbalism Kit",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "Pouches, clippers, pestle, and mortar required to identify herbs and brew healing potions.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "wood"
+    },
+    "tool": {
+      "category": "healers-kit"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "bagpipes": {
+    "id": "bagpipes",
+    "name": "Bagpipes",
+    "type": "tool",
+    "valueCoins": 30,
+    "description": "A musical instrument with an airtight leather bag and drone pipes.",
+    "physical": {
+      "weightLbs": 6,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "drum": {
+    "id": "drum",
+    "name": "Drum",
+    "type": "tool",
+    "valueCoins": 6,
+    "description": "A handheld drum stretched with taut calfskin.",
+    "physical": {
+      "weightLbs": 3,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "dulcimer": {
+    "id": "dulcimer",
+    "name": "Dulcimer",
+    "type": "tool",
+    "valueCoins": 25,
+    "description": "A stringed musical instrument played by striking the strings with small hammers.",
+    "physical": {
+      "weightLbs": 10,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "flute": {
+    "id": "flute",
+    "name": "Flute",
+    "type": "tool",
+    "valueCoins": 2,
+    "description": "A carved wooden side-blown wind instrument.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "lute": {
+    "id": "lute",
+    "name": "Lute",
+    "type": "tool",
+    "valueCoins": 35,
+    "description": "A plucked string instrument with a fretted neck and deep pear-shaped back.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "lyre": {
+    "id": "lyre",
+    "name": "Lyre",
+    "type": "tool",
+    "valueCoins": 30,
+    "description": "A classical stringed instrument shaped like a small harp.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "horn": {
+    "id": "horn",
+    "name": "Horn",
+    "type": "tool",
+    "valueCoins": 3,
+    "description": "A polished winding brass horn or animal horn producing deep resonant notes.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "bronze"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "pan-flute": {
+    "id": "pan-flute",
+    "name": "Pan Flute",
+    "type": "tool",
+    "valueCoins": 12,
+    "description": "A series of graduated hollow reed pipes bound together.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "shawm": {
+    "id": "shawm",
+    "name": "Shawm",
+    "type": "tool",
+    "valueCoins": 2,
+    "description": "A loud conical woodwind instrument with a double reed.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "viol": {
+    "id": "viol",
+    "name": "Viol",
+    "type": "tool",
+    "valueCoins": 30,
+    "description": "A bowed stringed instrument with a hollow wooden body.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "navigators-tools": {
+    "id": "navigators-tools",
+    "name": "Navigator's Tools",
+    "type": "tool",
+    "valueCoins": 25,
+    "description": "Sextant, astrolabe, compass, and star charts for charting courses at sea.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "bronze"
+    },
+    "tool": {
+      "category": "forgers-kit"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "poisoners-kit": {
+    "id": "poisoners-kit",
+    "name": "Poisoner's Kit",
+    "type": "tool",
+    "valueCoins": 50,
+    "description": "Glass vials, mortal and pestle, pipettes, and toxic distillates.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "glass"
+    },
+    "tool": {
+      "category": "thieves-tools"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "thieves-tools": {
+    "id": "thieves-tools",
+    "name": "Thieves' Tools",
+    "type": "tool",
+    "valueCoins": 25,
+    "description": "A set of lock picks, small tension wrenches, narrow-bladed shears, and a small mirror.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "steel"
+    },
+    "tool": {
+      "category": "thieves-tools"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "camel": {
+    "id": "camel",
+    "name": "Camel",
+    "type": "tool",
+    "valueCoins": 50,
+    "description": "A desert beast of burden with high stamina (speed 50 ft, carry 480 lb).",
+    "physical": {
+      "weightLbs": 1000,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "donkey-or-mule": {
+    "id": "donkey-or-mule",
+    "name": "Donkey or Mule",
+    "type": "tool",
+    "valueCoins": 8,
+    "description": "A sturdy pack animal (speed 40 ft, carry 420 lb).",
+    "physical": {
+      "weightLbs": 800,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "elephant": {
+    "id": "elephant",
+    "name": "Elephant",
+    "type": "tool",
+    "valueCoins": 200,
+    "description": "A massive mount and draught animal (speed 40 ft, carry 1,320 lb).",
+    "physical": {
+      "weightLbs": 8000,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "horse-draft": {
+    "id": "horse-draft",
+    "name": "Horse, Draft",
+    "type": "tool",
+    "valueCoins": 50,
+    "description": "A heavy workhorse bred for pulling carts and plows (speed 40 ft, carry 540 lb).",
+    "physical": {
+      "weightLbs": 1400,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "horse-riding": {
+    "id": "horse-riding",
+    "name": "Horse, Riding",
+    "type": "tool",
+    "valueCoins": 75,
+    "description": "A swift mount bred for travel and light transport (speed 60 ft, carry 480 lb).",
+    "physical": {
+      "weightLbs": 1000,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "mastiff": {
+    "id": "mastiff",
+    "name": "Mastiff",
+    "type": "tool",
+    "valueCoins": 25,
+    "description": "A large guard dog suitable as a mount for Small humanoids (speed 40 ft, carry 195 lb).",
+    "physical": {
+      "weightLbs": 150,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "pony": {
+    "id": "pony",
+    "name": "Pony",
+    "type": "tool",
+    "valueCoins": 30,
+    "description": "A small horse well-suited for subterranean travel and small riders (speed 40 ft, carry 225 lb).",
+    "physical": {
+      "weightLbs": 600,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "warhorse": {
+    "id": "warhorse",
+    "name": "Warhorse",
+    "type": "tool",
+    "valueCoins": 400,
+    "description": "A heavily trained combat charger (speed 60 ft, carry 540 lb).",
+    "physical": {
+      "weightLbs": 1400,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "barding": {
+    "id": "barding",
+    "name": "Barding",
+    "type": "armor",
+    "valueCoins": 40,
+    "description": "Armor designed to protect an animal's head, neck, chest, and body.",
+    "physical": {
+      "weightLbs": 30,
+      "material": "steel"
+    },
+    "armor": {
+      "armorCategory": "medium",
+      "acBonus": 13
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "bit-and-bridle": {
+    "id": "bit-and-bridle",
+    "name": "Bit and Bridle",
+    "type": "tool",
+    "valueCoins": 2,
+    "description": "Leather headgear and steel bit for steering mounts.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "carriage": {
+    "id": "carriage",
+    "name": "Carriage",
+    "type": "container",
+    "valueCoins": 100,
+    "description": "An enclosed four-wheeled vehicle seating up to four passengers.",
+    "physical": {
+      "weightLbs": 600,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "cart": {
+    "id": "cart",
+    "name": "Cart",
+    "type": "container",
+    "valueCoins": 15,
+    "description": "A two-wheeled open vehicle pulled by one draught beast.",
+    "physical": {
+      "weightLbs": 200,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "chariot": {
+    "id": "chariot",
+    "name": "Chariot",
+    "type": "container",
+    "valueCoins": 250,
+    "description": "A light two-wheeled combat vehicle designed for rapid maneuvers.",
+    "physical": {
+      "weightLbs": 100,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "feed-per-day": {
+    "id": "feed-per-day",
+    "name": "Feed (per day)",
+    "type": "consumable",
+    "valueCoins": 0.05,
+    "description": "One day of oats and hay for a mount or pack beast.",
+    "physical": {
+      "weightLbs": 10,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "saddle-riding": {
+    "id": "saddle-riding",
+    "name": "Saddle, Riding",
+    "type": "tool",
+    "valueCoins": 10,
+    "description": "A standard leather riding saddle.",
+    "physical": {
+      "weightLbs": 25,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "saddle-military": {
+    "id": "saddle-military",
+    "name": "Saddle, Military",
+    "type": "tool",
+    "valueCoins": 20,
+    "description": "Braces the rider, granting advantage on checks to remain mounted.",
+    "physical": {
+      "weightLbs": 30,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "saddle-pack": {
+    "id": "saddle-pack",
+    "name": "Saddle, Pack",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "A wooden pack frame facilitating gear and crate loading on a beast of burden.",
+    "physical": {
+      "weightLbs": 15,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "saddle-exotic": {
+    "id": "saddle-exotic",
+    "name": "Saddle, Exotic",
+    "type": "tool",
+    "valueCoins": 60,
+    "description": "Customized saddle for unusual mounts like griffons, giant lizards, or pegasi.",
+    "physical": {
+      "weightLbs": 40,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "saddlebags": {
+    "id": "saddlebags",
+    "name": "Saddlebags",
+    "type": "container",
+    "valueCoins": 4,
+    "description": "Pair of leather pouches holding 8 cubic feet or 30 pounds across a mount.",
+    "physical": {
+      "weightLbs": 8,
+      "material": "leather"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "sled": {
+    "id": "sled",
+    "name": "Sled",
+    "type": "container",
+    "valueCoins": 20,
+    "description": "Runnered vehicle for snow and ice travel pulled by dogs or ponies.",
+    "physical": {
+      "weightLbs": 300,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "wagon": {
+    "id": "wagon",
+    "name": "Wagon",
+    "type": "container",
+    "valueCoins": 35,
+    "description": "A heavy four-wheeled freight vehicle pulled by a team of draft animals.",
+    "physical": {
+      "weightLbs": 400,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "galley": {
+    "id": "galley",
+    "name": "Galley",
+    "type": "container",
+    "valueCoins": 30000,
+    "description": "A three-masted warship propelled by 80 oarsmen and sail (speed 4 mph).",
+    "physical": {
+      "weightLbs": 50000,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "keelboat": {
+    "id": "keelboat",
+    "name": "Keelboat",
+    "type": "container",
+    "valueCoins": 3000,
+    "description": "A shallow-draught riverboat for lake and river transport (speed 1 mph).",
+    "physical": {
+      "weightLbs": 5000,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "longship": {
+    "id": "longship",
+    "name": "Longship",
+    "type": "container",
+    "valueCoins": 10000,
+    "description": "A long, narrow raiding vessel propelled by oars and a single square sail (speed 3 mph).",
+    "physical": {
+      "weightLbs": 12000,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "rowboat": {
+    "id": "rowboat",
+    "name": "Rowboat",
+    "type": "container",
+    "valueCoins": 50,
+    "description": "A small wooden boat fitted with a pair of oars (speed 1.5 mph).",
+    "physical": {
+      "weightLbs": 100,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "sailing-ship": {
+    "id": "sailing-ship",
+    "name": "Sailing Ship",
+    "type": "container",
+    "valueCoins": 10000,
+    "description": "A sea-going commercial cargo vessel (speed 2 mph).",
+    "physical": {
+      "weightLbs": 25000,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "warship": {
+    "id": "warship",
+    "name": "Warship",
+    "type": "container",
+    "valueCoins": 25000,
+    "description": "A heavily fortified naval war vessel equipped with fighting castles (speed 2.5 mph).",
+    "physical": {
+      "weightLbs": 35000,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "trade-goods-salt": {
+    "id": "trade-goods-salt",
+    "name": "1 lb. of Salt",
+    "type": "treasure",
+    "valueCoins": 0.05,
+    "description": "A 1-pound bag of coarse mineral salt.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "stone"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "trade-goods-iron": {
+    "id": "trade-goods-iron",
+    "name": "1 lb. of Iron",
+    "type": "treasure",
+    "valueCoins": 0.1,
+    "description": "A 1-pound forged bar of pig iron.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "trade-goods-copper": {
+    "id": "trade-goods-copper",
+    "name": "1 lb. of Copper",
+    "type": "treasure",
+    "valueCoins": 0.5,
+    "description": "A 1-pound ingot of raw smelted copper.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "bronze"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "trade-goods-ginger": {
+    "id": "trade-goods-ginger",
+    "name": "1 lb. of Ginger",
+    "type": "treasure",
+    "valueCoins": 1,
+    "description": "A 1-pound bundle of pungent dried ginger root.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "trade-goods-cinnamon": {
+    "id": "trade-goods-cinnamon",
+    "name": "1 lb. of Cinnamon",
+    "type": "treasure",
+    "valueCoins": 2,
+    "description": "A 1-pound bundle of fragrant rolled cinnamon bark.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "trade-goods-silver": {
+    "id": "trade-goods-silver",
+    "name": "1 lb. of Silver",
+    "type": "treasure",
+    "valueCoins": 5,
+    "description": "A 1-pound hallmarked ingot of fine silver.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "trade-goods-silk": {
+    "id": "trade-goods-silk",
+    "name": "1 sq. yd. of Silk",
+    "type": "treasure",
+    "valueCoins": 10,
+    "description": "One square yard of shimmering imported woven silk.",
+    "physical": {
+      "weightLbs": 0.5,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "trade-goods-saffron": {
+    "id": "trade-goods-saffron",
+    "name": "1 lb. of Saffron",
+    "type": "treasure",
+    "valueCoins": 15,
+    "description": "A 1-pound packet of brilliant crimson saffron threads.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "trade-goods-gold": {
+    "id": "trade-goods-gold",
+    "name": "1 lb. of Gold",
+    "type": "treasure",
+    "valueCoins": 50,
+    "description": "A 1-pound hallmarked bar of pure gold.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "trade-goods-platinum": {
+    "id": "trade-goods-platinum",
+    "name": "1 lb. of Platinum",
+    "type": "treasure",
+    "valueCoins": 500,
+    "description": "A 1-pound heavy bar of pure refined platinum.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 0.85,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "healing-potion": {
+    "id": "healing-potion",
+    "name": "Potion of Healing",
+    "type": "potion",
+    "valueCoins": 50,
+    "description": "A character who drinks the magical red fluid in this vial regains 2d4 + 2 hit points.",
+    "physical": {
+      "weightLbs": 0.5,
+      "material": "glass"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "plate-armor": {
+    "id": "plate-armor",
+    "name": "Plate",
+    "type": "armor",
+    "valueCoins": 1500,
+    "description": "Plate consists of shaped, interlocking metal plates to cover the entire body.",
+    "physical": {
+      "weightLbs": 65,
+      "material": "steel"
+    },
+    "armor": {
+      "armorCategory": "heavy",
+      "acBonus": 18,
+      "maxDexBonus": 0,
+      "specialAbilities": [
+        "stealth-disadvantage",
+        "str-15"
+      ]
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "rope": {
+    "id": "rope",
+    "name": "Rope, Hempen (50 feet)",
+    "type": "consumable",
+    "valueCoins": 1,
+    "description": "50 feet of hemp rope with 2 hit points that can be burst with a DC 17 Strength check.",
+    "physical": {
+      "weightLbs": 10,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "rations": {
+    "id": "rations",
+    "name": "Rations (1 day)",
+    "type": "consumable",
+    "valueCoins": 0.5,
+    "description": "Compact dry foods suitable for travel including jerky, dried fruit, hardtack, and nuts.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "arrows": {
+    "id": "arrows",
+    "name": "Arrows (20)",
+    "type": "consumable",
+    "valueCoins": 1,
+    "description": "A bundle of twenty fletched arrows for a bow.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "crossbow-bolts": {
+    "id": "crossbow-bolts",
+    "name": "Crossbow Bolts (20)",
+    "type": "consumable",
+    "valueCoins": 1,
+    "description": "A quiver of twenty crossbow bolts.",
+    "physical": {
+      "weightLbs": 1.5,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "sling-bullets": {
+    "id": "sling-bullets",
+    "name": "Sling Bullets (20)",
+    "type": "consumable",
+    "valueCoins": 0.04,
+    "description": "A pouch of twenty lead bullets for a sling.",
+    "physical": {
+      "weightLbs": 1.5,
+      "material": "iron"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "blowgun-needles": {
+    "id": "blowgun-needles",
+    "name": "Blowgun Needles (50)",
+    "type": "consumable",
+    "valueCoins": 1,
+    "description": "A case containing fifty thin needles for a blowgun.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "ball-bearings": {
+    "id": "ball-bearings",
+    "name": "Ball Bearings (bag of 1,000)",
+    "type": "consumable",
+    "valueCoins": 1,
+    "description": "Cover a 10-foot-square area; moving creatures must make a DC 10 Dex saving throw or fall prone.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "caltrops": {
+    "id": "caltrops",
+    "name": "Caltrops (bag of 20)",
+    "type": "consumable",
+    "valueCoins": 1,
+    "description": "Cover a 5-foot square. Entering creatures take 1 piercing damage and lose 10 ft speed on failed DC 15 Dex save.",
+    "physical": {
+      "weightLbs": 2,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "chain": {
+    "id": "chain",
+    "name": "Chain (10 feet)",
+    "type": "tool",
+    "valueCoins": 5,
+    "description": "A heavy 10-foot iron chain with 10 HP; burst with DC 20 Strength check.",
+    "physical": {
+      "weightLbs": 10,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "chalk": {
+    "id": "chalk",
+    "name": "Chalk (1 piece)",
+    "type": "consumable",
+    "valueCoins": 0.01,
+    "description": "A stick of soft white limestone chalk for marking stone or wood.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "stone"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "spikes-iron": {
+    "id": "spikes-iron",
+    "name": "Spikes, Iron (10)",
+    "type": "tool",
+    "valueCoins": 1,
+    "description": "Ten heavy iron wedges for spiking doors shut or wedging traps.",
+    "physical": {
+      "weightLbs": 5,
+      "material": "steel"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "ladder": {
+    "id": "ladder",
+    "name": "Ladder (10-foot)",
+    "type": "tool",
+    "valueCoins": 0.1,
+    "description": "A 10-foot wooden runged ladder.",
+    "physical": {
+      "weightLbs": 25,
+      "material": "wood"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "pole": {
+    "id": "pole",
+    "name": "Pole (10-foot)",
+    "type": "tool",
+    "valueCoins": 0.05,
+    "description": "A 10-foot wooden pole used to prod floors for pit traps or test depths.",
+    "physical": {
+      "weightLbs": 7,
+      "material": "wood"
+    },
+    "tool": {
+      "category": "10-foot-pole"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "holy-water": {
+    "id": "holy-water",
+    "name": "Holy Water (flask)",
+    "type": "alchemical",
+    "valueCoins": 25,
+    "description": "Water blessed by a priest. Deals 2d6 radiant damage to fiends or undead on hit.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "glass"
+    },
+    "alchemical": {
+      "substanceType": "holy-water",
+      "damageDice": "2d6",
+      "damageType": "holy"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "acid": {
+    "id": "acid",
+    "name": "Acid (vial)",
+    "type": "alchemical",
+    "valueCoins": 25,
+    "description": "As an action, splash this vial on a target within 5 feet or throw it up to 20 feet. Deals 2d6 acid damage on hit.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "glass"
+    },
+    "alchemical": {
+      "substanceType": "acid-flask",
+      "damageDice": "2d6",
+      "damageType": "acid"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "alchemists-fire": {
+    "id": "alchemists-fire",
+    "name": "Alchemist's Fire (flask)",
+    "type": "alchemical",
+    "valueCoins": 50,
+    "description": "Sticky fluid that ignites when exposed to air. Deals 1d4 fire damage per turn until extinguished.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "glass"
+    },
+    "alchemical": {
+      "substanceType": "alchemists-fire",
+      "damageDice": "1d4",
+      "damageType": "fire",
+      "durationRounds": 10
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "antitoxin": {
+    "id": "antitoxin",
+    "name": "Antitoxin (vial)",
+    "type": "alchemical",
+    "valueCoins": 50,
+    "description": "Drinking this liquid grants advantage on saving throws against poison for 1 hour.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "glass"
+    },
+    "alchemical": {
+      "substanceType": "clearbreath",
+      "effectDescription": "Advantage on poison saving throws for 1 hour."
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "basic-poison": {
+    "id": "basic-poison",
+    "name": "Poison, Basic (vial)",
+    "type": "alchemical",
+    "valueCoins": 100,
+    "description": "Apply to weapon or ammunition; struck creature must make DC 10 Con save or take 1d4 poison damage.",
+    "physical": {
+      "weightLbs": 0,
+      "material": "glass"
+    },
+    "alchemical": {
+      "substanceType": "bladefire",
+      "damageDice": "1d4",
+      "damageType": "acid"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "oil": {
+    "id": "oil",
+    "name": "Oil (flask)",
+    "type": "consumable",
+    "valueCoins": 0.1,
+    "description": "Pint of combustible lamp oil. Burns for 6 hours or covers 5-foot square dealing 5 fire damage when ignited.",
+    "physical": {
+      "weightLbs": 1,
+      "material": "glass"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  },
+  "tent": {
+    "id": "tent",
+    "name": "Tent, Two-Person",
+    "type": "tool",
+    "valueCoins": 2,
+    "description": "A canvas shelter with collapsible poles accommodating two medium travelers.",
+    "physical": {
+      "weightLbs": 20,
+      "material": "cloth"
+    },
+    "provenance": {
+      "sourceId": "dnd-5e-players-handbook",
+      "extraction": {
+        "method": "procedural",
+        "confidence": 1.0,
+        "generator": {
+          "version": "1.0.0",
+          "seed": 5,
+          "templateId": "phb-equipment-parser"
+        }
+      },
+      "review": {
+        "status": "accepted"
+      }
+    }
+  }
+}

@@ -1,4 +1,14 @@
-import { VersionedAdventure, VersionedAdventureSchema, Location, Exit, Condition } from "@grimoire3d/ir";
+import {
+  VersionedAdventure,
+  VersionedAdventureSchema,
+  Location,
+  Exit,
+  Condition,
+  Item,
+  resolveItem,
+  getItem,
+  ITEM_REGISTRY,
+} from "@grimoire3d/ir";
 import { getSpell } from "@grimoire3d/spell-core";
 import {
   analyzeCombatWinnability,
@@ -112,6 +122,72 @@ export function validateAdventure(versionedAdv: unknown, options?: ValidatorOpti
       });
     }
     itemSet.add(item.id);
+
+    // Flag registry ID collisions: a custom item using an id that exists in the registry must be intentional
+    const registryItem = ITEM_REGISTRY[item.id];
+    if (registryItem) {
+      const diffFields: string[] = [];
+      const fieldsToCheck: (keyof Item)[] = [
+        "name",
+        "type",
+        "description",
+        "valueCoins",
+        "physical",
+        "weapon",
+        "armor",
+        "alchemical",
+        "tool",
+        "magic",
+      ];
+      for (const field of fieldsToCheck) {
+        if (JSON.stringify(item[field]) !== JSON.stringify(registryItem[field])) {
+          diffFields.push(field);
+        }
+      }
+      if (diffFields.length > 0) {
+        issues.push({
+          code: "ITEM_ID_SHADOWS_REGISTRY",
+          severity: "warning",
+          entityType: "item",
+          entityId: item.id,
+          message: `Custom item '${item.id}' shadows canonical registry item with differing fields: ${diffFields.join(", ")}`,
+          suggestedFix: `Confirm if overriding canonical item '${item.id}' is intended, or assign a unique custom ID.`,
+          provenanceRefs: item.provenance ? [item.provenance.sourceId] : undefined,
+        });
+      }
+    }
+  }
+
+  const isValidItemRef = (itemId: string): boolean => {
+    if (itemSet.has(itemId)) return true;
+    if (resolveItem(itemId, adv)) return true;
+    return false;
+  };
+
+  // Validate quest item references
+  for (const quest of adv.quests) {
+    if (quest.completionCondition.kind === "hasItem" && !isValidItemRef(quest.completionCondition.itemId)) {
+      issues.push({
+        code: "UNKNOWN_ITEM_REFERENCE",
+        severity: "error",
+        entityType: "quest",
+        entityId: quest.id,
+        message: `Quest '${quest.id}' completion condition requires unknown item ID '${quest.completionCondition.itemId}'.`,
+        suggestedFix: `Add item '${quest.completionCondition.itemId}' to adventure items or use a canonical registry item ID.`,
+      });
+    }
+    for (const eff of quest.rewards) {
+      if (eff.kind === "grantItem" && !isValidItemRef(eff.itemId)) {
+        issues.push({
+          code: "UNKNOWN_ITEM_REFERENCE",
+          severity: "error",
+          entityType: "quest",
+          entityId: quest.id,
+          message: `Quest '${quest.id}' reward grants unknown item ID '${eff.itemId}'.`,
+          suggestedFix: `Add item '${eff.itemId}' to adventure items or use a canonical registry item ID.`,
+        });
+      }
+    }
   }
 
   // Validate monsters
@@ -243,14 +319,25 @@ export function validateAdventure(versionedAdv: unknown, options?: ValidatorOpti
         });
       }
 
-      if (exit.locked?.keyItemId && !itemSet.has(exit.locked.keyItemId)) {
+      if (exit.locked?.keyItemId && !isValidItemRef(exit.locked.keyItemId)) {
         issues.push({
-          code: "MISSING_KEY_ITEM_DEFINITION",
+          code: "UNKNOWN_ITEM_REFERENCE",
           severity: "error",
           entityType: "exit",
           entityId: exit.id,
           message: `Locked exit '${exit.id}' references non-existent key item ID '${exit.locked.keyItemId}'.`,
-          suggestedFix: `Add '${exit.locked.keyItemId}' to adventure items array.`,
+          suggestedFix: `Add '${exit.locked.keyItemId}' to adventure items or use a canonical registry item ID.`,
+        });
+      }
+
+      if (exit.visibleWhen?.kind === "hasItem" && !isValidItemRef(exit.visibleWhen.itemId)) {
+        issues.push({
+          code: "UNKNOWN_ITEM_REFERENCE",
+          severity: "error",
+          entityType: "exit",
+          entityId: exit.id,
+          message: `Exit '${exit.id}' visibleWhen condition requires unknown item ID '${exit.visibleWhen.itemId}'.`,
+          suggestedFix: `Add '${exit.visibleWhen.itemId}' to adventure items or use a canonical registry item ID.`,
         });
       }
     }
@@ -266,14 +353,14 @@ export function validateAdventure(versionedAdv: unknown, options?: ValidatorOpti
           suggestedFix: `Point revealsExitId to a valid exit in '${loc.id}'.`,
         });
       }
-      if (secret.grantsItemId && !itemSet.has(secret.grantsItemId)) {
+      if (secret.grantsItemId && !isValidItemRef(secret.grantsItemId)) {
         issues.push({
-          code: "MISSING_SECRET_ITEM_DEFINITION",
+          code: "UNKNOWN_ITEM_REFERENCE",
           severity: "error",
           entityType: "secret",
           entityId: secret.id,
           message: `Secret '${secret.id}' grants non-existent item ID '${secret.grantsItemId}'.`,
-          suggestedFix: `Define item '${secret.grantsItemId}' in adventure items.`,
+          suggestedFix: `Define item '${secret.grantsItemId}' in adventure items or use a canonical registry item ID.`,
         });
       }
     }
@@ -281,14 +368,14 @@ export function validateAdventure(versionedAdv: unknown, options?: ValidatorOpti
     for (const inter of loc.interactables) {
       if (inter.onInspectEffects) {
         for (const eff of inter.onInspectEffects) {
-          if (eff.kind === "grantItem" && !itemSet.has(eff.itemId)) {
+          if (eff.kind === "grantItem" && !isValidItemRef(eff.itemId)) {
             issues.push({
-              code: "MISSING_INTERACTABLE_ITEM",
+              code: "UNKNOWN_ITEM_REFERENCE",
               severity: "error",
               entityType: "location",
               entityId: loc.id,
               message: `Interactable '${inter.id}' grants non-existent item ID '${eff.itemId}'.`,
-              suggestedFix: `Add item '${eff.itemId}' to adventure items.`,
+              suggestedFix: `Add item '${eff.itemId}' to adventure items or use a canonical registry item ID.`,
             });
           }
         }
@@ -320,6 +407,47 @@ export function validateAdventure(versionedAdv: unknown, options?: ValidatorOpti
             message: `Encounter '${loc.encounter.id}' requires flag '${loc.encounter.trigger.flag}' which is never set.`,
             suggestedFix: `Set trigger to 'always' or ensure flag '${loc.encounter.trigger.flag}' can be set.`,
           });
+        }
+      }
+
+      if (loc.encounter.trigger.kind === "hasItem" && !isValidItemRef(loc.encounter.trigger.itemId)) {
+        issues.push({
+          code: "UNKNOWN_ITEM_REFERENCE",
+          severity: "error",
+          entityType: "encounter",
+          entityId: loc.encounter.id,
+          message: `Encounter '${loc.encounter.id}' in '${loc.id}' trigger requires unknown item ID '${loc.encounter.trigger.itemId}'.`,
+          suggestedFix: `Add item '${loc.encounter.trigger.itemId}' to adventure items or use a canonical registry item ID.`,
+        });
+      }
+
+      if (loc.encounter.victoryEffects) {
+        for (const eff of loc.encounter.victoryEffects) {
+          if (eff.kind === "grantItem" && !isValidItemRef(eff.itemId)) {
+            issues.push({
+              code: "UNKNOWN_ITEM_REFERENCE",
+              severity: "error",
+              entityType: "encounter",
+              entityId: loc.encounter.id,
+              message: `Encounter '${loc.encounter.id}' victory effect grants unknown item ID '${eff.itemId}'.`,
+              suggestedFix: `Add item '${eff.itemId}' to adventure items or use a canonical registry item ID.`,
+            });
+          }
+        }
+      }
+
+      if (loc.encounter.defeatEffects) {
+        for (const eff of loc.encounter.defeatEffects) {
+          if (eff.kind === "grantItem" && !isValidItemRef(eff.itemId)) {
+            issues.push({
+              code: "UNKNOWN_ITEM_REFERENCE",
+              severity: "error",
+              entityType: "encounter",
+              entityId: loc.encounter.id,
+              message: `Encounter '${loc.encounter.id}' defeat effect grants unknown item ID '${eff.itemId}'.`,
+              suggestedFix: `Add item '${eff.itemId}' to adventure items or use a canonical registry item ID.`,
+            });
+          }
         }
       }
     }

@@ -1,4 +1,5 @@
 import { SimulatorEngine, GameAction, DomainEvent } from "./simulator";
+import { resolveItem } from "@grimoire3d/ir";
 
 export type AutoPlayStepResult = {
   action: GameAction;
@@ -32,7 +33,10 @@ export class AutoPlayAgent {
     const encounterActive = curLoc.encounter && !state.flags.get(`${curLoc.encounter.id}-defeated`) && !state.flags.get("altar-viper-defeated");
 
     if (state.inCombat || encounterActive) {
-      const healItem = Array.from(state.inventory).find((i) => i.includes("potion") || i.includes("healing"));
+      const healItem = Array.from(state.inventory).find((i) => {
+        const item = resolveItem(i, this.engine.adventure.adventure);
+        return item?.type === "potion" || i.includes("potion") || i.includes("healing");
+      });
       if (state.playerHp <= 12 && healItem) {
         return { kind: "useItem", itemId: healItem };
       }

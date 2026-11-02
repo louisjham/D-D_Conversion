@@ -525,6 +525,7 @@ export const AdventureSchema = z.object({
   locations: z.array(LocationSchema),
   npcs: z.array(NPCSchema),
   monsters: z.array(MonsterTemplateSchema),
+  // Module-level custom items: overrides canonical ITEM_REGISTRY when resolved via resolveItem(id, adventure)
   items: z.array(ItemSchema),
   quests: z.array(QuestSchema),
   randomTables: z.array(RandomTableSchema).optional(),

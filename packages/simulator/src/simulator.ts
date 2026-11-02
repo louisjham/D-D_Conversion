@@ -1,4 +1,15 @@
-import { VersionedAdventure, Location, Exit, Interactable, Secret, Encounter, RandomTableEntry, PlayerCharacter, Item } from "@grimoire3d/ir";
+import {
+  VersionedAdventure,
+  Location,
+  Exit,
+  Interactable,
+  Secret,
+  Encounter,
+  RandomTableEntry,
+  PlayerCharacter,
+  Item,
+  resolveItem,
+} from "@grimoire3d/ir";
 import {
   SeededRNG,
   resolveCheck,
@@ -795,7 +806,7 @@ export class SimulatorEngine {
     if (action.kind === "useItem") {
       const act = action as { kind: "useItem"; itemId: string; targetId?: string };
       const item =
-        this.adventure.adventure.items.find((i) => i.id === act.itemId) ||
+        resolveItem(act.itemId, this.adventure.adventure) ||
         STANDARD_EQUIPMENT_CATALOG.find((i) => i.id === act.itemId);
       if (!item) {
         return { success: false, message: `Item '${act.itemId}' not found.`, events: [] };
@@ -962,7 +973,7 @@ export class SimulatorEngine {
       }
 
       const weapon = act.weaponItemId
-        ? this.adventure.adventure.items.find((i) => i.id === act.weaponItemId) ||
+        ? resolveItem(act.weaponItemId, this.adventure.adventure) ||
           STANDARD_EQUIPMENT_CATALOG.find((i) => i.id === act.weaponItemId)
         : STANDARD_EQUIPMENT_CATALOG.find((i) => i.id === "item-adamantine-greatsword");
 
@@ -1012,7 +1023,7 @@ export class SimulatorEngine {
       }
 
       const tool = act.toolItemId
-        ? this.adventure.adventure.items.find((i) => i.id === act.toolItemId) ||
+        ? resolveItem(act.toolItemId, this.adventure.adventure) ||
           STANDARD_EQUIPMENT_CATALOG.find((i) => i.id === act.toolItemId)
         : undefined;
 

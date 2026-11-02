@@ -40,7 +40,7 @@ describe("@grimoire3d/procedural-generator — Constraint-Based Topology Generat
     expect(result.shortestPath.length).toBeGreaterThan(0);
 
     // Verify key was collected in final state inventory
-    expect(result.finalState?.inventory.has("dungeon-key-1234")).toBe(true);
+    expect(result.finalState?.inventory.has("brass-key")).toBe(true);
   });
 
   it("3. No generated dungeon is a pure linear chain (assert min branching factor & loops)", () => {

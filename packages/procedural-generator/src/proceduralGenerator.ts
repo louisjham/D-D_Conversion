@@ -6,6 +6,7 @@ import {
   Item,
   Encounter,
   Provenance,
+  resolveItem,
 } from "@grimoire3d/ir";
 import { SeededRNG } from "@grimoire3d/rules-core";
 import { validateAdventure } from "@grimoire3d/validator";
@@ -53,7 +54,7 @@ export class ProceduralGenerator {
           : "branching-with-bottleneck";
     }
 
-    const keyItemId = `dungeon-key-${opts.seed}`;
+    const keyItemId = 'brass-key';
     const biome =
       opts.theme === "cavern-complex"
         ? "cavern"
@@ -82,14 +83,13 @@ export class ProceduralGenerator {
     // 2. Generate Items
     const items: Item[] = [];
     if (opts.includeKeyLockPuzzle) {
-      items.push({
-        id: keyItemId,
-        name: `Ornate Brass Key #${opts.seed}`,
-        type: "key",
-        description: "A heavy brass key designed to unlock the sealed inner sanctum.",
-        valueCoins: 25,
-        provenance: createProvenance(keyItemId, "item-key"),
-      });
+      const canonicalKey = resolveItem("brass-key");
+      if (canonicalKey) {
+        items.push({
+          ...canonicalKey,
+          provenance: createProvenance("brass-key", "item-key"),
+        });
+      }
     }
 
     // 3. Generate Monster Templates
