@@ -20,6 +20,10 @@ export const ToolsInspectorView: React.FC = () => {
     diceFormula: "1d6",
     scaleWithCasterLevel: true,
     allowedClasses: ["mage", "wizard"],
+    range: { value: 150, unit: "feet" },
+    duration: { value: 0, unit: "instantaneous" },
+    castingTime: { value: 1, unit: "action" },
+    components: { verbal: true, somatic: true, material: "a tiny ball of bat guano and sulfur" },
     description: "Flames burst forth dealing 1d6 fire damage per caster level.",
   });
 
@@ -37,7 +41,7 @@ export const ToolsInspectorView: React.FC = () => {
   const handleCastSpell = () => {
     const rng = new SeededRNG(Math.floor(Math.random() * 10000));
     const res = SpellEvaluator.castSpell(spell, caster, rng);
-    setCaster({ ...caster });
+    setCaster(res.newCasterState);
     setSpellCastLog((prev) => [res.message, ...prev]);
   };
 

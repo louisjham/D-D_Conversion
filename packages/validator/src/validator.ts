@@ -1,4 +1,5 @@
 import { VersionedAdventure, VersionedAdventureSchema, Location, Exit, Condition } from "@grimoire3d/ir";
+import { getSpell } from "@grimoire3d/spell-core";
 import {
   analyzeCombatWinnability,
   WinnabilityOptions,
@@ -319,6 +320,93 @@ export function validateAdventure(versionedAdv: unknown, options?: ValidatorOpti
             message: `Encounter '${loc.encounter.id}' requires flag '${loc.encounter.trigger.flag}' which is never set.`,
             suggestedFix: `Set trigger to 'always' or ensure flag '${loc.encounter.trigger.flag}' can be set.`,
           });
+        }
+      }
+    }
+  }
+
+  // 3b. Spell Reference Validation
+  const customSpells = new Set<string>();
+  if (adv.spells) {
+    for (const s of adv.spells) {
+      customSpells.add(s.id);
+      customSpells.add(s.name.toLowerCase());
+    }
+  }
+
+  const isValidSpellRef = (spellId: string): boolean => {
+    if (customSpells.has(spellId) || customSpells.has(spellId.toLowerCase())) return true;
+    if (getSpell(spellId)) return true;
+    return false;
+  };
+
+  // Validate NPCs spell references
+  for (const npc of adv.npcs) {
+    if (npc.spellIds) {
+      for (const spellId of npc.spellIds) {
+        if (!isValidSpellRef(spellId)) {
+          issues.push({
+            code: "UNKNOWN_SPELL_REFERENCE",
+            severity: "error",
+            entityType: "npc",
+            entityId: npc.id,
+            message: `NPC '${npc.id}' references unknown spell '${spellId}'.`,
+            suggestedFix: `Add spell '${spellId}' to adventure.spells or use a valid canonical spell ID.`,
+          });
+        }
+      }
+    }
+  }
+
+  // Validate Locations (encounters, interactables, hazards) spell references
+  for (const loc of adv.locations) {
+    if (loc.encounter?.spellIds) {
+      for (const spellId of loc.encounter.spellIds) {
+        if (!isValidSpellRef(spellId)) {
+          issues.push({
+            code: "UNKNOWN_SPELL_REFERENCE",
+            severity: "error",
+            entityType: "encounter",
+            entityId: loc.encounter.id,
+            message: `Encounter '${loc.encounter.id}' in '${loc.id}' references unknown spell '${spellId}'.`,
+            suggestedFix: `Add spell '${spellId}' to adventure.spells or use a valid canonical spell ID.`,
+          });
+        }
+      }
+    }
+
+    for (const inter of loc.interactables) {
+      if (inter.spellIds) {
+        for (const spellId of inter.spellIds) {
+          if (!isValidSpellRef(spellId)) {
+            issues.push({
+              code: "UNKNOWN_SPELL_REFERENCE",
+              severity: "error",
+              entityType: "location",
+              entityId: loc.id,
+              message: `Interactable '${inter.id}' in '${loc.id}' references unknown spell '${spellId}'.`,
+              suggestedFix: `Add spell '${spellId}' to adventure.spells or use a valid canonical spell ID.`,
+            });
+          }
+        }
+      }
+    }
+
+    if (loc.boundaries?.hazards) {
+      for (const hazard of loc.boundaries.hazards) {
+        if (hazard.spellIds) {
+          for (const spellId of hazard.spellIds) {
+            if (!isValidSpellRef(spellId)) {
+              issues.push({
+                code: "UNKNOWN_SPELL_REFERENCE",
+                severity: "error",
+                entityType: "location",
+                entityId: loc.id,
+                message: `Hazard '${hazard.id}' in '${loc.id}' references unknown spell '${spellId}'.`,
+                suggestedFix: `Add spell '${spellId}' to adventure.spells or use a valid canonical spell ID.`,
+              });
+            }
+          }
         }
       }
     }

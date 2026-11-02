@@ -1,4 +1,7 @@
 import { z } from "zod";
+import { SpellSchema, type Spell } from "@grimoire3d/spell-core";
+
+export { SpellSchema, type Spell };
 
 // --- Provenance Schema ---
 export const ProvenanceSchema = z.object({
@@ -274,6 +277,7 @@ export const InteractableSchema = z.object({
   onInspectEffects: z.array(EffectSchema).optional(),
   physical: PhysicalObjectPropertiesSchema.optional(),
   provenance: ProvenanceSchema.optional(),
+  spellIds: z.array(z.string()).optional(),
 });
 export type Interactable = z.infer<typeof InteractableSchema>;
 
@@ -349,6 +353,7 @@ export const EncounterSchema = z.object({
   victoryEffects: z.array(EffectSchema).optional(),
   defeatEffects: z.array(EffectSchema).optional(),
   provenance: ProvenanceSchema.optional(),
+  spellIds: z.array(z.string()).optional(),
 });
 export type Encounter = z.infer<typeof EncounterSchema>;
 
@@ -370,6 +375,7 @@ export const NPCSchema = z.object({
       damageRoll: z.string(),
     })
     .optional(),
+  spellIds: z.array(z.string()).optional(),
 });
 export type NPC = z.infer<typeof NPCSchema>;
 
@@ -437,6 +443,7 @@ export const EnvironmentalHazardSchema = z.object({
   dc: z.number(),
   damage: z.string().optional(),
   description: z.string(),
+  spellIds: z.array(z.string()).optional(),
 });
 export type EnvironmentalHazard = z.infer<typeof EnvironmentalHazardSchema>;
 
@@ -521,6 +528,7 @@ export const AdventureSchema = z.object({
   items: z.array(ItemSchema),
   quests: z.array(QuestSchema),
   randomTables: z.array(RandomTableSchema).optional(),
+  spells: z.array(SpellSchema).optional(),
 });
 export type Adventure = z.infer<typeof AdventureSchema>;
 
