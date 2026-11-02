@@ -310,7 +310,15 @@ export class SimulatorEngine {
     this.state.emittedEvents.push(event);
   }
 
-  public executeAction(action: GameAction): { success: boolean; message: string; events: DomainEvent[] } {
+  public executeAction(action: GameAction): {
+    success: boolean;
+    message: string;
+    events: DomainEvent[];
+    combatStats?: {
+      victory: boolean;
+      damageByMonster: Record<string, number>;
+    };
+  } {
     if (this.state.gameEnded) {
       return { success: false, message: "Game has already ended.", events: [] };
     }
@@ -579,34 +587,50 @@ export class SimulatorEngine {
       }
 
       const enc = curLoc.encounter;
-      const enemySpec = enc.enemies[0];
-      const monster = this.adventure.adventure.monsters.find((m) => m.id === enemySpec.monsterTemplateId);
-      if (!monster) {
-        return { success: false, message: `Monster template '${enemySpec.monsterTemplateId}' missing.`, events: [] };
+      let allVictories = true;
+      const damageByMonster: Record<string, number> = {};
+
+      for (const enemySpec of enc.enemies) {
+        if (this.state.playerHp <= 0) {
+          allVictories = false;
+          break;
+        }
+
+        const monster = this.adventure.adventure.monsters.find((m) => m.id === enemySpec.monsterTemplateId);
+        if (!monster) {
+          return { success: false, message: `Monster template '${enemySpec.monsterTemplateId}' missing.`, events: [] };
+        }
+
+        this.emit({ type: "COMBAT_STARTED", encounterId: enc.id, monsterName: monster.name });
+
+        const combatRes = resolveSimpleCombat(
+          monster,
+          enemySpec.count,
+          {
+            hp: this.state.playerHp,
+            ac: this.state.playerAc,
+            attackBonus: this.state.playerAttackBonus,
+            damageBonus: 2,
+          },
+          this.rng
+        );
+
+        this.state.playerHp = combatRes.playerHpRemaining;
+        damageByMonster[monster.id] = (damageByMonster[monster.id] || 0) + (combatRes.damageDealtByMonster || 0);
+
+        for (const line of combatRes.log) {
+          this.state.actionLog.push(line);
+        }
+
+        if (!combatRes.victory) {
+          allVictories = false;
+          break;
+        }
       }
 
-      this.emit({ type: "COMBAT_STARTED", encounterId: enc.id, monsterName: monster.name });
+      this.emit({ type: "COMBAT_ENDED", encounterId: enc.id, victory: allVictories });
 
-      const combatRes = resolveSimpleCombat(
-        monster,
-        enemySpec.count,
-        {
-          hp: this.state.playerHp,
-          ac: this.state.playerAc,
-          attackBonus: this.state.playerAttackBonus,
-          damageBonus: 2,
-        },
-        this.rng
-      );
-
-      this.state.playerHp = combatRes.playerHpRemaining;
-      for (const line of combatRes.log) {
-        this.state.actionLog.push(line);
-      }
-
-      this.emit({ type: "COMBAT_ENDED", encounterId: enc.id, victory: combatRes.victory });
-
-      if (combatRes.victory) {
+      if (allVictories) {
         this.state.flags.set(`encounter-defeated-${enc.id}`, true);
         if (enc.victoryEffects) {
           for (const eff of enc.victoryEffects) {
@@ -616,7 +640,7 @@ export class SimulatorEngine {
           }
         }
         this.checkQuestCompletion();
-      } else if (!combatRes.victory) {
+      } else {
         this.state.gameEnded = true;
         this.state.gameOutcome = "defeat";
         this.emit({ type: "GAME_ENDED", outcome: "defeat" });
@@ -624,9 +648,13 @@ export class SimulatorEngine {
 
       const emitted = this.state.emittedEvents.slice(preEventCount);
       return {
-        success: combatRes.victory,
-        message: combatRes.victory ? "Combat victory!" : "Defeated in combat!",
+        success: allVictories,
+        message: allVictories ? "Combat victory!" : "Defeated in combat!",
         events: emitted,
+        combatStats: {
+          victory: allVictories,
+          damageByMonster,
+        },
       };
     }
 

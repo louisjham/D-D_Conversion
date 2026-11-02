@@ -1,4 +1,12 @@
 import { VersionedAdventure, VersionedAdventureSchema, Location, Exit, Condition } from "@grimoire3d/ir";
+import {
+  analyzeCombatWinnability,
+  WinnabilityOptions,
+  EncounterDifficultyReport,
+} from "./combatWinnability";
+
+export { analyzeCombatWinnability };
+export type { WinnabilityOptions, EncounterDifficultyReport };
 
 export type ValidationIssue = {
   code: string;
@@ -15,7 +23,11 @@ export type ValidationResult = {
   issues: ValidationIssue[];
 };
 
-export function validateAdventure(versionedAdv: unknown): ValidationResult {
+export interface ValidatorOptions extends WinnabilityOptions {
+  checkCombatWinnability?: boolean;
+}
+
+export function validateAdventure(versionedAdv: unknown, options?: ValidatorOptions): ValidationResult {
   const issues: ValidationIssue[] = [];
 
   // 1. Zod Schema Validation
@@ -350,6 +362,14 @@ export function validateAdventure(versionedAdv: unknown): ValidationResult {
   const stateSpaceAnalysis = analyzeStateSpaceSolvability(adv, locationMap);
   for (const issue of stateSpaceAnalysis) {
     issues.push(issue);
+  }
+
+  // 6. Combat Winnability & Difficulty Analysis
+  if (options?.checkCombatWinnability ?? true) {
+    const combatAnalysis = analyzeCombatWinnability(vAdventure, options);
+    for (const issue of combatAnalysis.issues) {
+      issues.push(issue);
+    }
   }
 
   const hasErrors = issues.some((i) => i.severity === "error");

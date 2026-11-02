@@ -73,6 +73,7 @@ export type CombatResult = {
   rounds: number;
   playerHpRemaining: number;
   log: string[];
+  damageDealtByMonster: number;
 };
 
 export function resolveSimpleCombat(
@@ -84,6 +85,7 @@ export function resolveSimpleCombat(
   let playerHp = playerStats.hp;
   let totalEnemyHp = monster.hp * count;
   let round = 0;
+  let damageDealtByMonster = 0;
   const log: string[] = [];
 
   log.push(`Combat started against ${count}x ${monster.name} (Total HP: ${totalEnemyHp})`);
@@ -130,6 +132,7 @@ export function resolveSimpleCombat(
     if (enemyHit) {
       const dmg = rng.rollDice(6) + aiDecision.bonusDamage;
       playerHp -= dmg;
+      damageDealtByMonster += dmg;
       log.push(`Round ${round}: ${monster.name} hits you for ${dmg} damage! (${Math.max(0, playerHp)} HP remaining)`);
     } else {
       log.push(`Round ${round}: ${monster.name} missed you (rolled ${enemyRoll}).`);
@@ -144,6 +147,7 @@ export function resolveSimpleCombat(
     rounds: round,
     playerHpRemaining: Math.max(0, playerHp),
     log,
+    damageDealtByMonster,
   };
 }
 
