@@ -121,6 +121,137 @@ export const SecretSchema = z.object({
 });
 export type Secret = z.infer<typeof SecretSchema>;
 
+// --- Physical Objects & Materials (Arms & Equipment Guide) ---
+export const ObjectMaterialEnum = z.enum([
+  "cloth",
+  "paper",
+  "glass",
+  "leather",
+  "wood",
+  "bone",
+  "stone",
+  "bronze",
+  "iron",
+  "steel",
+  "mithral",
+  "adamantine",
+  "darkwood",
+  "chitin",
+  "baatorian-green-steel",
+  "solanian-truesteel",
+  "gehennan-morghuth-iron",
+  "elven-darkleaf",
+  "elven-leafweave",
+  "blended-quartz",
+  "astral-driftmetal",
+  "urdrukar",
+  "ysgardian-heartwire",
+]);
+export type ObjectMaterial = z.infer<typeof ObjectMaterialEnum>;
+
+export const PhysicalObjectPropertiesSchema = z.object({
+  material: ObjectMaterialEnum.optional(),
+  hardness: z.number().optional(),
+  hp: z.number().optional(),
+  maxHp: z.number().optional(),
+  breakDc: z.number().optional(),
+  thicknessInches: z.number().optional(),
+  weightLbs: z.number().optional(),
+  size: z.enum(["fine", "diminutive", "tiny", "small", "medium", "large", "huge", "gargantuan", "colossal"]).optional(),
+  isBroken: z.boolean().optional(),
+  isLocked: z.boolean().optional(),
+  lockDc: z.number().optional(),
+  keyItemId: z.string().optional(),
+});
+export type PhysicalObjectProperties = z.infer<typeof PhysicalObjectPropertiesSchema>;
+
+export const WeaponPropertiesSchema = z.object({
+  damageDice: z.string(),
+  damageType: z.enum(["slashing", "piercing", "bludgeoning"]),
+  rangeFt: z.number().optional(),
+  properties: z.array(z.string()).optional(),
+  enhancementBonus: z.number().optional(),
+  critRange: z.number().optional(),
+  critMultiplier: z.number().optional(),
+  material: ObjectMaterialEnum.optional(),
+});
+export type WeaponProperties = z.infer<typeof WeaponPropertiesSchema>;
+
+export const ArmorPropertiesSchema = z.object({
+  armorCategory: z.enum(["light", "medium", "heavy", "shield"]),
+  acBonus: z.number(),
+  maxDexBonus: z.number().nullable().optional(),
+  armorCheckPenalty: z.number().optional(),
+  arcaneSpellFailure: z.number().optional(),
+  speedPenaltyFt: z.number().optional(),
+  material: ObjectMaterialEnum.optional(),
+  specialAbilities: z.array(z.string()).optional(),
+});
+export type ArmorProperties = z.infer<typeof ArmorPropertiesSchema>;
+
+export const AlchemicalPropertiesSchema = z.object({
+  substanceType: z.enum([
+    "bladefire",
+    "acid-flask",
+    "alchemists-fire",
+    "sparkstone",
+    "stonebreaker-acid",
+    "verminbane",
+    "gravebane",
+    "clearbreath",
+    "fleetfoot",
+    "ghostoil",
+    "holy-water",
+    "tanglefoot-bag",
+    "thunderstone",
+    "dwarfblind-stone",
+    "longbreath",
+    "defoliator",
+  ]),
+  damageDice: z.string().optional(),
+  damageType: z.enum(["acid", "fire", "lightning", "sonic", "holy", "bludgeoning"]).optional(),
+  splashDamage: z.number().optional(),
+  saveDc: z.number().optional(),
+  durationRounds: z.number().optional(),
+  effectDescription: z.string().optional(),
+});
+export type AlchemicalProperties = z.infer<typeof AlchemicalPropertiesSchema>;
+
+export const ToolPropertiesSchema = z.object({
+  category: z.enum([
+    "thieves-tools",
+    "crowbar",
+    "climbers-kit",
+    "healers-kit",
+    "listening-cone",
+    "grappling-hook",
+    "hacksaw",
+    "forgers-kit",
+    "10-foot-pole",
+    "portable-ram",
+    "magnifying-glass",
+  ]),
+  bonusSkill: z.string().optional(),
+  bonusAmount: z.number().optional(),
+  advantageOnCheck: z.boolean().optional(),
+});
+export type ToolProperties = z.infer<typeof ToolPropertiesSchema>;
+
+export const IntelligentOrCursedPropertiesSchema = z.object({
+  isIntelligent: z.boolean().optional(),
+  int: z.number().optional(),
+  wis: z.number().optional(),
+  cha: z.number().optional(),
+  ego: z.number().optional(),
+  communication: z.enum(["semi-empathy", "empathy", "speech", "telepathy"]).optional(),
+  alignment: z.string().optional(),
+  specialPurpose: z.string().optional(),
+  powers: z.array(z.string()).optional(),
+  isCursed: z.boolean().optional(),
+  curseDescription: z.string().optional(),
+});
+export type IntelligentOrCursedProperties = z.infer<typeof IntelligentOrCursedPropertiesSchema>;
+
 // --- Interactables ---
 export const InteractableSchema = z.object({
   id: z.string(),
@@ -134,6 +265,7 @@ export const InteractableSchema = z.object({
     })
     .optional(),
   onInspectEffects: z.array(EffectSchema).optional(),
+  physical: PhysicalObjectPropertiesSchema.optional(),
   provenance: ProvenanceSchema.optional(),
 });
 export type Interactable = z.infer<typeof InteractableSchema>;
@@ -233,9 +365,27 @@ export type NPC = z.infer<typeof NPCSchema>;
 export const ItemSchema = z.object({
   id: z.string(),
   name: z.string(),
-  type: z.enum(["key", "weapon", "armor", "potion", "quest", "treasure"]),
+  type: z.enum([
+    "key",
+    "weapon",
+    "armor",
+    "shield",
+    "potion",
+    "quest",
+    "treasure",
+    "tool",
+    "alchemical",
+    "container",
+    "consumable",
+  ]),
   description: z.string(),
   valueCoins: z.number().optional(),
+  physical: PhysicalObjectPropertiesSchema.optional(),
+  weapon: WeaponPropertiesSchema.optional(),
+  armor: ArmorPropertiesSchema.optional(),
+  alchemical: AlchemicalPropertiesSchema.optional(),
+  tool: ToolPropertiesSchema.optional(),
+  magic: IntelligentOrCursedPropertiesSchema.optional(),
   provenance: ProvenanceSchema.optional(),
 });
 export type Item = z.infer<typeof ItemSchema>;

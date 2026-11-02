@@ -1,4 +1,4 @@
-import { VersionedAdventure, Location, Exit, Interactable, Secret, Encounter, RandomTableEntry, PlayerCharacter } from "@grimoire3d/ir";
+import { VersionedAdventure, Location, Exit, Interactable, Secret, Encounter, RandomTableEntry, PlayerCharacter, Item } from "@grimoire3d/ir";
 import {
   SeededRNG,
   resolveCheck,
@@ -14,6 +14,13 @@ import {
   useSecondWind,
   resolveShortRest,
   resolveLongRest,
+  damageObject,
+  resolveBreakAttempt,
+  resolveLockpickAttempt,
+  resolveAlchemicalSubstance,
+  calcArmsAndEquipmentWeapon,
+  calcObjectDurability,
+  STANDARD_EQUIPMENT_CATALOG,
 } from "@grimoire3d/rules-core";
 
 export function parseAndRollDice(diceStr: string, rng: SeededRNG): number {
@@ -53,6 +60,9 @@ export type DomainEvent =
   | { type: "DOOR_FORCED"; exitId: string; success: boolean; noiseAlerted: boolean }
   | { type: "PARLEY_ATTEMPTED"; disposition: "hostile" | "cautious" | "neutral" | "friendly"; roll: number }
   | { type: "HAZARD_ENCOUNTERED"; hazardId: string; avoided: boolean; damage: number }
+  | { type: "OBJECT_DAMAGED"; interactableId: string; damage: number; remainingHp: number; isDestroyed: boolean }
+  | { type: "OBJECT_FORCED"; interactableId: string; success: boolean }
+  | { type: "ALCHEMICAL_USED"; itemId: string; substanceType: string; targetId?: string }
   | { type: "GAME_ENDED"; outcome: "victory" | "defeat" };
 
 export type Direction = "north" | "south" | "east" | "west" | "up" | "down";
@@ -65,6 +75,8 @@ export type GameAction =
   | { kind: "search"; targetId: string }
   | { kind: "interact"; targetId: string; verb: InteractionVerb }
   | { kind: "useItem"; itemId: string; targetId?: string }
+  | { kind: "attackObject"; targetId: string; weaponItemId?: string }
+  | { kind: "forceObject"; targetId: string; toolItemId?: string }
   | { kind: "combatAction"; action: CombatActionType }
   | { kind: "rollTable"; tableId: string }
   | { kind: "rest" }
@@ -681,7 +693,253 @@ export class SimulatorEngine {
       }
     }
 
-    // 12. Pickup Item Execution
+    // 12. PHB & Arms & Equipment: Use Item
+    if ("kind" in action && action.kind === "useItem") {
+      const act = action as { kind: "useItem"; itemId: string; targetId?: string };
+      const item =
+        this.adventure.adventure.items.find((i) => i.id === act.itemId) ||
+        STANDARD_EQUIPMENT_CATALOG.find((i) => i.id === act.itemId);
+      if (!item) {
+        return { success: false, message: `Item '${act.itemId}' not found.`, events: [] };
+      }
+      if (!this.state.inventory.has(act.itemId) && !this.state.inventory.has(item.id)) {
+        return { success: false, message: `Item '${item.name}' is not in your inventory.`, events: [] };
+      }
+
+      this.emit({ type: "ITEM_USED", itemId: item.id, targetId: act.targetId });
+
+      // A. Alchemical Item
+      if (item.type === "alchemical" || item.alchemical) {
+        let targetMaterial = undefined;
+        let targetName = act.targetId || "chamber";
+        const inter = curLoc.interactables.find((i) => i.id === act.targetId);
+        if (inter) {
+          targetName = inter.label;
+          targetMaterial = inter.physical?.material;
+        }
+
+        const alchRes = resolveAlchemicalSubstance(
+          item,
+          {
+            name: targetName,
+            material: targetMaterial,
+            isUndead: curLoc.encounter?.enemies.some(
+              (e) => e.monsterTemplateId.includes("skeleton") || e.monsterTemplateId.includes("zombie")
+            ),
+          },
+          this.rng
+        );
+
+        this.emit({
+          type: "ALCHEMICAL_USED",
+          itemId: item.id,
+          substanceType: item.alchemical?.substanceType || "acid-flask",
+          targetId: act.targetId,
+        });
+
+        // If stonebreaker acid against stone interactable
+        if (item.alchemical?.substanceType === "stonebreaker-acid" && inter) {
+          const dmgRes = damageObject(
+            {
+              id: inter.id,
+              hardness: inter.physical?.hardness,
+              hp: inter.physical?.hp,
+              maxHp: inter.physical?.maxHp,
+              material: inter.physical?.material || "stone",
+            },
+            alchRes.damage || 15,
+            "acid",
+            undefined,
+            "stonebreaker-acid"
+          );
+          if (inter.physical) inter.physical.hp = dmgRes.remainingHp;
+          if (dmgRes.isDestroyed) {
+            this.state.flags.set(`destroyed-${inter.id}`, true);
+            if (inter.physical) inter.physical.isBroken = true;
+          }
+          this.emit({
+            type: "OBJECT_DAMAGED",
+            interactableId: inter.id,
+            damage: dmgRes.damageDealt,
+            remainingHp: dmgRes.remainingHp,
+            isDestroyed: dmgRes.isDestroyed,
+          });
+          alchRes.message += ` ${dmgRes.message}`;
+        }
+
+        this.state.actionLog.push(`[Alchemical Item]: ${alchRes.message}`);
+        return { success: true, message: alchRes.message, events: this.state.emittedEvents.slice(preEventCount) };
+      }
+
+      // B. Tool: Crowbar
+      if (item.tool?.category === "crowbar") {
+        const targetId = act.targetId;
+        const inter = curLoc.interactables.find((i) => i.id === targetId);
+        const exit = curLoc.exits.find((e) => e.id === targetId);
+        if (!inter && !exit) {
+          return { success: false, message: "No door or chest specified to pry open with crowbar.", events: [] };
+        }
+        const breakRes = resolveBreakAttempt(
+          this.state.playerCharacter,
+          { breakDc: inter?.physical?.breakDc || exit?.forceDC || 16, label: inter?.label || exit?.id },
+          item,
+          this.rng
+        );
+        this.emit({ type: "OBJECT_FORCED", interactableId: targetId || "exit", success: breakRes.success });
+        if (breakRes.success) {
+          if (inter) {
+            if (inter.physical) inter.physical.isBroken = true;
+            this.state.flags.set(`forced-${inter.id}`, true);
+          }
+          if (exit) {
+            this.state.unlockedExits.add(exit.id);
+          }
+        }
+        this.state.actionLog.push(breakRes.message);
+        return { success: breakRes.success, message: breakRes.message, events: this.state.emittedEvents.slice(preEventCount) };
+      }
+
+      // C. Tool: Thieves' Tools
+      if (item.tool?.category === "thieves-tools") {
+        const targetId = act.targetId;
+        const inter = curLoc.interactables.find((i) => i.id === targetId);
+        const exit = curLoc.exits.find((e) => e.id === targetId);
+        const lockDc = inter?.physical?.lockDc || 15;
+        const lockRes = resolveLockpickAttempt(this.state.playerCharacter, lockDc, true, this.rng);
+        if (lockRes.success) {
+          if (inter) {
+            if (inter.physical) inter.physical.isLocked = false;
+            this.state.flags.set(`unlocked-${inter.id}`, true);
+          }
+          if (exit) {
+            this.state.unlockedExits.add(exit.id);
+            this.emit({ type: "EXIT_UNLOCKED", exitId: exit.id, method: "lockpick" });
+          }
+        }
+        this.state.actionLog.push(lockRes.message);
+        return { success: lockRes.success, message: lockRes.message, events: this.state.emittedEvents.slice(preEventCount) };
+      }
+
+      // D. Potion
+      if (item.type === "potion") {
+        const heal = parseAndRollDice("2d4+2", this.rng);
+        this.state.playerHp = Math.min(this.state.playerMaxHp, this.state.playerHp + heal);
+        this.state.playerCharacter.hp = this.state.playerHp;
+        const msg = `Quaffed '${item.name}', restoring ${heal} HP (Current: ${this.state.playerHp}/${this.state.playerMaxHp}).`;
+        this.state.actionLog.push(msg);
+        return { success: true, message: msg, events: this.state.emittedEvents.slice(preEventCount) };
+      }
+
+      // E. Key
+      if (item.type === "key") {
+        const exit = curLoc.exits.find((e) => e.locked?.keyItemId === item.id || e.id === act.targetId);
+        const inter = curLoc.interactables.find((i) => i.physical?.keyItemId === item.id || i.id === act.targetId);
+        if (exit) {
+          this.state.unlockedExits.add(exit.id);
+          this.emit({ type: "EXIT_UNLOCKED", exitId: exit.id, method: "key" });
+          const msg = `Unlocked portal '${exit.id}' with ${item.name}!`;
+          this.state.actionLog.push(msg);
+          return { success: true, message: msg, events: this.state.emittedEvents.slice(preEventCount) };
+        }
+        if (inter) {
+          if (inter.physical) inter.physical.isLocked = false;
+          this.state.flags.set(`unlocked-${inter.id}`, true);
+          const msg = `Unlocked '${inter.label}' with ${item.name}!`;
+          this.state.actionLog.push(msg);
+          return { success: true, message: msg, events: this.state.emittedEvents.slice(preEventCount) };
+        }
+      }
+
+      const defaultMsg = `Used item '${item.name}'.`;
+      this.state.actionLog.push(defaultMsg);
+      return { success: true, message: defaultMsg, events: this.state.emittedEvents.slice(preEventCount) };
+    }
+
+    // 13. Arms & Equipment: Attack / Sunder Object
+    if ("kind" in action && action.kind === "attackObject") {
+      const act = action as { kind: "attackObject"; targetId: string; weaponItemId?: string };
+      const inter = curLoc.interactables.find((i) => i.id === act.targetId);
+      if (!inter) {
+        return { success: false, message: `Object '${act.targetId}' not found in this chamber.`, events: [] };
+      }
+
+      const weapon = act.weaponItemId
+        ? this.adventure.adventure.items.find((i) => i.id === act.weaponItemId) ||
+          STANDARD_EQUIPMENT_CATALOG.find((i) => i.id === act.weaponItemId)
+        : STANDARD_EQUIPMENT_CATALOG.find((i) => i.id === "item-adamantine-greatsword");
+
+      const weaponMaterial = weapon?.weapon?.material || "steel";
+      const baseDmg = parseAndRollDice(weapon?.weapon?.damageDice || "1d8", this.rng) + 2;
+
+      const dmgRes = damageObject(
+        {
+          id: inter.id,
+          label: inter.label,
+          hardness: inter.physical?.hardness,
+          hp: inter.physical?.hp,
+          maxHp: inter.physical?.maxHp,
+          material: inter.physical?.material || "wood",
+        },
+        baseDmg,
+        weapon?.weapon?.damageType || "slashing",
+        weaponMaterial
+      );
+
+      if (inter.physical) {
+        inter.physical.hp = dmgRes.remainingHp;
+        if (dmgRes.isDestroyed) {
+          inter.physical.isBroken = true;
+          this.state.flags.set(`destroyed-${inter.id}`, true);
+        }
+      }
+
+      this.emit({
+        type: "OBJECT_DAMAGED",
+        interactableId: inter.id,
+        damage: dmgRes.damageDealt,
+        remainingHp: dmgRes.remainingHp,
+        isDestroyed: dmgRes.isDestroyed,
+      });
+
+      this.state.actionLog.push(`[Sunder Object: ${inter.label}]: ${dmgRes.message}`);
+      return { success: true, message: dmgRes.message, events: this.state.emittedEvents.slice(preEventCount) };
+    }
+
+    // 14. Arms & Equipment: Force Object
+    if ("kind" in action && action.kind === "forceObject") {
+      const act = action as { kind: "forceObject"; targetId: string; toolItemId?: string };
+      const inter = curLoc.interactables.find((i) => i.id === act.targetId);
+      if (!inter) {
+        return { success: false, message: `Object '${act.targetId}' not found in this chamber.`, events: [] };
+      }
+
+      const tool = act.toolItemId
+        ? this.adventure.adventure.items.find((i) => i.id === act.toolItemId) ||
+          STANDARD_EQUIPMENT_CATALOG.find((i) => i.id === act.toolItemId)
+        : undefined;
+
+      const breakRes = resolveBreakAttempt(
+        this.state.playerCharacter,
+        { breakDc: inter.physical?.breakDc || 16, label: inter.label },
+        tool,
+        this.rng
+      );
+
+      this.emit({ type: "OBJECT_FORCED", interactableId: inter.id, success: breakRes.success });
+
+      if (breakRes.success) {
+        if (inter.physical) {
+          inter.physical.isBroken = true;
+          inter.physical.isLocked = false;
+        }
+        this.state.flags.set(`forced-${inter.id}`, true);
+      }
+
+      this.state.actionLog.push(breakRes.message);
+      return { success: breakRes.success, message: breakRes.message, events: this.state.emittedEvents.slice(preEventCount) };
+    }
+
+    // 15. Pickup Item Execution
     if ((action as any).type === "PICKUP_ITEM") {
       const itemId = (action as any).itemId;
       this.state.inventory.add(itemId);
