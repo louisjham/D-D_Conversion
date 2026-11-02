@@ -170,7 +170,7 @@ describe("B2: The Keep on the Borderlands IR Validation & Simulation", () => {
 
     // 1. Force the Kobold Chieftain's locked chest with a crowbar
     engine.state.currentLocationId = "cave-a-chieftain";
-    engine.executeAction({ type: "PICKUP_ITEM", itemId: "item-crowbar" });
+    engine.executeAction({ kind: "pickupItem", itemId: "item-crowbar" });
 
     const crowbarRes = engine.executeAction({
       kind: "useItem",
@@ -182,7 +182,7 @@ describe("B2: The Keep on the Borderlands IR Validation & Simulation", () => {
 
     // 2. Attack Iron Portcullis with Adamantine Greatsword (hardness bypass)
     engine.state.currentLocationId = "keep-main-gate";
-    engine.executeAction({ type: "PICKUP_ITEM", itemId: "item-adamantine-greatsword" });
+    engine.executeAction({ kind: "pickupItem", itemId: "item-adamantine-greatsword" });
     const sunderRes = engine.executeAction({
       kind: "attackObject",
       targetId: "main-portcullis",
@@ -193,7 +193,7 @@ describe("B2: The Keep on the Borderlands IR Validation & Simulation", () => {
 
     // 3. Dissolve Stone Altar in Cave J Shrine with Stonebreaker Acid
     engine.state.currentLocationId = "cave-j-altar";
-    engine.executeAction({ type: "PICKUP_ITEM", itemId: "item-stonebreaker-acid" });
+    engine.executeAction({ kind: "pickupItem", itemId: "item-stonebreaker-acid" });
     const acidRes = engine.executeAction({
       kind: "useItem",
       itemId: "item-stonebreaker-acid",

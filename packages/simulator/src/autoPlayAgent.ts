@@ -63,7 +63,7 @@ export class AutoPlayAgent {
     for (const exit of curLoc.exits) {
       if (exit.locked && !state.unlockedExits.has(exit.id)) {
         if (exit.locked.keyItemId && state.inventory.has(exit.locked.keyItemId)) {
-          return { type: "UNLOCK_EXIT", exitId: exit.id };
+          return { kind: "unlockExit", exitId: exit.id };
         }
       }
     }

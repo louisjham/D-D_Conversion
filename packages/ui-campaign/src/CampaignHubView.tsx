@@ -151,7 +151,7 @@ export const CampaignHubView: React.FC<CampaignHubViewProps> = ({
                     <h5 className="font-bold text-xs text-emerald-400">Wayfarer Inn Rest</h5>
                     <p className="text-xs text-slate-300">Rest 8 hours at the inn to recover party HP and advance world time.</p>
                     <button
-                      onClick={() => onDispatchAction({ type: "REST_AT_HUB", hours: 8 })}
+                      onClick={() => onDispatchAction({ kind: "rest_at_hub", hours: 8 })}
                       className="px-3 py-1.5 bg-emerald-950 hover:bg-emerald-900 border border-emerald-800 text-emerald-300 text-xs font-bold rounded flex items-center gap-1.5"
                     >
                       <Bed className="w-3.5 h-3.5" /> Rest 8 Hours (Advance Time)
@@ -169,7 +169,7 @@ export const CampaignHubView: React.FC<CampaignHubViewProps> = ({
                           <div className="flex items-center gap-3">
                             <span className="text-amber-400 font-mono">{item.costGold} GP</span>
                             <button
-                              onClick={() => onDispatchAction({ type: "BUY_ITEM", itemId: item.id, costGold: item.costGold })}
+                              onClick={() => onDispatchAction({ kind: "buy_item", itemId: item.id, costGold: item.costGold })}
                               className="px-2.5 py-0.5 bg-amber-950 hover:bg-amber-900 border border-amber-800 text-amber-300 text-[11px] rounded"
                             >
                               Buy
@@ -186,7 +186,7 @@ export const CampaignHubView: React.FC<CampaignHubViewProps> = ({
                     <h5 className="font-bold text-xs text-indigo-400">Broken Shield Tavern</h5>
                     <p className="text-xs text-slate-300">Gather rumors and news from passing travelers.</p>
                     <button
-                      onClick={() => onDispatchAction({ type: "HEAR_RUMOR", rumorId: "rumor-viper-talisman" })}
+                      onClick={() => onDispatchAction({ kind: "hear_rumor", rumorId: "rumor-viper-talisman" })}
                       className="px-3 py-1.5 bg-indigo-950 hover:bg-indigo-900 border border-indigo-800 text-indigo-300 text-xs font-bold rounded flex items-center gap-1.5"
                     >
                       <MessageSquare className="w-3.5 h-3.5" /> Listen for Rumors
@@ -199,7 +199,7 @@ export const CampaignHubView: React.FC<CampaignHubViewProps> = ({
                     <h5 className="font-bold text-xs text-rose-400">Captain Vane's Bounty Office</h5>
                     <p className="text-xs text-slate-300">Accept quest objective to recover the Sun Talisman from the Broken Ravine.</p>
                     <button
-                      onClick={() => onDispatchAction({ type: "ACCEPT_QUEST", questId: "quest-sun-talisman" })}
+                      onClick={() => onDispatchAction({ kind: "accept_quest", questId: "quest-sun-talisman" })}
                       className="px-3 py-1.5 bg-rose-950 hover:bg-rose-900 border border-rose-800 text-rose-300 text-xs font-bold rounded flex items-center gap-1.5"
                     >
                       <Shield className="w-3.5 h-3.5" /> Accept Sun Talisman Quest (100 GP Reward)
@@ -239,7 +239,7 @@ export const CampaignHubView: React.FC<CampaignHubViewProps> = ({
                 </h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div
-                    onClick={() => onDispatchAction({ type: "CHOOSE_ROUTE", routeId: "north-road" })}
+                    onClick={() => onDispatchAction({ kind: "choose_route", routeId: "north-road" })}
                     className={`p-3 rounded-lg border cursor-pointer transition-all ${
                       session.state.activeRouteId === "north-road" ? "bg-sky-950/40 border-sky-600" : "bg-slate-950 border-slate-800"
                     }`}
@@ -249,7 +249,7 @@ export const CampaignHubView: React.FC<CampaignHubViewProps> = ({
                   </div>
 
                   <div
-                    onClick={() => onDispatchAction({ type: "CHOOSE_ROUTE", routeId: "fen-path" })}
+                    onClick={() => onDispatchAction({ kind: "choose_route", routeId: "fen-path" })}
                     className={`p-3 rounded-lg border cursor-pointer transition-all ${
                       session.state.activeRouteId === "fen-path" ? "bg-sky-950/40 border-sky-600" : "bg-slate-950 border-slate-800"
                     }`}
@@ -262,9 +262,9 @@ export const CampaignHubView: React.FC<CampaignHubViewProps> = ({
                 <div className="flex items-center gap-3 pt-2">
                   <button
                     onClick={() => {
-                      onDispatchAction({ type: "BEGIN_TRAVEL" });
-                      onDispatchAction({ type: "RESOLVE_TRAVEL" });
-                      onDispatchAction({ type: "ENTER_DUNGEON" });
+                      onDispatchAction({ kind: "begin_travel" });
+                      onDispatchAction({ kind: "resolve_travel" });
+                      onDispatchAction({ kind: "enter_dungeon" });
                     }}
                     className="px-4 py-2 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700 text-emerald-200 font-bold rounded text-xs flex items-center gap-2"
                   >
@@ -320,7 +320,7 @@ export const CampaignHubView: React.FC<CampaignHubViewProps> = ({
             <div className="flex-1 overflow-auto space-y-1 font-mono text-[10px] text-slate-300 pr-1">
               {session.state.emittedEvents.slice(-8).map((ev, idx) => (
                 <div key={`ev-${idx}`} className="p-1.5 bg-slate-950 rounded border border-slate-800">
-                  <span className="text-amber-400 font-bold">[{ev.type}]</span> {JSON.stringify(ev.payload)}
+                  <span className="text-amber-400 font-bold">[{ev.kind}]</span> {JSON.stringify(ev.payload)}
                 </div>
               ))}
             </div>

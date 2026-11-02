@@ -41,36 +41,36 @@ export function parseAndRollDice(diceStr: string, rng: SeededRNG): number {
 }
 
 export type DomainEvent =
-  | { type: "PLAYER_MOVED"; fromRoomId: string; toRoomId: string; exitId: string }
-  | { type: "ROOM_DISCOVERED"; roomId: string; label: string }
-  | { type: "FOG_REVEALED"; roomId: string }
-  | { type: "ITEM_GRANTED"; itemId: string; source: string }
-  | { type: "ITEM_USED"; itemId: string; targetId?: string }
-  | { type: "SECRET_DISCOVERED"; secretId: string; perceptionDC: number; rollTotal: number }
-  | { type: "EXIT_UNLOCKED"; exitId: string; method: "key" | "lockpick" }
-  | { type: "CHECK_RESOLVED"; ability: string; dc: number; roll: number; success: boolean }
-  | { type: "TRAP_TRIGGERED"; interactableId: string; disarmed: boolean }
-  | { type: "COMBAT_STARTED"; encounterId: string; monsterName: string }
-  | { type: "COMBAT_ROUND_RESOLVED"; round: number; playerHp: number; enemyHp: number }
-  | { type: "COMBAT_ENDED"; encounterId: string; victory: boolean }
-  | { type: "QUEST_UPDATED"; questId: string; status: "started" | "completed" }
-  | { type: "RANDOM_TABLE_ROLLED"; tableId: string; tableName: string; rollResult: number; entryResult: string }
-  | { type: "WANDERING_ENCOUNTER_TRIGGERED"; tableId: string; entityId?: string; encounterText: string }
-  | { type: "LISTEN_ATTEMPTED"; exitId: string; heard: boolean; notice?: string }
-  | { type: "DOOR_FORCED"; exitId: string; success: boolean; noiseAlerted: boolean }
-  | { type: "PARLEY_ATTEMPTED"; disposition: "hostile" | "cautious" | "neutral" | "friendly"; roll: number }
-  | { type: "HAZARD_ENCOUNTERED"; hazardId: string; avoided: boolean; damage: number }
-  | { type: "OBJECT_DAMAGED"; interactableId: string; damage: number; remainingHp: number; isDestroyed: boolean }
-  | { type: "OBJECT_FORCED"; interactableId: string; success: boolean }
-  | { type: "ALCHEMICAL_USED"; itemId: string; substanceType: string; targetId?: string }
-  | { type: "GAME_ENDED"; outcome: "victory" | "defeat" };
+  | { kind: "player_moved"; fromRoomId: string; toRoomId: string; exitId: string }
+  | { kind: "room_discovered"; roomId: string; label: string }
+  | { kind: "fog_revealed"; roomId: string }
+  | { kind: "item_granted"; itemId: string; source: string }
+  | { kind: "item_used"; itemId: string; targetId?: string }
+  | { kind: "secret_discovered"; secretId: string; perceptionDC: number; rollTotal: number }
+  | { kind: "exit_unlocked"; exitId: string; method: "key" | "lockpick" }
+  | { kind: "check_resolved"; ability: string; dc: number; roll: number; success: boolean }
+  | { kind: "trap_triggered"; interactableId: string; disarmed: boolean }
+  | { kind: "combat_started"; encounterId: string; monsterName: string }
+  | { kind: "combat_round_resolved"; round: number; playerHp: number; enemyHp: number }
+  | { kind: "combat_ended"; encounterId: string; victory: boolean }
+  | { kind: "quest_updated"; questId: string; status: "started" | "completed" }
+  | { kind: "random_table_rolled"; tableId: string; tableName: string; rollResult: number; entryResult: string }
+  | { kind: "wandering_encounter_triggered"; tableId: string; entityId?: string; encounterText: string }
+  | { kind: "listen_attempted"; exitId: string; heard: boolean; notice?: string }
+  | { kind: "door_forced"; exitId: string; success: boolean; noiseAlerted: boolean }
+  | { kind: "parley_attempted"; disposition: "hostile" | "cautious" | "neutral" | "friendly"; roll: number }
+  | { kind: "hazard_encountered"; hazardId: string; avoided: boolean; damage: number }
+  | { kind: "object_damaged"; interactableId: string; damage: number; remainingHp: number; isDestroyed: boolean }
+  | { kind: "object_forced"; interactableId: string; success: boolean }
+  | { kind: "alchemical_used"; itemId: string; substanceType: string; targetId?: string }
+  | { kind: "game_ended"; outcome: "victory" | "defeat" };
 
 export type Direction = "north" | "south" | "east" | "west" | "up" | "down";
 export type InteractionVerb = "inspect" | "open" | "disarm" | "search" | "take" | "talk";
 export type CombatActionType = "attack" | "defend" | "flee" | "useItem";
 
 export type GameAction =
-  | { kind: "move"; direction: Direction; exitId?: string }
+  | { kind: "move"; direction?: Direction; exitId?: string }
   | { kind: "inspect"; targetId: string }
   | { kind: "search"; targetId: string }
   | { kind: "interact"; targetId: string; verb: InteractionVerb }
@@ -87,13 +87,9 @@ export type GameAction =
   | { kind: "searchTraps" }
   | { kind: "parley" }
   | { kind: "flee" }
-  // Legacy / Direct Actions
-  | { type: "MOVE"; exitId: string }
-  | { type: "INSPECT"; interactableId: string }
-  | { type: "SEARCH_SECRET"; secretId: string }
-  | { type: "UNLOCK_EXIT"; exitId: string }
-  | { type: "RESOLVE_COMBAT"; encounterId: string }
-  | { type: "PICKUP_ITEM"; itemId: string };
+  | { kind: "unlockExit"; exitId: string }
+  | { kind: "resolveCombat"; encounterId: string }
+  | { kind: "pickupItem"; itemId: string };
 
 export type GameState = {
   currentLocationId: string;
@@ -187,8 +183,8 @@ export class SimulatorEngine {
       discoveredRooms,
       actionLog: [`Entered ${startLoc ? startLoc.label : startId}`],
       emittedEvents: [
-        { type: "ROOM_DISCOVERED", roomId: startId, label: startLoc ? startLoc.label : startId },
-        { type: "FOG_REVEALED", roomId: startId },
+        { kind: "room_discovered", roomId: startId, label: startLoc ? startLoc.label : startId },
+        { kind: "fog_revealed", roomId: startId },
       ],
       inCombat: false,
       gameEnded: false,
@@ -240,13 +236,13 @@ export class SimulatorEngine {
       this.state.gameOutcome = "victory";
 
       if (isEscapeTunnel) {
-        this.emit({ type: "QUEST_UPDATED", questId: "escape-crypt", status: "completed" });
+        this.emit({ kind: "quest_updated", questId: "escape-crypt", status: "completed" });
       }
       quests.forEach((q) => {
-        if (questsCompleted) this.emit({ type: "QUEST_UPDATED", questId: q.id, status: "completed" });
+        if (questsCompleted) this.emit({ kind: "quest_updated", questId: q.id, status: "completed" });
       });
 
-      this.emit({ type: "GAME_ENDED", outcome: "victory" });
+      this.emit({ kind: "game_ended", outcome: "victory" });
 
       const victoryText = isEscapeTunnel
         ? "VICTORY! You escaped the Serpent Altar Crypt!"
@@ -268,7 +264,7 @@ export class SimulatorEngine {
 
     const entryDesc = entry ? (entry.result.text || entry.result.entityId || entry.result.kind) : "No effect";
     const event: DomainEvent = {
-      type: "RANDOM_TABLE_ROLLED",
+      kind: "random_table_rolled",
       tableId: table.id,
       tableName: table.name,
       rollResult: roll,
@@ -279,7 +275,7 @@ export class SimulatorEngine {
     if (entry) {
       if (entry.result.kind === "encounter") {
         this.emit({
-          type: "WANDERING_ENCOUNTER_TRIGGERED",
+          kind: "wandering_encounter_triggered",
           tableId: table.id,
           entityId: entry.result.entityId,
           encounterText: entry.result.text || `Wandering ${entry.result.entityId || "monster"} appeared!`,
@@ -287,7 +283,7 @@ export class SimulatorEngine {
         this.state.actionLog.push(`[Table Roll: ${table.name}] Rolled ${roll} -> ${entry.result.text || entry.result.entityId}`);
       } else if (entry.result.kind === "item" && entry.result.entityId) {
         this.state.inventory.add(entry.result.entityId);
-        this.emit({ type: "ITEM_GRANTED", itemId: entry.result.entityId, source: table.id });
+        this.emit({ kind: "item_granted", itemId: entry.result.entityId, source: table.id });
         this.state.actionLog.push(`[Table Roll: ${table.name}] Rolled ${roll} -> Granted item '${entry.result.entityId}'`);
       } else if (entry.result.kind === "flag" && entry.result.entityId) {
         this.state.flags.set(entry.result.entityId, true);
@@ -331,34 +327,28 @@ export class SimulatorEngine {
     let targetInteractableId: string | undefined;
     let targetSecretId: string | undefined;
 
-    if ("kind" in action) {
-      if (action.kind === "move") {
-        if (action.exitId) {
-          targetExitId = action.exitId;
-        } else {
-          const exit = curLoc.exits.find((e) => e.direction === action.direction);
-          if (exit) targetExitId = exit.id;
-        }
-      } else if (action.kind === "inspect" || action.kind === "interact") {
-        targetInteractableId = action.targetId;
-      } else if (action.kind === "search") {
-        targetSecretId = action.targetId;
+    if (action.kind === "move") {
+      if (action.exitId) {
+        targetExitId = action.exitId;
+      } else if (action.direction) {
+        const exit = curLoc.exits.find((e) => e.direction === action.direction);
+        if (exit) targetExitId = exit.id;
       }
-    } else {
-      if (action.type === "MOVE") targetExitId = action.exitId;
-      if (action.type === "INSPECT") targetInteractableId = action.interactableId;
-      if (action.type === "SEARCH_SECRET") targetSecretId = action.secretId;
+    } else if (action.kind === "inspect" || action.kind === "interact") {
+      targetInteractableId = action.targetId;
+    } else if (action.kind === "search") {
+      targetSecretId = action.targetId;
     }
 
     // 1. Move Execution
-    if (targetExitId || (action as any).type === "MOVE" || (action as any).kind === "move") {
-      const exitId = targetExitId || (action as any).exitId;
+    if (action.kind === "move") {
+      const exitId = targetExitId || action.exitId;
       const exit = targetExitId
         ? curLoc.exits.find((e) => e.id === targetExitId)
-        : curLoc.exits.find((e) => e.id === exitId || e.direction === (action as any).direction);
+        : curLoc.exits.find((e) => e.id === exitId || e.direction === action.direction);
 
       if (!exit) {
-        return { success: false, message: `No valid exit in direction ${(action as any).direction || exitId}.`, events: [] };
+        return { success: false, message: `No valid exit in direction ${action.direction || exitId}.`, events: [] };
       }
 
       // Check secret visibility
@@ -370,7 +360,7 @@ export class SimulatorEngine {
       if (exit.locked && !this.state.unlockedExits.has(exit.id)) {
         if (exit.locked.keyItemId && this.state.inventory.has(exit.locked.keyItemId)) {
           this.state.unlockedExits.add(exit.id);
-          this.emit({ type: "EXIT_UNLOCKED", exitId: exit.id, method: "key" });
+          this.emit({ kind: "exit_unlocked", exitId: exit.id, method: "key" });
           this.state.actionLog.push(`Unlocked exit using '${exit.locked.keyItemId}'`);
         } else {
           return { success: false, message: `Exit '${exit.id}' is locked! Key required: ${exit.locked.keyItemId || "Lockpick"}.`, events: [] };
@@ -401,9 +391,9 @@ export class SimulatorEngine {
 
       this.state.discoveredRooms.add(newLoc.id);
 
-      this.emit({ type: "PLAYER_MOVED", fromRoomId: prevRoomId, toRoomId: newLoc.id, exitId: exit.id });
-      this.emit({ type: "ROOM_DISCOVERED", roomId: newLoc.id, label: newLoc.label });
-      this.emit({ type: "FOG_REVEALED", roomId: newLoc.id });
+      this.emit({ kind: "player_moved", fromRoomId: prevRoomId, toRoomId: newLoc.id, exitId: exit.id });
+      this.emit({ kind: "room_discovered", roomId: newLoc.id, label: newLoc.label });
+      this.emit({ kind: "fog_revealed", roomId: newLoc.id });
 
       const msg = `Moved to ${newLoc.label}`;
       this.state.actionLog.push(msg);
@@ -413,7 +403,7 @@ export class SimulatorEngine {
         for (const haz of newLoc.boundaries.hazards) {
           if (!this.state.flags.get(`hazard-${haz.id}-avoided`)) {
             const hazRes = resolveEnvironmentalHazard(this.rng, haz);
-            this.emit({ type: "HAZARD_ENCOUNTERED", hazardId: haz.id, avoided: hazRes.avoided, damage: hazRes.damageDealt });
+            this.emit({ kind: "hazard_encountered", hazardId: haz.id, avoided: hazRes.avoided, damage: hazRes.damageDealt });
             if (!hazRes.avoided) {
               this.state.playerHp = Math.max(1, this.state.playerHp - hazRes.damageDealt);
               this.state.actionLog.push(`Triggered hazard '${haz.id}': ${hazRes.message}`);
@@ -433,8 +423,8 @@ export class SimulatorEngine {
     }
 
     // 2. Inspect / Interactable Execution
-    if (targetInteractableId || (action as any).type === "INSPECT") {
-      const interId = targetInteractableId || (action as any).interactableId;
+    if (action.kind === "inspect" || action.kind === "interact") {
+      const interId = targetInteractableId || action.targetId;
       const inter = curLoc.interactables.find((i) => i.id === interId);
       if (!inter) {
         return { success: false, message: `Interactable '${interId}' not found.`, events: [] };
@@ -453,7 +443,7 @@ export class SimulatorEngine {
         if (!hasBypassKey) {
           const res = resolveCheck(inter.inspectionCheck.dc, 3, this.rng);
           this.emit({
-            type: "CHECK_RESOLVED",
+            kind: "check_resolved",
             ability: inter.inspectionCheck.ability,
             dc: inter.inspectionCheck.dc,
             roll: res.roll,
@@ -475,7 +465,7 @@ export class SimulatorEngine {
         for (const eff of inter.onInspectEffects) {
           if (eff.kind === "grantItem") {
             this.state.inventory.add(eff.itemId);
-            this.emit({ type: "ITEM_GRANTED", itemId: eff.itemId, source: inter.id });
+            this.emit({ kind: "item_granted", itemId: eff.itemId, source: inter.id });
             msg += ` | Found item: '${eff.itemId}'`;
           } else if (eff.kind === "setFlag") {
             this.state.flags.set(eff.flag, eff.value);
@@ -492,8 +482,8 @@ export class SimulatorEngine {
     }
 
     // 3. Search Secret Execution
-    if (targetSecretId || (action as any).type === "SEARCH_SECRET") {
-      const secId = targetSecretId || (action as any).secretId;
+    if (action.kind === "search") {
+      const secId = targetSecretId || action.targetId;
       const secret = curLoc.secrets.find((s) => s.id === secId);
       if (!secret) {
         return { success: false, message: `Secret '${secId}' not found.`, events: [] };
@@ -501,7 +491,7 @@ export class SimulatorEngine {
 
       const res = resolveCheck(secret.perceptionDC, 4, this.rng);
       this.emit({
-        type: "CHECK_RESOLVED",
+        kind: "check_resolved",
         ability: "perception",
         dc: secret.perceptionDC,
         roll: res.roll,
@@ -513,7 +503,7 @@ export class SimulatorEngine {
         this.state.flags.set(`${secret.id}-discovered`, true);
 
         this.emit({
-          type: "SECRET_DISCOVERED",
+          kind: "secret_discovered",
           secretId: secret.id,
           perceptionDC: secret.perceptionDC,
           rollTotal: res.total,
@@ -528,7 +518,7 @@ export class SimulatorEngine {
 
         if (secret.grantsItemId) {
           this.state.inventory.add(secret.grantsItemId);
-          this.emit({ type: "ITEM_GRANTED", itemId: secret.grantsItemId, source: secret.id });
+          this.emit({ kind: "item_granted", itemId: secret.grantsItemId, source: secret.id });
         }
 
         const msg = `Found secret '${secret.label}'! (Rolled ${res.total} vs DC ${secret.perceptionDC})`;
@@ -544,15 +534,15 @@ export class SimulatorEngine {
     }
 
     // 4. Unlock Exit Execution
-    if ((action as any).type === "UNLOCK_EXIT") {
-      const exit = curLoc.exits.find((e) => e.id === (action as any).exitId);
+    if (action.kind === "unlockExit") {
+      const exit = curLoc.exits.find((e) => e.id === action.exitId);
       if (!exit || !exit.locked) {
-        return { success: false, message: `No locked exit '${(action as any).exitId}' here.`, events: [] };
+        return { success: false, message: `No locked exit '${action.exitId}' here.`, events: [] };
       }
 
       if (exit.locked.keyItemId && this.state.inventory.has(exit.locked.keyItemId)) {
         this.state.unlockedExits.add(exit.id);
-        this.emit({ type: "EXIT_UNLOCKED", exitId: exit.id, method: "key" });
+        this.emit({ kind: "exit_unlocked", exitId: exit.id, method: "key" });
         const msg = `Unlocked door with key '${exit.locked.keyItemId}'.`;
         this.state.actionLog.push(msg);
         const emitted = this.state.emittedEvents.slice(preEventCount);
@@ -560,7 +550,7 @@ export class SimulatorEngine {
       } else if (exit.locked.pickable) {
         const res = resolveCheck(exit.locked.lockpickDC || 12, 3, this.rng);
         this.emit({
-          type: "CHECK_RESOLVED",
+          kind: "check_resolved",
           ability: "thievesTools",
           dc: exit.locked.lockpickDC || 12,
           roll: res.roll,
@@ -569,7 +559,7 @@ export class SimulatorEngine {
 
         if (res.success) {
           this.state.unlockedExits.add(exit.id);
-          this.emit({ type: "EXIT_UNLOCKED", exitId: exit.id, method: "lockpick" });
+          this.emit({ kind: "exit_unlocked", exitId: exit.id, method: "lockpick" });
           const msg = `Picked lock on door!`;
           this.state.actionLog.push(msg);
           const emitted = this.state.emittedEvents.slice(preEventCount);
@@ -581,7 +571,7 @@ export class SimulatorEngine {
     }
 
     // 5. Combat Action Execution
-    if ((action as any).type === "RESOLVE_COMBAT" || (action as any).kind === "combatAction") {
+    if (action.kind === "resolveCombat" || action.kind === "combatAction") {
       if (!curLoc.encounter) {
         return { success: false, message: `No active encounter in this room.`, events: [] };
       }
@@ -601,7 +591,7 @@ export class SimulatorEngine {
           return { success: false, message: `Monster template '${enemySpec.monsterTemplateId}' missing.`, events: [] };
         }
 
-        this.emit({ type: "COMBAT_STARTED", encounterId: enc.id, monsterName: monster.name });
+        this.emit({ kind: "combat_started", encounterId: enc.id, monsterName: monster.name });
 
         const combatRes = resolveSimpleCombat(
           monster,
@@ -628,7 +618,7 @@ export class SimulatorEngine {
         }
       }
 
-      this.emit({ type: "COMBAT_ENDED", encounterId: enc.id, victory: allVictories });
+      this.emit({ kind: "combat_ended", encounterId: enc.id, victory: allVictories });
 
       if (allVictories) {
         this.state.flags.set(`encounter-defeated-${enc.id}`, true);
@@ -643,7 +633,7 @@ export class SimulatorEngine {
       } else {
         this.state.gameEnded = true;
         this.state.gameOutcome = "defeat";
-        this.emit({ type: "GAME_ENDED", outcome: "defeat" });
+        this.emit({ kind: "game_ended", outcome: "defeat" });
       }
 
       const emitted = this.state.emittedEvents.slice(preEventCount);
@@ -659,7 +649,7 @@ export class SimulatorEngine {
     }
 
     // 6. Rest (PHB Healing Rest & DMG Wandering Patrol Check)
-    if ((action as any).kind === "rest") {
+    if (action.kind === "rest") {
       this.state.turnCount++;
       const isSafeHaven = curLoc.presentation?.biome === "keep" || curLoc.id.includes("tavern") || curLoc.id.includes("keep");
 
@@ -671,7 +661,7 @@ export class SimulatorEngine {
           const msg = `Rest interrupted! A wandering patrol attacks! Rolled ${wandCheck.roll} on d6 (Threshold: ${wandCheck.threshold})`;
           this.state.actionLog.push(msg);
           this.emit({
-            type: "WANDERING_ENCOUNTER_TRIGGERED",
+            kind: "wandering_encounter_triggered",
             tableId: "wandering-dungeon",
             entityId: wandMonster,
             encounterText: msg,
@@ -689,7 +679,7 @@ export class SimulatorEngine {
     }
 
     // 6b. Second Wind (PHB Fighter Feature)
-    if ("kind" in action && action.kind === "useSecondWind") {
+    if (action.kind === "useSecondWind") {
       const windRes = useSecondWind(this.state.playerCharacter, this.rng);
       this.state.playerHp = this.state.playerCharacter.hp;
       this.state.actionLog.push(windRes.message);
@@ -697,7 +687,7 @@ export class SimulatorEngine {
     }
 
     // 6c. Long Rest (DMG Safe Haven 8-Hour Rest)
-    if ("kind" in action && action.kind === "longRest") {
+    if (action.kind === "longRest") {
       const isSafeHaven = curLoc.presentation?.biome === "keep" || curLoc.id.includes("tavern") || curLoc.id.includes("keep");
       if (!isSafeHaven) {
         return { success: false, message: "A Long Rest requires an established safe haven (Keep or Inn). Cannot camp long-term in an active dungeon!", events: [] };
@@ -711,7 +701,7 @@ export class SimulatorEngine {
     }
 
     // 7. Roll Table Execution
-    if ("kind" in action && action.kind === "rollTable") {
+    if (action.kind === "rollTable") {
       const res = this.evaluateRandomTable(action.tableId);
       const emitted = this.state.emittedEvents.slice(preEventCount);
       return {
@@ -722,7 +712,7 @@ export class SimulatorEngine {
     }
 
     // 8. PHB Exploration: Listen at Door
-    if ("kind" in action && action.kind === "listen") {
+    if (action.kind === "listen") {
       const act = action as { exitId?: string; direction?: Direction };
       const exit = curLoc.exits.find((e) => e.id === act.exitId || e.direction === act.direction) || curLoc.exits[0];
       if (!exit) {
@@ -734,13 +724,13 @@ export class SimulatorEngine {
         ? exit.listenNotice || "You press your ear against the portal and hear low guttural muttering and clinking metal."
         : "You strain your ears against the cold timber but discern only silence.";
 
-      this.emit({ type: "LISTEN_ATTEMPTED", exitId: exit.id, heard, notice: heard ? sensory : undefined });
+      this.emit({ kind: "listen_attempted", exitId: exit.id, heard, notice: heard ? sensory : undefined });
       this.state.actionLog.push(`[Listen at ${exit.direction} exit]: ${sensory}`);
       return { success: true, message: sensory, events: this.state.emittedEvents.slice(preEventCount) };
     }
 
     // 9. PHB Exploration: Force Open Stuck / Barred Door
-    if ("kind" in action && action.kind === "forceDoor") {
+    if (action.kind === "forceDoor") {
       const act = action as { exitId?: string; direction?: Direction };
       const exit = curLoc.exits.find((e) => e.id === act.exitId || e.direction === act.direction) || curLoc.exits[0];
       if (!exit) {
@@ -751,7 +741,7 @@ export class SimulatorEngine {
         this.state.unlockedExits.add(exit.id);
         // DMG Rule: Loud noises alert wandering patrols
         const wandCheck = resolveDmgWanderingCheck(this.rng, 1, true);
-        this.emit({ type: "DOOR_FORCED", exitId: exit.id, success: true, noiseAlerted: wandCheck.triggered });
+        this.emit({ kind: "door_forced", exitId: exit.id, success: true, noiseAlerted: wandCheck.triggered });
         let msg = `Battered open door '${exit.id}'!`;
         if (wandCheck.triggered) {
           msg += ` The resounding crash echoes through the stone corridors, alerting nearby patrols!`;
@@ -759,14 +749,14 @@ export class SimulatorEngine {
         this.state.actionLog.push(msg);
         return { success: true, message: msg, events: this.state.emittedEvents.slice(preEventCount) };
       } else {
-        this.emit({ type: "DOOR_FORCED", exitId: exit.id, success: false, noiseAlerted: false });
+        this.emit({ kind: "door_forced", exitId: exit.id, success: false, noiseAlerted: false });
         this.state.actionLog.push(`Failed to force door '${exit.id}': ${forceRes.message}`);
         return { success: false, message: forceRes.message, events: this.state.emittedEvents.slice(preEventCount) };
       }
     }
 
     // 10. PHB Exploration: Search for Traps & Hazards (10-Foot Pole)
-    if ("kind" in action && action.kind === "searchTraps") {
+    if (action.kind === "searchTraps") {
       const checkRes = resolveCheck(13, 2, this.rng);
       if (checkRes.success && curLoc.boundaries?.hazards && curLoc.boundaries.hazards.length > 0) {
         for (const haz of curLoc.boundaries.hazards) {
@@ -783,12 +773,12 @@ export class SimulatorEngine {
     }
 
     // 11. PHB Social: Parley with Encounter
-    if ("kind" in action && action.kind === "parley") {
+    if (action.kind === "parley") {
       if (!curLoc.encounter) {
         return { success: false, message: "No creature here to parley with.", events: [] };
       }
       const reactionRes = resolveDmgReactionRoll(this.rng, 1);
-      this.emit({ type: "PARLEY_ATTEMPTED", disposition: reactionRes.reaction, roll: reactionRes.roll });
+      this.emit({ kind: "parley_attempted", disposition: reactionRes.reaction, roll: reactionRes.roll });
       if (reactionRes.reaction === "neutral" || reactionRes.reaction === "friendly") {
         this.state.flags.set(`encounter-parleyed-${curLoc.encounter.id}`, true);
         const msg = `Parley succeeded! Rolled ${reactionRes.roll} on 2d6. ${reactionRes.description} Combat averted.`;
@@ -802,7 +792,7 @@ export class SimulatorEngine {
     }
 
     // 12. PHB & Arms & Equipment: Use Item
-    if ("kind" in action && action.kind === "useItem") {
+    if (action.kind === "useItem") {
       const act = action as { kind: "useItem"; itemId: string; targetId?: string };
       const item =
         this.adventure.adventure.items.find((i) => i.id === act.itemId) ||
@@ -814,7 +804,7 @@ export class SimulatorEngine {
         return { success: false, message: `Item '${item.name}' is not in your inventory.`, events: [] };
       }
 
-      this.emit({ type: "ITEM_USED", itemId: item.id, targetId: act.targetId });
+      this.emit({ kind: "item_used", itemId: item.id, targetId: act.targetId });
 
       // A. Alchemical Item
       if (item.type === "alchemical" || item.alchemical) {
@@ -839,7 +829,7 @@ export class SimulatorEngine {
         );
 
         this.emit({
-          type: "ALCHEMICAL_USED",
+          kind: "alchemical_used",
           itemId: item.id,
           substanceType: item.alchemical?.substanceType || "acid-flask",
           targetId: act.targetId,
@@ -866,7 +856,7 @@ export class SimulatorEngine {
             if (inter.physical) inter.physical.isBroken = true;
           }
           this.emit({
-            type: "OBJECT_DAMAGED",
+            kind: "object_damaged",
             interactableId: inter.id,
             damage: dmgRes.damageDealt,
             remainingHp: dmgRes.remainingHp,
@@ -893,7 +883,7 @@ export class SimulatorEngine {
           item,
           this.rng
         );
-        this.emit({ type: "OBJECT_FORCED", interactableId: targetId || "exit", success: breakRes.success });
+        this.emit({ kind: "object_forced", interactableId: targetId || "exit", success: breakRes.success });
         if (breakRes.success) {
           if (inter) {
             if (inter.physical) inter.physical.isBroken = true;
@@ -921,7 +911,7 @@ export class SimulatorEngine {
           }
           if (exit) {
             this.state.unlockedExits.add(exit.id);
-            this.emit({ type: "EXIT_UNLOCKED", exitId: exit.id, method: "lockpick" });
+            this.emit({ kind: "exit_unlocked", exitId: exit.id, method: "lockpick" });
           }
         }
         this.state.actionLog.push(lockRes.message);
@@ -944,7 +934,7 @@ export class SimulatorEngine {
         const inter = curLoc.interactables.find((i) => i.physical?.keyItemId === item.id || i.id === act.targetId);
         if (exit) {
           this.state.unlockedExits.add(exit.id);
-          this.emit({ type: "EXIT_UNLOCKED", exitId: exit.id, method: "key" });
+          this.emit({ kind: "exit_unlocked", exitId: exit.id, method: "key" });
           const msg = `Unlocked portal '${exit.id}' with ${item.name}!`;
           this.state.actionLog.push(msg);
           return { success: true, message: msg, events: this.state.emittedEvents.slice(preEventCount) };
@@ -964,7 +954,7 @@ export class SimulatorEngine {
     }
 
     // 13. Arms & Equipment: Attack / Sunder Object
-    if ("kind" in action && action.kind === "attackObject") {
+    if (action.kind === "attackObject") {
       const act = action as { kind: "attackObject"; targetId: string; weaponItemId?: string };
       const inter = curLoc.interactables.find((i) => i.id === act.targetId);
       if (!inter) {
@@ -1002,7 +992,7 @@ export class SimulatorEngine {
       }
 
       this.emit({
-        type: "OBJECT_DAMAGED",
+        kind: "object_damaged",
         interactableId: inter.id,
         damage: dmgRes.damageDealt,
         remainingHp: dmgRes.remainingHp,
@@ -1014,7 +1004,7 @@ export class SimulatorEngine {
     }
 
     // 14. Arms & Equipment: Force Object
-    if ("kind" in action && action.kind === "forceObject") {
+    if (action.kind === "forceObject") {
       const act = action as { kind: "forceObject"; targetId: string; toolItemId?: string };
       const inter = curLoc.interactables.find((i) => i.id === act.targetId);
       if (!inter) {
@@ -1033,7 +1023,7 @@ export class SimulatorEngine {
         this.rng
       );
 
-      this.emit({ type: "OBJECT_FORCED", interactableId: inter.id, success: breakRes.success });
+      this.emit({ kind: "object_forced", interactableId: inter.id, success: breakRes.success });
 
       if (breakRes.success) {
         if (inter.physical) {
@@ -1048,10 +1038,10 @@ export class SimulatorEngine {
     }
 
     // 15. Pickup Item Execution
-    if ((action as any).type === "PICKUP_ITEM") {
-      const itemId = (action as any).itemId;
+    if (action.kind === "pickupItem") {
+      const itemId = action.itemId;
       this.state.inventory.add(itemId);
-      this.emit({ type: "ITEM_GRANTED", itemId, source: "pickup" });
+      this.emit({ kind: "item_granted", itemId, source: "pickup" });
       const msg = `Picked up item '${itemId}'.`;
       this.state.actionLog.push(msg);
       const emitted = this.state.emittedEvents.slice(preEventCount);

@@ -11,18 +11,19 @@ export class ClassicLiteRulesProfile implements RulesProfile {
   ): { success: boolean; message: string; events: any[] } {
     const events: any[] = [];
 
-    switch (action.type) {
-      case "MOVE": {
-        events.push({ type: "PLAYER_MOVED", target: action.exitId });
+    switch (action.kind) {
+      case "move": {
+        events.push({ kind: "player_moved", target: action.exitId });
         return { success: true, message: `Moved exit ${action.exitId}`, events };
       }
-      case "INSPECT": {
-        events.push({ type: "INTERACTABLE_INSPECTED", id: action.interactableId });
-        return { success: true, message: `Inspected ${action.interactableId}`, events };
+      case "inspect": {
+        events.push({ kind: "interactable_inspected", id: action.targetId || action.interactableId });
+        return { success: true, message: `Inspected ${action.targetId || action.interactableId}`, events };
       }
-      case "SEARCH_SECRET": {
+      case "search":
+      case "search_secret": {
         const res = resolveCheck(12, 3, rng);
-        events.push({ type: "SECRET_SEARCHED", success: res.success });
+        events.push({ kind: "secret_searched", success: res.success });
         return { success: res.success, message: res.success ? "Found secret" : "Nothing found", events };
       }
       default:

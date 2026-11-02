@@ -386,7 +386,7 @@ export const ExplorationView2D: React.FC<ExplorationView2DProps> = ({
 
               {curLoc.encounter && (!curLoc.encounter.victoryEffects || !curLoc.encounter.victoryEffects.some((eff) => eff.kind === "setFlag" && engine.state.flags.get(eff.flag))) && (
                 <button
-                  onClick={() => handleAction({ type: "RESOLVE_COMBAT", encounterId: curLoc.encounter!.id })}
+                  onClick={() => handleAction({ kind: "resolveCombat", encounterId: curLoc.encounter!.id })}
                   className="w-full p-2.5 bg-red-950 hover:bg-red-900 border border-red-700 text-red-200 font-bold rounded text-xs flex items-center justify-center gap-2 transition-all animate-pulse"
                 >
                   <Sword className="w-4 h-4 text-red-400" /> Fight Monster Encounter!

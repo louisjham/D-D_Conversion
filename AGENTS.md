@@ -44,8 +44,8 @@ Individual packages have no scripts; all tooling runs from root. Vitest config a
 **Discriminated Unions** for actions/events:
 ```ts
 export type GameAction =
-  | { kind: "move"; direction: Direction }
-  | { type: "MOVE"; exitId: string }; // Legacy support
+  | { kind: "move"; direction?: Direction; exitId?: string }
+  | { kind: "inspect"; targetId: string };
 ```
 
 **Error Handling**: Never throw for expected failures. Return result objects:

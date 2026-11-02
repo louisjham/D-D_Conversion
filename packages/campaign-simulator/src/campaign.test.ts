@@ -11,13 +11,13 @@ describe("Phase 4 — Campaign Region & Expedition Loop Test Suite", () => {
     const session = new CampaignSession(greywatchCampaign, 42);
     expect(session.state.currency.gold).toBe(50);
 
-    const res = session.executeAction({ type: "BUY_ITEM", itemId: "iron-key", costGold: 10 });
+    const res = session.executeAction({ kind: "buy_item", itemId: "iron-key", costGold: 10 });
     expect(res.success).toBe(true);
     expect(session.state.currency.gold).toBe(40);
     expect(session.state.inventory).toContain("iron-key");
 
     // Insufficient funds test
-    const failRes = session.executeAction({ type: "BUY_ITEM", itemId: "expensive-magic-item", costGold: 1000 });
+    const failRes = session.executeAction({ kind: "buy_item", itemId: "expensive-magic-item", costGold: 1000 });
     expect(failRes.success).toBe(false);
     expect(session.state.currency.gold).toBe(40);
   });
@@ -26,11 +26,11 @@ describe("Phase 4 — Campaign Region & Expedition Loop Test Suite", () => {
     const session = new CampaignSession(greywatchCampaign, 42);
     expect(session.state.knownRumors["rumor-viper-talisman"]).toBe("unheard");
 
-    session.executeAction({ type: "HEAR_RUMOR", rumorId: "rumor-viper-talisman" });
+    session.executeAction({ kind: "hear_rumor", rumorId: "rumor-viper-talisman" });
     expect(session.state.knownRumors["rumor-viper-talisman"]).toBe("heard");
 
-    session.executeAction({ type: "ACCEPT_QUEST", questId: "quest-sun-talisman" });
-    session.executeAction({ type: "REST_AT_HUB", hours: 8 });
+    session.executeAction({ kind: "accept_quest", questId: "quest-sun-talisman" });
+    session.executeAction({ kind: "rest_at_hub", hours: 8 });
     expect(session.state.knownRumors["rumor-viper-talisman"]).toBe("confirmed");
   });
 
@@ -38,9 +38,9 @@ describe("Phase 4 — Campaign Region & Expedition Loop Test Suite", () => {
     const session = new CampaignSession(greywatchCampaign, 42);
     expect(session.state.worldTime).toEqual({ day: 1, hour: 8 });
 
-    session.executeAction({ type: "CHOOSE_ROUTE", routeId: "north-road" });
-    session.executeAction({ type: "BEGIN_TRAVEL" });
-    session.executeAction({ type: "RESOLVE_TRAVEL" });
+    session.executeAction({ kind: "choose_route", routeId: "north-road" });
+    session.executeAction({ kind: "begin_travel" });
+    session.executeAction({ kind: "resolve_travel" });
 
     expect(session.state.worldTime).toEqual({ day: 1, hour: 12 }); // +4 hours
     expect(session.state.currentRegionId).toBe("broken-ravine");
@@ -49,42 +49,42 @@ describe("Phase 4 — Campaign Region & Expedition Loop Test Suite", () => {
 
   it("4. Full Hub -> Travel -> Dungeon -> Retreat -> Return -> Rest loop", () => {
     const session = new CampaignSession(greywatchCampaign, 42);
-    session.executeAction({ type: "CHOOSE_ROUTE", routeId: "north-road" });
-    session.executeAction({ type: "BEGIN_TRAVEL" });
-    session.executeAction({ type: "RESOLVE_TRAVEL" });
-    session.executeAction({ type: "ENTER_DUNGEON" });
+    session.executeAction({ kind: "choose_route", routeId: "north-road" });
+    session.executeAction({ kind: "begin_travel" });
+    session.executeAction({ kind: "resolve_travel" });
+    session.executeAction({ kind: "enter_dungeon" });
 
     // Bind dungeon simulator
     const dungeonEngine = session.bindDungeonSimulator(serpentAltarAdventure as VersionedAdventure);
-    dungeonEngine.executeAction({ type: "MOVE", exitId: "exit-entry-to-guard" });
-    dungeonEngine.executeAction({ type: "INSPECT", interactableId: "wooden-chest" });
+    dungeonEngine.executeAction({ kind: "move", exitId: "exit-entry-to-guard" });
+    dungeonEngine.executeAction({ kind: "inspect", targetId: "wooden-chest" });
 
     // Sync persistent state back to campaign session
     session.syncActiveDungeonState();
     expect(session.state.activeExpedition?.dungeonInventory).toContain("iron-key");
 
     // Retreat & Return to Hub
-    session.executeAction({ type: "RETREAT_FROM_DUNGEON" });
+    session.executeAction({ kind: "retreat_from_dungeon" });
     expect(session.state.currentRegionId).toBe("greywatch-keep");
 
     // Rest at Inn & advance world turn
-    session.executeAction({ type: "REST_AT_HUB", hours: 8 });
+    session.executeAction({ kind: "rest_at_hub", hours: 8 });
     expect(session.state.worldTime.day).toBeGreaterThanOrEqual(1);
   });
 
   it("5. Persistent dungeon state across multiple expeditions", () => {
     const session = new CampaignSession(greywatchCampaign, 42);
-    session.executeAction({ type: "CHOOSE_ROUTE", routeId: "north-road" });
-    session.executeAction({ type: "BEGIN_TRAVEL" });
-    session.executeAction({ type: "RESOLVE_TRAVEL" });
+    session.executeAction({ kind: "choose_route", routeId: "north-road" });
+    session.executeAction({ kind: "begin_travel" });
+    session.executeAction({ kind: "resolve_travel" });
 
     // First expedition
     const engine1 = session.bindDungeonSimulator(serpentAltarAdventure as VersionedAdventure);
-    engine1.executeAction({ type: "MOVE", exitId: "exit-entry-to-guard" });
-    engine1.executeAction({ type: "INSPECT", interactableId: "wooden-chest" });
+    engine1.executeAction({ kind: "move", exitId: "exit-entry-to-guard" });
+    engine1.executeAction({ kind: "inspect", targetId: "wooden-chest" });
     session.syncActiveDungeonState();
 
-    session.executeAction({ type: "RETREAT_FROM_DUNGEON" });
+    session.executeAction({ kind: "retreat_from_dungeon" });
 
     // Second expedition: rebind dungeon simulator from persistent activeExpedition
     const engine2 = session.bindDungeonSimulator(serpentAltarAdventure as VersionedAdventure);
@@ -96,15 +96,15 @@ describe("Phase 4 — Campaign Region & Expedition Loop Test Suite", () => {
     const session = new CampaignSession(greywatchCampaign, 42);
     const initialAlert = session.state.factionStates["goblin-raiders"].alert;
 
-    session.executeAction({ type: "ADVANCE_WORLD_TURN", hours: 24 });
+    session.executeAction({ kind: "advance_world_turn", hours: 24 });
     expect(session.state.worldTime.day).toBe(2);
     expect(session.state.factionStates["goblin-raiders"].lastUpdatedAt.day).toBe(2);
   });
 
   it("7. Save/Load CampaignSaveEnvelope round-trip fidelity", () => {
     const session = new CampaignSession(greywatchCampaign, 42);
-    session.executeAction({ type: "BUY_ITEM", itemId: "iron-key", costGold: 10 });
-    session.executeAction({ type: "HEAR_RUMOR", rumorId: "rumor-viper-talisman" });
+    session.executeAction({ kind: "buy_item", itemId: "iron-key", costGold: 10 });
+    session.executeAction({ kind: "hear_rumor", rumorId: "rumor-viper-talisman" });
 
     const envelope = createCampaignSaveEnvelope("greywatch-broken-ravine", 42, session.state);
     const compat = validateCampaignSaveCompatibility(envelope, "greywatch-broken-ravine");
@@ -123,11 +123,11 @@ describe("Phase 4 — Campaign Region & Expedition Loop Test Suite", () => {
     const session2 = new CampaignSession(greywatchCampaign, 42);
 
     const actions: CampaignAction[] = [
-      { type: "BUY_ITEM", itemId: "iron-key", costGold: 10 },
-      { type: "HEAR_RUMOR", rumorId: "rumor-viper-talisman" },
-      { type: "CHOOSE_ROUTE", routeId: "north-road" },
-      { type: "BEGIN_TRAVEL" },
-      { type: "RESOLVE_TRAVEL" },
+      { kind: "buy_item", itemId: "iron-key", costGold: 10 },
+      { kind: "hear_rumor", rumorId: "rumor-viper-talisman" },
+      { kind: "choose_route", routeId: "north-road" },
+      { kind: "begin_travel" },
+      { kind: "resolve_travel" },
     ];
 
     for (const a of actions) {
@@ -165,7 +165,7 @@ describe("Phase 4 — Campaign Region & Expedition Loop Test Suite", () => {
     const preDisp = targetFaction.disposition;
 
     const res = session.executeAction({
-      type: "CLAIM_BOUNTY",
+      kind: "claim_bounty",
       questId: "quest-slay-ogre",
       rewardGold: 250,
       requiredItemId: "silver-key-ogre",
@@ -180,10 +180,10 @@ describe("Phase 4 — Campaign Region & Expedition Loop Test Suite", () => {
 
   it("12. REFRESH_TOWN_SERVICES rotates unheard rumors and emits SERVICES_REFRESHED event", () => {
     const session = new CampaignSession(greywatchCampaign, 42);
-    const res = session.executeAction({ type: "REFRESH_TOWN_SERVICES" });
+    const res = session.executeAction({ kind: "refresh_town_services" });
 
     expect(res.success).toBe(true);
-    const event = session.state.emittedEvents.find((e) => e.type === "SERVICES_REFRESHED");
+    const event = session.state.emittedEvents.find((e) => e.kind === "services_refreshed");
     expect(event).toBeDefined();
   });
 });

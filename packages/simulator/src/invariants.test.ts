@@ -11,7 +11,7 @@ describe("Stateful Property & Invariant Test Suite", () => {
     const preState = JSON.stringify(engine.state);
 
     // Attempt invalid move to non-existent exit
-    const res = engine.executeAction({ type: "MOVE", exitId: "bogus-exit-99" });
+    const res = engine.executeAction({ kind: "move", exitId: "bogus-exit-99" });
     expect(res.success).toBe(false);
 
     const postState = JSON.stringify(engine.state);
@@ -20,16 +20,16 @@ describe("Stateful Property & Invariant Test Suite", () => {
 
   it("Invariant 2: All emitted DomainEvents reference valid adventure entities", () => {
     const engine = new SimulatorEngine(serpentAltarAdventure as VersionedAdventure, 42);
-    engine.executeAction({ type: "MOVE", exitId: "exit-entry-to-guard" });
-    engine.executeAction({ type: "INSPECT", interactableId: "wooden-chest" });
+    engine.executeAction({ kind: "move", exitId: "exit-entry-to-guard" });
+    engine.executeAction({ kind: "inspect", targetId: "wooden-chest" });
 
     const locIds = new Set(serpentAltarAdventure.adventure.locations.map((l: any) => l.id));
     const itemIds = new Set(serpentAltarAdventure.adventure.items.map((i: any) => i.id));
 
     for (const ev of engine.state.emittedEvents) {
-      if (ev.type === "PLAYER_MOVED") {
+      if (ev.kind === "player_moved") {
         expect(locIds.has(ev.toRoomId)).toBe(true);
-      } else if (ev.type === "ITEM_GRANTED") {
+      } else if (ev.kind === "item_granted") {
         expect(itemIds.has(ev.itemId)).toBe(true);
       }
     }
@@ -37,8 +37,8 @@ describe("Stateful Property & Invariant Test Suite", () => {
 
   it("Invariant 3: Save ➔ Load preserves byte-equivalent normalized state", () => {
     const engine = new SimulatorEngine(serpentAltarAdventure as VersionedAdventure, 42);
-    engine.executeAction({ type: "MOVE", exitId: "exit-entry-to-guard" });
-    engine.executeAction({ type: "INSPECT", interactableId: "wooden-chest" });
+    engine.executeAction({ kind: "move", exitId: "exit-entry-to-guard" });
+    engine.executeAction({ kind: "inspect", targetId: "wooden-chest" });
 
     const saveEnvelope = createSaveGameEnvelope("serpent-altar-crypt", 42, {
       currentLocationId: engine.state.currentLocationId,
@@ -68,9 +68,9 @@ describe("Stateful Property & Invariant Test Suite", () => {
     const eng2 = new SimulatorEngine(serpentAltarAdventure as VersionedAdventure, seed);
 
     const actions: GameAction[] = [
-      { type: "MOVE", exitId: "exit-entry-to-guard" },
-      { type: "INSPECT", interactableId: "wooden-chest" },
-      { type: "MOVE", exitId: "exit-guard-to-corridor" },
+      { kind: "move", exitId: "exit-entry-to-guard" },
+      { kind: "inspect", targetId: "wooden-chest" },
+      { kind: "move", exitId: "exit-guard-to-corridor" },
     ];
 
     actions.forEach((a) => {
@@ -83,8 +83,8 @@ describe("Stateful Property & Invariant Test Suite", () => {
 
   it("Invariant 5: Inventory never contains unknown or duplicate items", () => {
     const engine = new SimulatorEngine(serpentAltarAdventure as VersionedAdventure, 42);
-    engine.executeAction({ type: "MOVE", exitId: "exit-entry-to-guard" });
-    engine.executeAction({ type: "INSPECT", interactableId: "wooden-chest" });
+    engine.executeAction({ kind: "move", exitId: "exit-entry-to-guard" });
+    engine.executeAction({ kind: "inspect", targetId: "wooden-chest" });
 
     const itemIds = new Set(serpentAltarAdventure.adventure.items.map((i: any) => i.id));
     for (const item of engine.state.inventory) {
@@ -94,14 +94,14 @@ describe("Stateful Property & Invariant Test Suite", () => {
 
   it("Invariant 6: Revealed secrets and unlocked exits remain revealed/unlocked unless explicitly reset", () => {
     const engine = new SimulatorEngine(serpentAltarAdventure as VersionedAdventure, 42);
-    engine.executeAction({ type: "MOVE", exitId: "exit-entry-to-guard" });
-    engine.executeAction({ type: "MOVE", exitId: "exit-guard-to-corridor" });
-    engine.executeAction({ type: "SEARCH_SECRET", secretId: "secret-door-treasury" });
+    engine.executeAction({ kind: "move", exitId: "exit-entry-to-guard" });
+    engine.executeAction({ kind: "move", exitId: "exit-guard-to-corridor" });
+    engine.executeAction({ kind: "search", targetId: "secret-door-treasury" });
 
     expect(engine.state.discoveredSecrets.has("secret-door-treasury")).toBe(true);
 
     // Move around and verify secret remains revealed
-    engine.executeAction({ type: "MOVE", exitId: "exit-corridor-to-guard" });
+    engine.executeAction({ kind: "move", exitId: "exit-corridor-to-guard" });
     expect(engine.state.discoveredSecrets.has("secret-door-treasury")).toBe(true);
   });
 
@@ -109,10 +109,10 @@ describe("Stateful Property & Invariant Test Suite", () => {
     const engine = new SimulatorEngine(serpentAltarAdventure as VersionedAdventure, 42);
     const validLocationIds = new Set(serpentAltarAdventure.adventure.locations.map((l: any) => l.id));
 
-    engine.executeAction({ type: "MOVE", exitId: "exit-entry-to-guard" });
+    engine.executeAction({ kind: "move", exitId: "exit-entry-to-guard" });
     expect(validLocationIds.has(engine.state.currentLocationId)).toBe(true);
 
-    engine.executeAction({ type: "MOVE", exitId: "exit-guard-to-corridor" });
+    engine.executeAction({ kind: "move", exitId: "exit-guard-to-corridor" });
     expect(validLocationIds.has(engine.state.currentLocationId)).toBe(true);
   });
 
@@ -142,7 +142,7 @@ describe("Stateful Property & Invariant Test Suite", () => {
     const res = engine.executeAction({ kind: "rollTable", tableId: "table-b2-caves-wandering-monsters" });
     expect(res.success).toBe(true);
 
-    const rolledEvent = engine.state.emittedEvents.find((e) => e.type === "RANDOM_TABLE_ROLLED");
+    const rolledEvent = engine.state.emittedEvents.find((e) => e.kind === "random_table_rolled");
     expect(rolledEvent).toBeDefined();
   });
 });

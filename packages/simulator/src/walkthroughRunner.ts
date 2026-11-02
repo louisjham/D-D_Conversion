@@ -36,22 +36,22 @@ export function runWalkthroughScript(
 
       switch (step.action) {
         case "move":
-          res = engine.executeAction({ type: "MOVE", exitId: step.target! });
+          res = engine.executeAction({ kind: "move", exitId: step.target! });
           break;
         case "inspect":
-          res = engine.executeAction({ type: "INSPECT", interactableId: step.target! });
+          res = engine.executeAction({ kind: "inspect", targetId: step.target! });
           break;
         case "searchSecret":
-          res = engine.executeAction({ type: "SEARCH_SECRET", secretId: step.target! });
+          res = engine.executeAction({ kind: "search", targetId: step.target! });
           break;
         case "unlockExit":
-          res = engine.executeAction({ type: "UNLOCK_EXIT", exitId: step.target! });
+          res = engine.executeAction({ kind: "unlockExit", exitId: step.target! });
           break;
         case "resolveCombat":
-          res = engine.executeAction({ type: "RESOLVE_COMBAT", encounterId: step.target! });
+          res = engine.executeAction({ kind: "resolveCombat", encounterId: step.target! });
           break;
         case "pickupItem":
-          res = engine.executeAction({ type: "PICKUP_ITEM", itemId: step.target! });
+          res = engine.executeAction({ kind: "pickupItem", itemId: step.target! });
           break;
       }
 

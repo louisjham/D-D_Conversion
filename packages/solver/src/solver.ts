@@ -103,7 +103,7 @@ export function enumerateLegalActions(
 
     if (!isDefeated) {
       actions.push({ kind: "combatAction", action: "attack" });
-      actions.push({ type: "RESOLVE_COMBAT", encounterId: encId });
+      actions.push({ kind: "resolveCombat", encounterId: encId });
 
       // Potions if wounded
       if (state.playerHp < state.playerMaxHp) {
@@ -120,7 +120,6 @@ export function enumerateLegalActions(
   for (const inter of curLoc.interactables || []) {
     if (!state.flags.get(`inspected-${inter.id}`)) {
       actions.push({ kind: "inspect", targetId: inter.id });
-      actions.push({ type: "INSPECT", interactableId: inter.id });
     }
 
     if (
@@ -143,7 +142,6 @@ export function enumerateLegalActions(
   for (const sec of curLoc.secrets || []) {
     if (!state.discoveredSecrets.has(sec.id)) {
       actions.push({ kind: "search", targetId: sec.id });
-      actions.push({ type: "SEARCH_SECRET", secretId: sec.id });
     }
   }
 
@@ -151,11 +149,11 @@ export function enumerateLegalActions(
   for (const exit of curLoc.exits || []) {
     if (exit.locked && !state.unlockedExits.has(exit.id)) {
       if (exit.locked.keyItemId && state.inventory.has(exit.locked.keyItemId)) {
-        actions.push({ type: "UNLOCK_EXIT", exitId: exit.id });
+        actions.push({ kind: "unlockExit", exitId: exit.id });
         actions.push({ kind: "useItem", itemId: exit.locked.keyItemId, targetId: exit.id });
       }
       if (exit.locked.pickable) {
-        actions.push({ type: "UNLOCK_EXIT", exitId: exit.id });
+        actions.push({ kind: "unlockExit", exitId: exit.id });
       }
       if (exit.forceDC && state.inventory.has("item-crowbar")) {
         actions.push({ kind: "forceDoor", exitId: exit.id, direction: exit.direction });
@@ -174,7 +172,6 @@ export function enumerateLegalActions(
     }
 
     actions.push({ kind: "move", direction: exit.direction, exitId: exit.id });
-    actions.push({ type: "MOVE", exitId: exit.id });
   }
 
   // 6. Rest if damaged

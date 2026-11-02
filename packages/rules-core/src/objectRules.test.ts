@@ -259,7 +259,7 @@ describe("Arms and Equipment Guide: Object Characteristics & Rules", () => {
     const engine = new SimulatorEngine(testAdventure, 42);
 
     // 1. Give player a crowbar and test forcing the chest open
-    engine.executeAction({ type: "PICKUP_ITEM", itemId: "item-crowbar" });
+    engine.executeAction({ kind: "pickupItem", itemId: "item-crowbar" });
     expect(engine.state.inventory.has("item-crowbar")).toBe(true);
 
     const forceRes = engine.executeAction({
@@ -270,7 +270,7 @@ describe("Arms and Equipment Guide: Object Characteristics & Rules", () => {
     expect(forceRes.message).toContain("Break check on Reinforced Iron Chest");
 
     // 2. Give player Stonebreaker Acid and dissolve the stone monolith
-    engine.executeAction({ type: "PICKUP_ITEM", itemId: "item-stonebreaker-acid" });
+    engine.executeAction({ kind: "pickupItem", itemId: "item-stonebreaker-acid" });
     const acidRes = engine.executeAction({
       kind: "useItem",
       itemId: "item-stonebreaker-acid",
@@ -281,7 +281,7 @@ describe("Arms and Equipment Guide: Object Characteristics & Rules", () => {
     expect(acidRes.message).toContain("bypassed");
 
     // 3. Attack the chest with Adamantine Greatsword
-    engine.executeAction({ type: "PICKUP_ITEM", itemId: "item-adamantine-greatsword" });
+    engine.executeAction({ kind: "pickupItem", itemId: "item-adamantine-greatsword" });
     const attackRes = engine.executeAction({
       kind: "attackObject",
       targetId: "reinforced-chest",

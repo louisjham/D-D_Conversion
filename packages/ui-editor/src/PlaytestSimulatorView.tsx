@@ -40,11 +40,11 @@ export const PlaytestSimulatorView: React.FC<PlaytestSimulatorViewProps> = ({
 
   const handleAction = (actionType: string, targetId: string) => {
     let res;
-    if (actionType === "MOVE") res = engine.executeAction({ type: "MOVE", exitId: targetId });
-    if (actionType === "INSPECT") res = engine.executeAction({ type: "INSPECT", interactableId: targetId });
-    if (actionType === "SEARCH_SECRET") res = engine.executeAction({ type: "SEARCH_SECRET", secretId: targetId });
-    if (actionType === "UNLOCK_EXIT") res = engine.executeAction({ type: "UNLOCK_EXIT", exitId: targetId });
-    if (actionType === "RESOLVE_COMBAT") res = engine.executeAction({ type: "RESOLVE_COMBAT", encounterId: targetId });
+    if (actionType === "MOVE") res = engine.executeAction({ kind: "move", exitId: targetId });
+    if (actionType === "INSPECT") res = engine.executeAction({ kind: "inspect", targetId });
+    if (actionType === "SEARCH_SECRET") res = engine.executeAction({ kind: "search", targetId });
+    if (actionType === "UNLOCK_EXIT") res = engine.executeAction({ kind: "unlockExit", exitId: targetId });
+    if (actionType === "RESOLVE_COMBAT") res = engine.executeAction({ kind: "resolveCombat", encounterId: targetId });
 
     // Force React re-render
     const updatedEngine = Object.assign(Object.create(Object.getPrototypeOf(engine)), engine);
@@ -62,11 +62,11 @@ export const PlaytestSimulatorView: React.FC<PlaytestSimulatorViewProps> = ({
       // Fast-forward engine state to end of walkthrough
       const newEng = new SimulatorEngine(vAdventure, 42);
       for (const step of walkthroughScript) {
-        if (step.action === "move") newEng.executeAction({ type: "MOVE", exitId: step.target });
-        if (step.action === "inspect") newEng.executeAction({ type: "INSPECT", interactableId: step.target });
-        if (step.action === "searchSecret") newEng.executeAction({ type: "SEARCH_SECRET", secretId: step.target });
-        if (step.action === "unlockExit") newEng.executeAction({ type: "UNLOCK_EXIT", exitId: step.target });
-        if (step.action === "resolveCombat") newEng.executeAction({ type: "RESOLVE_COMBAT", encounterId: step.target });
+        if (step.action === "move") newEng.executeAction({ kind: "move", exitId: step.target });
+        if (step.action === "inspect") newEng.executeAction({ kind: "inspect", targetId: step.target });
+        if (step.action === "searchSecret") newEng.executeAction({ kind: "search", targetId: step.target });
+        if (step.action === "unlockExit") newEng.executeAction({ kind: "unlockExit", exitId: step.target });
+        if (step.action === "resolveCombat") newEng.executeAction({ kind: "resolveCombat", encounterId: step.target });
       }
       setEngine(newEng);
       if (onLocationChanged) onLocationChanged(newEng.state.currentLocationId);

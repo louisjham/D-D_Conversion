@@ -22,39 +22,39 @@ export type ExpeditionRecord = {
 };
 
 export type CampaignAction =
-  | { type: "VISIT_SERVICE"; serviceId: string }
-  | { type: "BUY_ITEM"; itemId: string; costGold: number }
-  | { type: "SELL_ITEM"; itemId: string; priceGold: number }
-  | { type: "HEAR_RUMOR"; rumorId: string }
-  | { type: "ACCEPT_QUEST"; questId: string }
-  | { type: "CLAIM_BOUNTY"; questId: string; rewardGold: number; requiredItemId?: string }
-  | { type: "CHOOSE_ROUTE"; routeId: string }
-  | { type: "BEGIN_TRAVEL" }
-  | { type: "RESOLVE_TRAVEL" }
-  | { type: "ENTER_DUNGEON" }
-  | { type: "RETREAT_FROM_DUNGEON" }
-  | { type: "RETURN_TO_HUB" }
-  | { type: "REST_AT_HUB"; hours: number }
-  | { type: "REFRESH_TOWN_SERVICES" }
-  | { type: "ADVANCE_WORLD_TURN"; hours: number };
+  | { kind: "visit_service"; serviceId: string }
+  | { kind: "buy_item"; itemId: string; costGold: number }
+  | { kind: "sell_item"; itemId: string; priceGold: number }
+  | { kind: "hear_rumor"; rumorId: string }
+  | { kind: "accept_quest"; questId: string }
+  | { kind: "claim_bounty"; questId: string; rewardGold: number; requiredItemId?: string }
+  | { kind: "choose_route"; routeId: string }
+  | { kind: "begin_travel" }
+  | { kind: "resolve_travel" }
+  | { kind: "enter_dungeon" }
+  | { kind: "retreat_from_dungeon" }
+  | { kind: "return_to_hub" }
+  | { kind: "rest_at_hub"; hours: number }
+  | { kind: "refresh_town_services" }
+  | { kind: "advance_world_turn"; hours: number };
 
 export type CampaignEvent = {
-  type:
-    | "RUMOR_HEARD"
-    | "ITEM_PURCHASED"
-    | "ITEM_SOLD"
-    | "QUEST_ACCEPTED"
-    | "BOUNTY_CLAIMED"
-    | "SERVICES_REFRESHED"
-    | "TRAVEL_STARTED"
-    | "TRAVEL_RESOLVED"
-    | "REGION_ENTERED"
-    | "EXPEDITION_COMPLETED"
-    | "EXPEDITION_RETREATED"
-    | "HUB_REST_COMPLETED"
-    | "FACTION_UPDATED"
-    | "REGION_RESTOCKED"
-    | "WORLD_TURN_COMPLETED";
+  kind:
+    | "rumor_heard"
+    | "item_purchased"
+    | "item_sold"
+    | "quest_accepted"
+    | "bounty_claimed"
+    | "services_refreshed"
+    | "travel_started"
+    | "travel_resolved"
+    | "region_entered"
+    | "expedition_completed"
+    | "expedition_retreated"
+    | "hub_rest_completed"
+    | "faction_updated"
+    | "region_restocked"
+    | "world_turn_completed";
   payload: Record<string, any>;
 };
 
@@ -149,17 +149,17 @@ export class CampaignSession {
   public executeAction(action: CampaignAction): { success: boolean; events: CampaignEvent[] } {
     const events: CampaignEvent[] = [];
 
-    switch (action.type) {
-      case "VISIT_SERVICE": {
+    switch (action.kind) {
+      case "visit_service": {
         this.state.actionLogHistory.push(action);
         return { success: true, events };
       }
 
-      case "BUY_ITEM": {
+      case "buy_item": {
         if (EconomyEngine.canAfford(this.state.currency, action.costGold)) {
           EconomyEngine.deduct(this.state.currency, action.costGold);
           this.state.inventory.push(action.itemId);
-          const ev: CampaignEvent = { type: "ITEM_PURCHASED", payload: { itemId: action.itemId, costGold: action.costGold } };
+          const ev: CampaignEvent = { kind: "item_purchased", payload: { itemId: action.itemId, costGold: action.costGold } };
           events.push(ev);
           this.state.emittedEvents.push(ev);
           this.state.actionLogHistory.push(action);
@@ -168,12 +168,12 @@ export class CampaignSession {
         return { success: false, events };
       }
 
-      case "SELL_ITEM": {
+      case "sell_item": {
         const idx = this.state.inventory.indexOf(action.itemId);
         if (idx !== -1) {
           this.state.inventory.splice(idx, 1);
           EconomyEngine.add(this.state.currency, action.priceGold);
-          const ev: CampaignEvent = { type: "ITEM_SOLD", payload: { itemId: action.itemId, priceGold: action.priceGold } };
+          const ev: CampaignEvent = { kind: "item_sold", payload: { itemId: action.itemId, priceGold: action.priceGold } };
           events.push(ev);
           this.state.emittedEvents.push(ev);
           this.state.actionLogHistory.push(action);
@@ -182,39 +182,39 @@ export class CampaignSession {
         return { success: false, events };
       }
 
-      case "HEAR_RUMOR": {
+      case "hear_rumor": {
         this.state.knownRumors[action.rumorId] = "heard";
-        const ev: CampaignEvent = { type: "RUMOR_HEARD", payload: { rumorId: action.rumorId } };
+        const ev: CampaignEvent = { kind: "rumor_heard", payload: { rumorId: action.rumorId } };
         events.push(ev);
         this.state.emittedEvents.push(ev);
         this.state.actionLogHistory.push(action);
         return { success: true, events };
       }
 
-      case "ACCEPT_QUEST": {
+      case "accept_quest": {
         this.state.questStates[action.questId] = "accepted";
-        const ev: CampaignEvent = { type: "QUEST_ACCEPTED", payload: { questId: action.questId } };
+        const ev: CampaignEvent = { kind: "quest_accepted", payload: { questId: action.questId } };
         events.push(ev);
         this.state.emittedEvents.push(ev);
         this.state.actionLogHistory.push(action);
         return { success: true, events };
       }
 
-      case "CHOOSE_ROUTE": {
+      case "choose_route": {
         this.state.activeRouteId = action.routeId;
         this.state.actionLogHistory.push(action);
         return { success: true, events };
       }
 
-      case "BEGIN_TRAVEL": {
-        const ev: CampaignEvent = { type: "TRAVEL_STARTED", payload: { routeId: this.state.activeRouteId } };
+      case "begin_travel": {
+        const ev: CampaignEvent = { kind: "travel_started", payload: { routeId: this.state.activeRouteId } };
         events.push(ev);
         this.state.emittedEvents.push(ev);
         this.state.actionLogHistory.push(action);
         return { success: true, events };
       }
 
-      case "RESOLVE_TRAVEL": {
+      case "resolve_travel": {
         // Advance time by travel route duration (e.g. 4 hours for North Road)
         const travelHours = this.state.activeRouteId === "fen-path" ? 8 : 4;
         const turnReport = FactionDirector.advanceWorldTurn(this.state.factionStates, this.state.worldTime, travelHours);
@@ -222,33 +222,33 @@ export class CampaignSession {
         this.state.currentRegionId = "broken-ravine";
         this.state.currentNodeId = "ravine-entrance";
 
-        const ev: CampaignEvent = { type: "TRAVEL_RESOLVED", payload: { destination: "broken-ravine" } };
+        const ev: CampaignEvent = { kind: "travel_resolved", payload: { destination: "broken-ravine" } };
         events.push(ev);
         this.state.emittedEvents.push(ev);
         this.state.actionLogHistory.push(action);
         return { success: true, events };
       }
 
-      case "ENTER_DUNGEON": {
-        const ev: CampaignEvent = { type: "REGION_ENTERED", payload: { regionId: "broken-ravine" } };
+      case "enter_dungeon": {
+        const ev: CampaignEvent = { kind: "region_entered", payload: { regionId: "broken-ravine" } };
         events.push(ev);
         this.state.emittedEvents.push(ev);
         this.state.actionLogHistory.push(action);
         return { success: true, events };
       }
 
-      case "RETREAT_FROM_DUNGEON":
-      case "RETURN_TO_HUB": {
+      case "retreat_from_dungeon":
+      case "return_to_hub": {
         this.state.currentRegionId = "greywatch-keep";
         this.state.currentNodeId = "keep-courtyard";
-        const ev: CampaignEvent = { type: "EXPEDITION_RETREATED", payload: { destination: "greywatch-keep" } };
+        const ev: CampaignEvent = { kind: "expedition_retreated", payload: { destination: "greywatch-keep" } };
         events.push(ev);
         this.state.emittedEvents.push(ev);
         this.state.actionLogHistory.push(action);
         return { success: true, events };
       }
 
-      case "REST_AT_HUB": {
+      case "rest_at_hub": {
         const turnReport = FactionDirector.advanceWorldTurn(this.state.factionStates, this.state.worldTime, action.hours);
         this.state.worldTime = turnReport.newTime;
 
@@ -264,14 +264,14 @@ export class CampaignSession {
           }
         }
 
-        const ev: CampaignEvent = { type: "HUB_REST_COMPLETED", payload: { hours: action.hours, newTime: this.state.worldTime } };
+        const ev: CampaignEvent = { kind: "hub_rest_completed", payload: { hours: action.hours, newTime: this.state.worldTime } };
         events.push(ev);
         this.state.emittedEvents.push(ev);
         this.state.actionLogHistory.push(action);
         return { success: true, events };
       }
 
-      case "CLAIM_BOUNTY": {
+      case "claim_bounty": {
         let hasReqItem = true;
         if (action.requiredItemId) {
           const invIdx = this.state.inventory.indexOf(action.requiredItemId);
@@ -296,7 +296,7 @@ export class CampaignSession {
         }
 
         const ev: CampaignEvent = {
-          type: "BOUNTY_CLAIMED",
+          kind: "bounty_claimed",
           payload: { questId: action.questId, rewardGold: action.rewardGold, requiredItemId: action.requiredItemId },
         };
         events.push(ev);
@@ -305,7 +305,7 @@ export class CampaignSession {
         return { success: true, events };
       }
 
-      case "REFRESH_TOWN_SERVICES": {
+      case "refresh_town_services": {
         let refreshedRumor: string | undefined;
         for (const rId in this.state.knownRumors) {
           if (this.state.knownRumors[rId] === "unheard") {
@@ -315,7 +315,7 @@ export class CampaignSession {
           }
         }
         const ev: CampaignEvent = {
-          type: "SERVICES_REFRESHED",
+          kind: "services_refreshed",
           payload: { rumorsRefreshed: !!refreshedRumor, heardRumorId: refreshedRumor },
         };
         events.push(ev);
@@ -324,10 +324,10 @@ export class CampaignSession {
         return { success: true, events };
       }
 
-      case "ADVANCE_WORLD_TURN": {
+      case "advance_world_turn": {
         const turnReport = FactionDirector.advanceWorldTurn(this.state.factionStates, this.state.worldTime, action.hours);
         this.state.worldTime = turnReport.newTime;
-        const ev: CampaignEvent = { type: "WORLD_TURN_COMPLETED", payload: { turnReport } };
+        const ev: CampaignEvent = { kind: "world_turn_completed", payload: { turnReport } };
         events.push(ev);
         this.state.emittedEvents.push(ev);
         this.state.actionLogHistory.push(action);

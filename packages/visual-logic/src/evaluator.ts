@@ -41,7 +41,7 @@ export class EventGraphEvaluator {
     for (const eff of script.effects) {
       if (eff.kind === "grantItem") {
         engine.state.inventory.add(eff.itemId);
-        engine.emit({ type: "ITEM_GRANTED", itemId: eff.itemId, source: script.graphId });
+        engine.emit({ kind: "item_granted", itemId: eff.itemId, source: script.graphId });
         appliedCount++;
       } else if (eff.kind === "setFlag") {
         engine.state.flags.set(eff.flag, eff.value);
@@ -51,7 +51,7 @@ export class EventGraphEvaluator {
         appliedCount++;
       } else if (eff.kind === "openExit") {
         engine.state.unlockedExits.add(eff.exitId);
-        engine.emit({ type: "EXIT_UNLOCKED", exitId: eff.exitId, method: "key" });
+        engine.emit({ kind: "exit_unlocked", exitId: eff.exitId, method: "key" });
         appliedCount++;
       }
     }

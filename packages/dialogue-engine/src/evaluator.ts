@@ -54,7 +54,7 @@ export class DialogueEngineSession {
       for (const eff of choice.effects) {
         if (eff.kind === "grantItem") {
           engine.state.inventory.add(eff.itemId);
-          engine.emit({ type: "ITEM_GRANTED", itemId: eff.itemId, source: `dialogue-${choice.id}` });
+          engine.emit({ kind: "item_granted", itemId: eff.itemId, source: `dialogue-${choice.id}` });
         } else if (eff.kind === "setFlag") {
           engine.state.flags.set(eff.flag, eff.value);
         } else if (eff.kind === "revealSecret") {

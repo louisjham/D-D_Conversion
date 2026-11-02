@@ -10,14 +10,14 @@ describe("Simulator Engine Replayability & Save/Load Round-Trip", () => {
     const engineB = new SimulatorEngine(serpentAltarAdventure as VersionedAdventure, seed);
 
     const actionSequence = [
-      { type: "MOVE", exitId: "exit-entry-to-guard" },
-      { type: "INSPECT", interactableId: "wooden-chest" },
-      { type: "MOVE", exitId: "exit-guard-to-corridor" },
-      { type: "SEARCH_SECRET", secretId: "secret-door-treasury" },
-      { type: "MOVE", exitId: "exit-corridor-to-trap" },
-      { type: "UNLOCK_EXIT", exitId: "exit-trap-to-altar" },
-      { type: "MOVE", exitId: "exit-trap-to-altar" },
-      { type: "RESOLVE_COMBAT", encounterId: "enc-altar-viper" },
+      { kind: "move", exitId: "exit-entry-to-guard" },
+      { kind: "inspect", targetId: "wooden-chest" },
+      { kind: "move", exitId: "exit-guard-to-corridor" },
+      { kind: "search", targetId: "secret-door-treasury" },
+      { kind: "move", exitId: "exit-corridor-to-trap" },
+      { kind: "unlockExit", exitId: "exit-trap-to-altar" },
+      { kind: "move", exitId: "exit-trap-to-altar" },
+      { kind: "resolveCombat", encounterId: "enc-altar-viper" },
     ];
 
     for (const action of actionSequence) {
@@ -50,8 +50,8 @@ describe("Simulator Engine Replayability & Save/Load Round-Trip", () => {
 
   it("2. Save/Load round-trip test preserves exact engine state across serialization", () => {
     const engine = new SimulatorEngine(serpentAltarAdventure as VersionedAdventure, 42);
-    engine.executeAction({ type: "MOVE", exitId: "exit-entry-to-guard" });
-    engine.executeAction({ type: "INSPECT", interactableId: "wooden-chest" });
+    engine.executeAction({ kind: "move", exitId: "exit-entry-to-guard" });
+    engine.executeAction({ kind: "inspect", targetId: "wooden-chest" });
 
     // Save state
     const savedStateSerialized = JSON.stringify({

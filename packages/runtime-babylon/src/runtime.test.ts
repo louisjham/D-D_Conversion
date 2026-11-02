@@ -53,11 +53,11 @@ describe("Phase 3B — 3D Babylon Runtime Test Suite", () => {
 
   it("5. Trap, chest, and altar visuals update after corresponding DomainEvents", () => {
     const engine = new SimulatorEngine(serpentAltarAdventure as VersionedAdventure, 42);
-    engine.executeAction({ type: "MOVE", exitId: "exit-entry-to-guard" });
-    const res = engine.executeAction({ type: "INSPECT", interactableId: "wooden-chest" });
+    engine.executeAction({ kind: "move", exitId: "exit-entry-to-guard" });
+    const res = engine.executeAction({ kind: "inspect", targetId: "wooden-chest" });
 
     expect(res.success).toBe(true);
-    expect(res.events.some((e) => e.type === "ITEM_GRANTED")).toBe(true);
+    expect(res.events.some((e) => e.kind === "item_granted")).toBe(true);
     expect(engine.state.inventory.has("iron-key")).toBe(true);
   });
 
@@ -69,8 +69,8 @@ describe("Phase 3B — 3D Babylon Runtime Test Suite", () => {
 
   it("7. 2D save -> Babylon 3D runtime -> normalized state equality", () => {
     const engine2D = new SimulatorEngine(serpentAltarAdventure as VersionedAdventure, 42);
-    engine2D.executeAction({ type: "MOVE", exitId: "exit-entry-to-guard" });
-    engine2D.executeAction({ type: "INSPECT", interactableId: "wooden-chest" });
+    engine2D.executeAction({ kind: "move", exitId: "exit-entry-to-guard" });
+    engine2D.executeAction({ kind: "inspect", targetId: "wooden-chest" });
 
     const saveEnv = createSaveGameEnvelope("serpent-altar-crypt", 42, {
       currentLocationId: engine2D.state.currentLocationId,
