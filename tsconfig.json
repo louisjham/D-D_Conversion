@@ -36,7 +36,8 @@
       "@grimoire3d/visual-logic": ["./packages/visual-logic/src/index.ts"],
       "@grimoire3d/spell-core": ["./packages/spell-core/src/index.ts"],
       "@grimoire3d/dialogue-engine": ["./packages/dialogue-engine/src/index.ts"],
-      "@grimoire3d/procedural-generator": ["./packages/procedural-generator/src/index.ts"]
+      "@grimoire3d/procedural-generator": ["./packages/procedural-generator/src/index.ts"],
+      "@grimoire3d/solver": ["./packages/solver/src/index.ts"]
     }
   },
   "include": ["packages/*/src/**/*", "apps/*/src/**/*"]

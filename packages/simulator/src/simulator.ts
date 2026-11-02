@@ -70,7 +70,7 @@ export type InteractionVerb = "inspect" | "open" | "disarm" | "search" | "take" 
 export type CombatActionType = "attack" | "defend" | "flee" | "useItem";
 
 export type GameAction =
-  | { kind: "move"; direction: Direction }
+  | { kind: "move"; direction: Direction; exitId?: string }
   | { kind: "inspect"; targetId: string }
   | { kind: "search"; targetId: string }
   | { kind: "interact"; targetId: string; verb: InteractionVerb }
@@ -115,7 +115,39 @@ export type GameState = {
   gameOutcome?: "victory" | "defeat";
   seed: number;
   turnCount: number;
+  clone?: () => GameState;
 };
+
+export function cloneGameState(state: GameState): GameState {
+  const cloned: GameState = {
+    currentLocationId: state.currentLocationId,
+    inventory: new Set(state.inventory),
+    flags: new Map(state.flags),
+    playerHp: state.playerHp,
+    playerMaxHp: state.playerMaxHp,
+    playerAc: state.playerAc,
+    playerAttackBonus: state.playerAttackBonus,
+    playerCharacter: {
+      ...state.playerCharacter,
+      abilities: { ...state.playerCharacter.abilities },
+    },
+    discoveredSecrets: new Set(state.discoveredSecrets),
+    unlockedExits: new Set(state.unlockedExits),
+    discoveredRooms: new Set(state.discoveredRooms),
+    actionLog: [...state.actionLog],
+    emittedEvents: [...state.emittedEvents],
+    inCombat: state.inCombat,
+    activeCombatEncounterId: state.activeCombatEncounterId,
+    gameEnded: state.gameEnded,
+    gameOutcome: state.gameOutcome,
+    seed: state.seed,
+    turnCount: state.turnCount,
+    clone() {
+      return cloneGameState(this);
+    },
+  };
+  return cloned;
+}
 
 export class SimulatorEngine {
   public state: GameState;
@@ -162,7 +194,68 @@ export class SimulatorEngine {
       gameEnded: false,
       seed,
       turnCount: 0,
+      clone() {
+        return cloneGameState(this);
+      },
     };
+  }
+
+  public clone(): SimulatorEngine {
+    const cloned = new SimulatorEngine(this.adventure, this.state.seed, this.state.playerCharacter);
+    cloned.state = this.state.clone ? this.state.clone() : cloneGameState(this.state);
+    cloned.rng = this.rng.clone();
+    return cloned;
+  }
+
+  public checkQuestCompletion(): boolean {
+    if (this.state.gameEnded) {
+      return this.state.gameOutcome === "victory";
+    }
+
+    const curLoc = this.getCurrentLocation();
+    const isEscapeTunnel = curLoc.id === "escape-tunnel";
+    const isVictoryLocation =
+      isEscapeTunnel ||
+      (curLoc as any).tags?.includes("victory") ||
+      curLoc.presentation?.ambienceTags?.includes("victory");
+
+    let questsCompleted = false;
+    const quests = this.adventure.adventure.quests || [];
+    if (quests.length > 0) {
+      questsCompleted = quests.every((q) => {
+        const cond = q.completionCondition;
+        if (!cond) return false;
+        if (cond.kind === "always") return true;
+        if (cond.kind === "flag") return !!this.state.flags.get(cond.flag);
+        if (cond.kind === "hasItem") return this.state.inventory.has(cond.itemId);
+        return false;
+      });
+    }
+
+    if (isVictoryLocation || (quests.length > 0 && questsCompleted)) {
+      if (isEscapeTunnel) {
+        this.state.flags.set("escaped-crypt", true);
+      }
+      this.state.gameEnded = true;
+      this.state.gameOutcome = "victory";
+
+      if (isEscapeTunnel) {
+        this.emit({ type: "QUEST_UPDATED", questId: "escape-crypt", status: "completed" });
+      }
+      quests.forEach((q) => {
+        if (questsCompleted) this.emit({ type: "QUEST_UPDATED", questId: q.id, status: "completed" });
+      });
+
+      this.emit({ type: "GAME_ENDED", outcome: "victory" });
+
+      const victoryText = isEscapeTunnel
+        ? "VICTORY! You escaped the Serpent Altar Crypt!"
+        : "VICTORY! You have completed the adventure!";
+      this.state.actionLog.push(victoryText);
+      return true;
+    }
+
+    return false;
   }
 
   public evaluateRandomTable(tableId: string): { roll: number; entry?: RandomTableEntry; event?: DomainEvent } {
@@ -232,8 +325,12 @@ export class SimulatorEngine {
 
     if ("kind" in action) {
       if (action.kind === "move") {
-        const exit = curLoc.exits.find((e) => e.direction === action.direction);
-        if (exit) targetExitId = exit.id;
+        if (action.exitId) {
+          targetExitId = action.exitId;
+        } else {
+          const exit = curLoc.exits.find((e) => e.direction === action.direction);
+          if (exit) targetExitId = exit.id;
+        }
       } else if (action.kind === "inspect" || action.kind === "interact") {
         targetInteractableId = action.targetId;
       } else if (action.kind === "search") {
@@ -248,7 +345,9 @@ export class SimulatorEngine {
     // 1. Move Execution
     if (targetExitId || (action as any).type === "MOVE" || (action as any).kind === "move") {
       const exitId = targetExitId || (action as any).exitId;
-      const exit = curLoc.exits.find((e) => e.id === exitId || e.direction === (action as any).direction);
+      const exit = targetExitId
+        ? curLoc.exits.find((e) => e.id === targetExitId)
+        : curLoc.exits.find((e) => e.id === exitId || e.direction === (action as any).direction);
 
       if (!exit) {
         return { success: false, message: `No valid exit in direction ${(action as any).direction || exitId}.`, events: [] };
@@ -279,9 +378,18 @@ export class SimulatorEngine {
         };
       }
 
+      const targetLoc = this.locationMap.get(exit.target);
+      if (!targetLoc) {
+        return {
+          success: false,
+          message: `Destination '${exit.target}' not found in adventure.`,
+          events: [],
+        };
+      }
+
       const prevRoomId = this.state.currentLocationId;
       this.state.currentLocationId = exit.target;
-      const newLoc = this.getCurrentLocation();
+      const newLoc = targetLoc;
 
       this.state.discoveredRooms.add(newLoc.id);
 
@@ -310,41 +418,7 @@ export class SimulatorEngine {
       }
 
       // Check Objective Win Condition
-      const isEscapeTunnel = newLoc.id === "escape-tunnel";
-      const isVictoryLocation = isEscapeTunnel || (newLoc as any).tags?.includes("victory") || newLoc.presentation?.ambienceTags?.includes("victory");
-      
-      let questsCompleted = false;
-      const quests = this.adventure.adventure.quests || [];
-      if (quests.length > 0) {
-        questsCompleted = quests.every(q => {
-          const cond = q.completionCondition;
-          if (!cond) return false;
-          if (cond.kind === "always") return true;
-          if (cond.kind === "flag") return !!this.state.flags.get(cond.flag);
-          if (cond.kind === "hasItem") return this.state.inventory.has(cond.itemId);
-          return false;
-        });
-      }
-
-      if (isVictoryLocation || (quests.length > 0 && questsCompleted)) {
-        if (isEscapeTunnel) {
-          this.state.flags.set("escaped-crypt", true);
-        }
-        this.state.gameEnded = true;
-        this.state.gameOutcome = "victory";
-        
-        if (isEscapeTunnel) {
-          this.emit({ type: "QUEST_UPDATED", questId: "escape-crypt", status: "completed" });
-        }
-        quests.forEach(q => {
-          if (questsCompleted) this.emit({ type: "QUEST_UPDATED", questId: q.id, status: "completed" });
-        });
-        
-        this.emit({ type: "GAME_ENDED", outcome: "victory" });
-        
-        const victoryText = isEscapeTunnel ? "VICTORY! You escaped the Serpent Altar Crypt!" : "VICTORY! You have completed the adventure!";
-        this.state.actionLog.push(victoryText);
-      }
+      this.checkQuestCompletion();
 
       const emitted = this.state.emittedEvents.slice(preEventCount);
       return { success: true, message: msg, events: emitted };
@@ -401,6 +475,8 @@ export class SimulatorEngine {
           }
         }
       }
+      this.state.flags.set(`inspected-${inter.id}`, true);
+      this.checkQuestCompletion();
 
       this.state.actionLog.push(msg);
       const emitted = this.state.emittedEvents.slice(preEventCount);
@@ -530,12 +606,16 @@ export class SimulatorEngine {
 
       this.emit({ type: "COMBAT_ENDED", encounterId: enc.id, victory: combatRes.victory });
 
-      if (combatRes.victory && enc.victoryEffects) {
-        for (const eff of enc.victoryEffects) {
-          if (eff.kind === "setFlag") {
-            this.state.flags.set(eff.flag, eff.value);
+      if (combatRes.victory) {
+        this.state.flags.set(`encounter-defeated-${enc.id}`, true);
+        if (enc.victoryEffects) {
+          for (const eff of enc.victoryEffects) {
+            if (eff.kind === "setFlag") {
+              this.state.flags.set(eff.flag, eff.value);
+            }
           }
         }
+        this.checkQuestCompletion();
       } else if (!combatRes.victory) {
         this.state.gameEnded = true;
         this.state.gameOutcome = "defeat";

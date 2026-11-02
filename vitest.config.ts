@@ -29,6 +29,7 @@ export default defineConfig({
       "@grimoire3d/spell-core": path.resolve(__dirname, "./packages/spell-core/src/index.ts"),
       "@grimoire3d/dialogue-engine": path.resolve(__dirname, "./packages/dialogue-engine/src/index.ts"),
       "@grimoire3d/procedural-generator": path.resolve(__dirname, "./packages/procedural-generator/src/index.ts"),
+      "@grimoire3d/solver": path.resolve(__dirname, "./packages/solver/src/index.ts"),
     },
   },
 });

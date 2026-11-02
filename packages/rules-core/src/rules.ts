@@ -23,6 +23,12 @@ export class SeededRNG {
   public rollDice(sides: number): number {
     return Math.floor(this.nextFloat() * sides) + 1;
   }
+
+  public clone(): SeededRNG {
+    const copy = new SeededRNG(0);
+    (copy as any).state = this.state;
+    return copy;
+  }
 }
 
 export type CheckResult = {
