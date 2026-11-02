@@ -102,6 +102,10 @@ export const ExitSchema = z.object({
   locked: LockSpecSchema.optional(),
   visibleWhen: ConditionSchema.optional(),
   provenance: ProvenanceSchema.optional(),
+  doorType: z.enum(["open", "wood", "iron", "stone", "portcullis"]).optional(),
+  doorState: z.enum(["open", "closed", "stuck", "barred", "locked"]).optional(),
+  forceDC: z.number().optional(),
+  listenNotice: z.string().optional(),
 });
 export type Exit = z.infer<typeof ExitSchema>;
 
@@ -203,6 +207,37 @@ export const RoomGeometrySchema = z.object({
 });
 export type RoomGeometry = z.infer<typeof RoomGeometrySchema>;
 
+export const EnvironmentalHazardSchema = z.object({
+  id: z.string(),
+  type: z.enum(["pit-trap", "steep-slope", "noxious-fumes", "cave-in", "deep-water"]),
+  dc: z.number(),
+  damage: z.string().optional(),
+  description: z.string(),
+});
+export type EnvironmentalHazard = z.infer<typeof EnvironmentalHazardSchema>;
+
+export const RoomBoundariesSchema = z.object({
+  terrain: z.enum(["paved", "hewn-stone", "rough-cavern", "mud-scree", "steep-chasm"]).optional(),
+  hazards: z.array(EnvironmentalHazardSchema).optional(),
+  acoustics: z.enum(["echoing", "muffled", "normal"]).optional(),
+  sensoryCues: z
+    .object({
+      smell: z.string().optional(),
+      sound: z.string().optional(),
+      draft: z.string().optional(),
+    })
+    .optional(),
+});
+export type RoomBoundaries = z.infer<typeof RoomBoundariesSchema>;
+
+export const WanderingFrequencySchema = z.object({
+  checkOnRest: z.boolean(),
+  chanceOnD6: z.number(),
+  tableId: z.string().optional(),
+  monsterTemplateId: z.string().optional(),
+});
+export type WanderingFrequency = z.infer<typeof WanderingFrequencySchema>;
+
 export const LocationSchema = z.object({
   id: z.string(),
   label: z.string(),
@@ -222,6 +257,9 @@ export const LocationSchema = z.object({
   secrets: z.array(SecretSchema),
   encounter: EncounterSchema.optional(),
   provenance: ProvenanceSchema.optional(),
+  boundaries: RoomBoundariesSchema.optional(),
+  wanderingFrequency: WanderingFrequencySchema.optional(),
+  availableActions: z.array(z.string()).optional(),
 });
 export type Location = z.infer<typeof LocationSchema>;
 

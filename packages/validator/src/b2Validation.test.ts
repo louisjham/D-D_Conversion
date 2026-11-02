@@ -66,4 +66,56 @@ describe("B2: The Keep on the Borderlands IR Validation & Simulation", () => {
     expect(res.success).toBe(true);
     expect(engine.state.currentLocationId).toBe("cave-d-entrance");
   });
+
+  it("5. Verifies PHB player actions and DMG world boundaries in B2", () => {
+    const engine = new SimulatorEngine(b2KeepOnTheBorderlands as VersionedAdventure, 42);
+
+    // --- PHB Action 1: Listen at Door ---
+    // Start at Entry Yard
+    engine.state.currentLocationId = "keep-entry-yard";
+    let listenRes = engine.executeAction({ kind: "listen", direction: "east" });
+    expect(listenRes.success).toBe(true);
+    expect(listenRes.message).toMatch(/Lively fiddle tunes|discern only silence/);
+
+    // --- PHB Action 2 & DMG Boundary: Safe Haven Rest vs Dungeon Rest ---
+    // Resting in the Keep is safe
+    engine.state.playerHp = 10;
+    let restRes = engine.executeAction({ kind: "rest" });
+    expect(restRes.success).toBe(true);
+    expect(engine.state.playerHp).toBe(18); // Healed +8
+
+    // Move to Cave C Guard Room
+    engine.state.currentLocationId = "cave-c-guard";
+
+    // --- PHB Action 3 & DMG Boundary: Stuck Door & Force Door ---
+    // Moving west to Goblin Chieftain initially fails because door is stuck
+    let moveRes = engine.executeAction({ kind: "move", direction: "west" });
+    expect(moveRes.success).toBe(false);
+    expect(moveRes.message).toContain("stuck");
+
+    // Listen at the stuck chieftain door first
+    listenRes = engine.executeAction({ kind: "listen", direction: "west" });
+    expect(listenRes.success).toBe(true);
+    expect(listenRes.message).toMatch(/Angry goblin squeals|discern only silence/);
+
+    // Force open the stuck door
+    const forceRes = engine.executeAction({ kind: "forceDoor", direction: "west" });
+    expect(forceRes.success).toBe(true);
+    expect(forceRes.message).toContain("Battered open door");
+
+    // Now moving west succeeds!
+    moveRes = engine.executeAction({ kind: "move", direction: "west" });
+    expect(moveRes.success).toBe(true);
+    expect(engine.state.currentLocationId).toBe("cave-c-chieftain");
+
+    // --- PHB Action 4: Social Parley with Encounter ---
+    const parleyRes = engine.executeAction({ kind: "parley" });
+    expect(parleyRes).toBeDefined();
+
+    // --- PHB Action 5: Search for Traps & Hazards ---
+    engine.state.currentLocationId = "cave-a-pit-trap";
+    const trapRes = engine.executeAction({ kind: "searchTraps" });
+    expect(trapRes.success).toBe(true);
+    expect(trapRes.message).toMatch(/10-foot covered pit trap|No active triggers or pitfalls detected/);
+  });
 });

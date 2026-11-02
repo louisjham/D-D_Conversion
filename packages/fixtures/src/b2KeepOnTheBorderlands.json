@@ -34,7 +34,10 @@
           {
             "id": "exit-gate-to-entry-yard",
             "direction": "north",
-            "target": "keep-entry-yard"
+            "target": "keep-entry-yard",
+            "doorType": "portcullis",
+            "doorState": "open",
+            "listenNotice": "Guards calling out gate tallies and armor rattling as shields are adjusted."
           },
           {
             "id": "exit-gate-to-wilderness",
@@ -53,7 +56,22 @@
             }
           }
         ],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "inspect",
+          "rest",
+          "talk"
+        ],
+        "boundaries": {
+          "terrain": "paved",
+          "acoustics": "normal",
+          "sensoryCues": {
+            "sound": "Clanking halberds and military boot cadences on the ramparts",
+            "smell": "Woodsmoke, roasting mutton, and hearth ale",
+            "draft": "Warm shelter behind 30-foot mortared stone ramparts"
+          }
+        }
       },
       {
         "id": "keep-entry-yard",
@@ -87,7 +105,10 @@
           {
             "id": "exit-entry-yard-to-tavern",
             "direction": "east",
-            "target": "keep-tavern"
+            "target": "keep-tavern",
+            "doorType": "wood",
+            "doorState": "closed",
+            "listenNotice": "Lively fiddle tunes, laughter, and heavy pewter tankards banging on wooden trestles."
           },
           {
             "id": "exit-entry-yard-to-inner-gate",
@@ -111,7 +132,22 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "inspect",
+          "rest",
+          "talk"
+        ],
+        "boundaries": {
+          "terrain": "paved",
+          "acoustics": "normal",
+          "sensoryCues": {
+            "sound": "Clanking halberds and military boot cadences on the ramparts",
+            "smell": "Woodsmoke, roasting mutton, and hearth ale",
+            "draft": "Warm shelter behind 30-foot mortared stone ramparts"
+          }
+        }
       },
       {
         "id": "keep-provisioner",
@@ -145,7 +181,22 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "inspect",
+          "rest",
+          "talk"
+        ],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "normal",
+          "sensoryCues": {
+            "sound": "Clanking halberds and military boot cadences on the ramparts",
+            "smell": "Woodsmoke, roasting mutton, and hearth ale",
+            "draft": "Warm shelter behind 30-foot mortared stone ramparts"
+          }
+        }
       },
       {
         "id": "keep-bank",
@@ -179,7 +230,22 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "inspect",
+          "rest",
+          "talk"
+        ],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "normal",
+          "sensoryCues": {
+            "sound": "Clanking halberds and military boot cadences on the ramparts",
+            "smell": "Woodsmoke, roasting mutton, and hearth ale",
+            "draft": "Warm shelter behind 30-foot mortared stone ramparts"
+          }
+        }
       },
       {
         "id": "keep-bailiff-tower",
@@ -222,7 +288,22 @@
             }
           }
         ],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "inspect",
+          "rest",
+          "talk"
+        ],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "normal",
+          "sensoryCues": {
+            "sound": "Clanking halberds and military boot cadences on the ramparts",
+            "smell": "Woodsmoke, roasting mutton, and hearth ale",
+            "draft": "Warm shelter behind 30-foot mortared stone ramparts"
+          }
+        }
       },
       {
         "id": "keep-tavern",
@@ -269,7 +350,22 @@
             ]
           }
         ],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "inspect",
+          "rest",
+          "talk"
+        ],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "normal",
+          "sensoryCues": {
+            "sound": "Clanking halberds and military boot cadences on the ramparts",
+            "smell": "Woodsmoke, roasting mutton, and hearth ale",
+            "draft": "Warm shelter behind 30-foot mortared stone ramparts"
+          }
+        }
       },
       {
         "id": "keep-inner-gate",
@@ -307,7 +403,22 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "inspect",
+          "rest",
+          "talk"
+        ],
+        "boundaries": {
+          "terrain": "paved",
+          "acoustics": "normal",
+          "sensoryCues": {
+            "sound": "Clanking halberds and military boot cadences on the ramparts",
+            "smell": "Woodsmoke, roasting mutton, and hearth ale",
+            "draft": "Warm shelter behind 30-foot mortared stone ramparts"
+          }
+        }
       },
       {
         "id": "keep-inner-courtyard",
@@ -360,7 +471,22 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "inspect",
+          "rest",
+          "talk"
+        ],
+        "boundaries": {
+          "terrain": "paved",
+          "acoustics": "normal",
+          "sensoryCues": {
+            "sound": "Clanking halberds and military boot cadences on the ramparts",
+            "smell": "Woodsmoke, roasting mutton, and hearth ale",
+            "draft": "Warm shelter behind 30-foot mortared stone ramparts"
+          }
+        }
       },
       {
         "id": "keep-chapel",
@@ -394,7 +520,22 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "inspect",
+          "rest",
+          "talk"
+        ],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "normal",
+          "sensoryCues": {
+            "sound": "Clanking halberds and military boot cadences on the ramparts",
+            "smell": "Woodsmoke, roasting mutton, and hearth ale",
+            "draft": "Warm shelter behind 30-foot mortared stone ramparts"
+          }
+        }
       },
       {
         "id": "keep-armory",
@@ -428,7 +569,22 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "inspect",
+          "rest",
+          "talk"
+        ],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "normal",
+          "sensoryCues": {
+            "sound": "Clanking halberds and military boot cadences on the ramparts",
+            "smell": "Woodsmoke, roasting mutton, and hearth ale",
+            "draft": "Warm shelter behind 30-foot mortared stone ramparts"
+          }
+        }
       },
       {
         "id": "keep-barracks",
@@ -462,7 +618,22 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "inspect",
+          "rest",
+          "talk"
+        ],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "normal",
+          "sensoryCues": {
+            "sound": "Clanking halberds and military boot cadences on the ramparts",
+            "smell": "Woodsmoke, roasting mutton, and hearth ale",
+            "draft": "Warm shelter behind 30-foot mortared stone ramparts"
+          }
+        }
       },
       {
         "id": "keep-castellan-chamber",
@@ -513,7 +684,22 @@
             ]
           }
         ],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "inspect",
+          "rest",
+          "talk"
+        ],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "normal",
+          "sensoryCues": {
+            "sound": "Clanking halberds and military boot cadences on the ramparts",
+            "smell": "Woodsmoke, roasting mutton, and hearth ale",
+            "draft": "Warm shelter behind 30-foot mortared stone ramparts"
+          }
+        }
       },
       {
         "id": "wild-borderlands-road",
@@ -556,7 +742,22 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "searchTraps",
+          "rest"
+        ],
+        "boundaries": {
+          "terrain": "mud-scree",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "sound": "Cawing ravens and eerie winds funneling down the canyon gorge",
+            "smell": "Faint charcoal smoke and feral musk drifting from hillside clefts",
+            "draft": "Gusts of chilly highland wind whistling between jagged limestone bluffs"
+          }
+        }
       },
       {
         "id": "wild-mad-hermit",
@@ -589,7 +790,22 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "searchTraps",
+          "rest"
+        ],
+        "boundaries": {
+          "terrain": "mud-scree",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "sound": "Cawing ravens and eerie winds funneling down the canyon gorge",
+            "smell": "Faint charcoal smoke and feral musk drifting from hillside clefts",
+            "draft": "Gusts of chilly highland wind whistling between jagged limestone bluffs"
+          }
+        }
       },
       {
         "id": "wild-ravine-entrance",
@@ -672,7 +888,36 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "searchTraps",
+          "rest"
+        ],
+        "boundaries": {
+          "terrain": "mud-scree",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "sound": "Cawing ravens and eerie winds funneling down the canyon gorge",
+            "smell": "Faint charcoal smoke and feral musk drifting from hillside clefts",
+            "draft": "Gusts of chilly highland wind whistling between jagged limestone bluffs"
+          },
+          "hazards": [
+            {
+              "id": "ravine-scree-slope",
+              "type": "steep-slope",
+              "dc": 12,
+              "damage": "1d6",
+              "description": "Loose shale and crumbling scree along the 40-foot cliff incline leading to the upper cave portals"
+            }
+          ]
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 1,
+          "monsterTemplateId": "orc-warrior"
+        }
       },
       {
         "id": "cave-a-entrance",
@@ -710,7 +955,29 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Stench of wet reptilian scales, sour grease, and rotting root vegetable peelings",
+            "sound": "Nervous hissing clicks, scuttling claws, and high-pitched yapping",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "kobold-warrior"
+        }
       },
       {
         "id": "cave-a-guard-room",
@@ -767,6 +1034,28 @@
               "value": true
             }
           ]
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Stench of wet reptilian scales, sour grease, and rotting root vegetable peelings",
+            "sound": "Nervous hissing clicks, scuttling claws, and high-pitched yapping",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "kobold-warrior"
         }
       },
       {
@@ -822,7 +1111,38 @@
             ]
           }
         ],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Stench of wet reptilian scales, sour grease, and rotting root vegetable peelings",
+            "sound": "Nervous hissing clicks, scuttling claws, and high-pitched yapping",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          },
+          "hazards": [
+            {
+              "id": "kobold-camouflaged-pit",
+              "type": "pit-trap",
+              "dc": 13,
+              "damage": "1d6",
+              "description": "10-foot covered pit trap with sharpened bamboo stakes at the bottom"
+            }
+          ]
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "kobold-warrior"
+        }
       },
       {
         "id": "cave-a-chieftain",
@@ -898,6 +1218,28 @@
               "itemId": "brass-chest-key"
             }
           ]
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Stench of wet reptilian scales, sour grease, and rotting root vegetable peelings",
+            "sound": "Nervous hissing clicks, scuttling claws, and high-pitched yapping",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "kobold-warrior"
         }
       },
       {
@@ -932,11 +1274,36 @@
           {
             "id": "exit-cave-b-to-chieftain",
             "direction": "east",
-            "target": "cave-b-chieftain"
+            "target": "cave-b-chieftain",
+            "doorType": "wood",
+            "doorState": "closed",
+            "listenNotice": "Deep guttural roars and iron weapon blades striking practice posts."
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Rancid tallow, singed boar bristles, and stagnant bilge",
+            "sound": "Guttural shouting, heavy cleaver chops, and clattering iron spit roasting",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
+        }
       },
       {
         "id": "cave-b-chieftain",
@@ -992,6 +1359,28 @@
               "itemId": "gold-goblet"
             }
           ]
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Rancid tallow, singed boar bristles, and stagnant bilge",
+            "sound": "Guttural shouting, heavy cleaver chops, and clattering iron spit roasting",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
         }
       },
       {
@@ -1030,7 +1419,29 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Foul dung heaps, decaying offal, and dog urine",
+            "sound": "Heated bickering in Goblin tongue and bones rolling across damp stone",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "goblin-warrior"
+        }
       },
       {
         "id": "cave-c-guard",
@@ -1064,7 +1475,11 @@
           {
             "id": "exit-c-guard-to-chieftain",
             "direction": "west",
-            "target": "cave-c-chieftain"
+            "target": "cave-c-chieftain",
+            "doorType": "wood",
+            "doorState": "stuck",
+            "forceDC": 13,
+            "listenNotice": "Angry goblin squeals and the menacing low growl of a giant dire rat."
           }
         ],
         "interactables": [],
@@ -1087,6 +1502,28 @@
               "value": true
             }
           ]
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Foul dung heaps, decaying offal, and dog urine",
+            "sound": "Heated bickering in Goblin tongue and bones rolling across damp stone",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "goblin-warrior"
         }
       },
       {
@@ -1155,6 +1592,28 @@
               "value": true
             }
           ]
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Foul dung heaps, decaying offal, and dog urine",
+            "sound": "Heated bickering in Goblin tongue and bones rolling across damp stone",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "goblin-warrior"
         }
       },
       {
@@ -1193,7 +1652,29 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Quenched iron forge steam, lamp oil, and weapon tallow",
+            "sound": "Disciplined military drill paces, rhythmic pike thrusts, and sharp commands",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
+        }
       },
       {
         "id": "cave-d-guard",
@@ -1227,7 +1708,11 @@
           {
             "id": "exit-d-guard-to-armory",
             "direction": "west",
-            "target": "cave-d-armory"
+            "target": "cave-d-armory",
+            "doorType": "iron",
+            "doorState": "barred",
+            "forceDC": 15,
+            "listenNotice": "Disciplined clink of heavy iron polearms being retrieved from storage racks."
           }
         ],
         "interactables": [],
@@ -1250,6 +1735,28 @@
               "value": true
             }
           ]
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Quenched iron forge steam, lamp oil, and weapon tallow",
+            "sound": "Disciplined military drill paces, rhythmic pike thrusts, and sharp commands",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
         }
       },
       {
@@ -1304,7 +1811,29 @@
             ]
           }
         ],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Quenched iron forge steam, lamp oil, and weapon tallow",
+            "sound": "Disciplined military drill paces, rhythmic pike thrusts, and sharp commands",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
+        }
       },
       {
         "id": "cave-d-chieftain",
@@ -1356,6 +1885,28 @@
               "value": true
             }
           ]
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Quenched iron forge steam, lamp oil, and weapon tallow",
+            "sound": "Disciplined military drill paces, rhythmic pike thrusts, and sharp commands",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
         }
       },
       {
@@ -1416,6 +1967,28 @@
               "itemId": "sword-plus-one"
             }
           ]
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Suffocating predator stench, spoiled venison, and bone meal",
+            "sound": "Thunderous snores vibrating loose stalactites from the roof",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
         }
       },
       {
@@ -1454,7 +2027,29 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Damp limestone, bat guano, and cold fungal spores",
+            "sound": "Dripping subterranean water and scurrying cave vermin",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
+        }
       },
       {
         "id": "cave-f-owlbear",
@@ -1522,6 +2117,28 @@
               "value": true
             }
           ]
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Damp limestone, bat guano, and cold fungal spores",
+            "sound": "Dripping subterranean water and scurrying cave vermin",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
         }
       },
       {
@@ -1560,7 +2177,29 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Damp limestone, bat guano, and cold fungal spores",
+            "sound": "Dripping subterranean water and scurrying cave vermin",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
+        }
       },
       {
         "id": "cave-g-guard",
@@ -1617,6 +2256,28 @@
               "value": true
             }
           ]
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Damp limestone, bat guano, and cold fungal spores",
+            "sound": "Dripping subterranean water and scurrying cave vermin",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
         }
       },
       {
@@ -1669,6 +2330,28 @@
               "value": true
             }
           ]
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Damp limestone, bat guano, and cold fungal spores",
+            "sound": "Dripping subterranean water and scurrying cave vermin",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
         }
       },
       {
@@ -1707,7 +2390,29 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Damp limestone, bat guano, and cold fungal spores",
+            "sound": "Dripping subterranean water and scurrying cave vermin",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
+        }
       },
       {
         "id": "cave-h-maze",
@@ -1745,7 +2450,29 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Damp limestone, bat guano, and cold fungal spores",
+            "sound": "Dripping subterranean water and scurrying cave vermin",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
+        }
       },
       {
         "id": "cave-h-chieftain",
@@ -1813,6 +2540,28 @@
               "value": true
             }
           ]
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Damp limestone, bat guano, and cold fungal spores",
+            "sound": "Dripping subterranean water and scurrying cave vermin",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
         }
       },
       {
@@ -1851,7 +2600,29 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Damp limestone, bat guano, and cold fungal spores",
+            "sound": "Dripping subterranean water and scurrying cave vermin",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
+        }
       },
       {
         "id": "cave-i-guard",
@@ -1908,6 +2679,28 @@
               "value": true
             }
           ]
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Damp limestone, bat guano, and cold fungal spores",
+            "sound": "Dripping subterranean water and scurrying cave vermin",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
         }
       },
       {
@@ -1960,6 +2753,28 @@
               "value": true
             }
           ]
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Damp limestone, bat guano, and cold fungal spores",
+            "sound": "Dripping subterranean water and scurrying cave vermin",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
         }
       },
       {
@@ -1999,7 +2814,29 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Heavy burning myrrh, brimstone, and bitter funeral herbs",
+            "sound": "Sinister subsonic chanting that makes the breastbone thrum with dread",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
+        }
       },
       {
         "id": "cave-j-torture",
@@ -2038,7 +2875,29 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Heavy burning myrrh, brimstone, and bitter funeral herbs",
+            "sound": "Sinister subsonic chanting that makes the breastbone thrum with dread",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
+        }
       },
       {
         "id": "cave-j-altar",
@@ -2143,6 +3002,28 @@
               "value": true
             }
           ]
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Heavy burning myrrh, brimstone, and bitter funeral herbs",
+            "sound": "Sinister subsonic chanting that makes the breastbone thrum with dread",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
         }
       },
       {
@@ -2176,7 +3057,29 @@
           }
         ],
         "interactables": [],
-        "secrets": []
+        "secrets": [],
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Damp limestone, bat guano, and cold fungal spores",
+            "sound": "Dripping subterranean water and scurrying cave vermin",
+            "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+          }
+        },
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "orc-warrior"
+        }
       }
     ],
     "npcs": [
@@ -2620,8 +3523,8 @@
     "sourceFormat": "pdf"
   },
   "metadata": {
-    "createdAt": "2026-08-11T08:05:30.160895",
-    "updatedAt": "2026-08-11T08:05:30.160895",
+    "createdAt": "2026-11-02T01:21:18.547145",
+    "updatedAt": "2026-11-02T01:21:18.547145",
     "importedBy": "extractor"
   }
 }

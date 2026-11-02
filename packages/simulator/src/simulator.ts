@@ -1,5 +1,15 @@
 import { VersionedAdventure, Location, Exit, Interactable, Secret, Encounter, RandomTableEntry } from "@grimoire3d/ir";
-import { SeededRNG, resolveCheck, resolveSimpleCombat } from "@grimoire3d/rules-core";
+import {
+  SeededRNG,
+  resolveCheck,
+  resolveSimpleCombat,
+  resolveListenCheck,
+  resolveOpenDoors,
+  resolveDmgWanderingCheck,
+  resolveDmgReactionRoll,
+  resolveDmgMoraleCheck,
+  resolveEnvironmentalHazard,
+} from "@grimoire3d/rules-core";
 
 export function parseAndRollDice(diceStr: string, rng: SeededRNG): number {
   const cleanStr = diceStr.replace(/\s+/g, '');
@@ -34,6 +44,10 @@ export type DomainEvent =
   | { type: "QUEST_UPDATED"; questId: string; status: "started" | "completed" }
   | { type: "RANDOM_TABLE_ROLLED"; tableId: string; tableName: string; rollResult: number; entryResult: string }
   | { type: "WANDERING_ENCOUNTER_TRIGGERED"; tableId: string; entityId?: string; encounterText: string }
+  | { type: "LISTEN_ATTEMPTED"; exitId: string; heard: boolean; notice?: string }
+  | { type: "DOOR_FORCED"; exitId: string; success: boolean; noiseAlerted: boolean }
+  | { type: "PARLEY_ATTEMPTED"; disposition: "hostile" | "cautious" | "neutral" | "friendly"; roll: number }
+  | { type: "HAZARD_ENCOUNTERED"; hazardId: string; avoided: boolean; damage: number }
   | { type: "GAME_ENDED"; outcome: "victory" | "defeat" };
 
 export type Direction = "north" | "south" | "east" | "west" | "up" | "down";
@@ -49,6 +63,11 @@ export type GameAction =
   | { kind: "combatAction"; action: CombatActionType }
   | { kind: "rollTable"; tableId: string }
   | { kind: "rest" }
+  | { kind: "listen"; exitId?: string; direction?: Direction }
+  | { kind: "forceDoor"; exitId?: string; direction?: Direction }
+  | { kind: "searchTraps" }
+  | { kind: "parley" }
+  | { kind: "flee" }
   // Legacy / Direct Actions
   | { type: "MOVE"; exitId: string }
   | { type: "INSPECT"; interactableId: string }
@@ -222,6 +241,15 @@ export class SimulatorEngine {
         }
       }
 
+      // Check stuck / barred door states (DMG World Boundary)
+      if ((exit.doorState === "stuck" || exit.doorState === "barred") && !this.state.unlockedExits.has(exit.id)) {
+        return {
+          success: false,
+          message: `The door '${exit.id}' is ${exit.doorState}! You must use 'forceDoor' to batter it open before passing.`,
+          events: [],
+        };
+      }
+
       const prevRoomId = this.state.currentLocationId;
       this.state.currentLocationId = exit.target;
       const newLoc = this.getCurrentLocation();
@@ -234,6 +262,23 @@ export class SimulatorEngine {
 
       const msg = `Moved to ${newLoc.label}`;
       this.state.actionLog.push(msg);
+
+      // DMG Environmental Hazard Check
+      if (newLoc.boundaries?.hazards && newLoc.boundaries.hazards.length > 0) {
+        for (const haz of newLoc.boundaries.hazards) {
+          if (!this.state.flags.get(`hazard-${haz.id}-avoided`)) {
+            const hazRes = resolveEnvironmentalHazard(this.rng, haz);
+            this.emit({ type: "HAZARD_ENCOUNTERED", hazardId: haz.id, avoided: hazRes.avoided, damage: hazRes.damageDealt });
+            if (!hazRes.avoided) {
+              this.state.playerHp = Math.max(1, this.state.playerHp - hazRes.damageDealt);
+              this.state.actionLog.push(`Triggered hazard '${haz.id}': ${hazRes.message}`);
+            } else {
+              this.state.flags.set(`hazard-${haz.id}-avoided`, true);
+              this.state.actionLog.push(`Evaded hazard '${haz.id}': ${hazRes.message}`);
+            }
+          }
+        }
+      }
 
       // Check Objective Win Condition
       const isEscapeTunnel = newLoc.id === "escape-tunnel";
@@ -465,11 +510,31 @@ export class SimulatorEngine {
       };
     }
 
-    // 6. Rest
+    // 6. Rest (PHB Healing Rest & DMG Wandering Patrol Check)
     if ((action as any).kind === "rest") {
       this.state.turnCount++;
+      const isSafeHaven = curLoc.presentation?.biome === "keep" || curLoc.id.includes("tavern") || curLoc.id.includes("keep");
+
+      // In dangerous dungeon biomes, resting triggers a DMG wandering monster check!
+      if (!isSafeHaven) {
+        const wandCheck = resolveDmgWanderingCheck(this.rng, curLoc.wanderingFrequency?.chanceOnD6 ?? 1);
+        if (wandCheck.triggered) {
+          const wandMonster = curLoc.wanderingFrequency?.monsterTemplateId || "goblin-scout";
+          const msg = `Rest interrupted! A wandering patrol attacks! Rolled ${wandCheck.roll} on d6 (Threshold: ${wandCheck.threshold})`;
+          this.state.actionLog.push(msg);
+          this.emit({
+            type: "WANDERING_ENCOUNTER_TRIGGERED",
+            tableId: "wandering-dungeon",
+            entityId: wandMonster,
+            encounterText: msg,
+          });
+          this.state.inCombat = true;
+          return { success: false, message: msg, events: this.state.emittedEvents.slice(preEventCount) };
+        }
+      }
+
       this.state.playerHp = Math.min(this.state.playerMaxHp, this.state.playerHp + 8);
-      const msg = `Rested and recovered HP (Current HP: ${this.state.playerHp}/${this.state.playerMaxHp})`;
+      const msg = `Rested successfully and recovered HP (Current HP: ${this.state.playerHp}/${this.state.playerMaxHp})`;
       this.state.actionLog.push(msg);
       return { success: true, message: msg, events: [] };
     }
@@ -485,7 +550,87 @@ export class SimulatorEngine {
       };
     }
 
-    // 8. Pickup Item Execution
+    // 8. PHB Exploration: Listen at Door
+    if ("kind" in action && action.kind === "listen") {
+      const act = action as { exitId?: string; direction?: Direction };
+      const exit = curLoc.exits.find((e) => e.id === act.exitId || e.direction === act.direction) || curLoc.exits[0];
+      if (!exit) {
+        return { success: false, message: "No exit to listen at.", events: [] };
+      }
+      const checkRes = resolveListenCheck(this.rng, 2, 12);
+      const heard = checkRes.success;
+      const sensory = heard
+        ? exit.listenNotice || "You press your ear against the portal and hear low guttural muttering and clinking metal."
+        : "You strain your ears against the cold timber but discern only silence.";
+
+      this.emit({ type: "LISTEN_ATTEMPTED", exitId: exit.id, heard, notice: heard ? sensory : undefined });
+      this.state.actionLog.push(`[Listen at ${exit.direction} exit]: ${sensory}`);
+      return { success: true, message: sensory, events: this.state.emittedEvents.slice(preEventCount) };
+    }
+
+    // 9. PHB Exploration: Force Open Stuck / Barred Door
+    if ("kind" in action && action.kind === "forceDoor") {
+      const act = action as { exitId?: string; direction?: Direction };
+      const exit = curLoc.exits.find((e) => e.id === act.exitId || e.direction === act.direction) || curLoc.exits[0];
+      if (!exit) {
+        return { success: false, message: "No exit to force open.", events: [] };
+      }
+      const forceRes = resolveOpenDoors(this.rng, 14, exit.forceDC || 14);
+      if (forceRes.success) {
+        this.state.unlockedExits.add(exit.id);
+        // DMG Rule: Loud noises alert wandering patrols
+        const wandCheck = resolveDmgWanderingCheck(this.rng, 1, true);
+        this.emit({ type: "DOOR_FORCED", exitId: exit.id, success: true, noiseAlerted: wandCheck.triggered });
+        let msg = `Battered open door '${exit.id}'!`;
+        if (wandCheck.triggered) {
+          msg += ` The resounding crash echoes through the stone corridors, alerting nearby patrols!`;
+        }
+        this.state.actionLog.push(msg);
+        return { success: true, message: msg, events: this.state.emittedEvents.slice(preEventCount) };
+      } else {
+        this.emit({ type: "DOOR_FORCED", exitId: exit.id, success: false, noiseAlerted: false });
+        this.state.actionLog.push(`Failed to force door '${exit.id}': ${forceRes.message}`);
+        return { success: false, message: forceRes.message, events: this.state.emittedEvents.slice(preEventCount) };
+      }
+    }
+
+    // 10. PHB Exploration: Search for Traps & Hazards (10-Foot Pole)
+    if ("kind" in action && action.kind === "searchTraps") {
+      const checkRes = resolveCheck(13, 2, this.rng);
+      if (checkRes.success && curLoc.boundaries?.hazards && curLoc.boundaries.hazards.length > 0) {
+        for (const haz of curLoc.boundaries.hazards) {
+          this.state.flags.set(`hazard-${haz.id}-avoided`, true);
+        }
+        const msg = `Careful inspection with a 10-foot pole detected: ${curLoc.boundaries.hazards.map((h) => h.description).join("; ")}. Hazard marked and bypassed safely!`;
+        this.state.actionLog.push(msg);
+        return { success: true, message: msg, events: [] };
+      } else {
+        const msg = "You probe the flagstones and seams methodically. No active triggers or pitfalls detected.";
+        this.state.actionLog.push(msg);
+        return { success: true, message: msg, events: [] };
+      }
+    }
+
+    // 11. PHB Social: Parley with Encounter
+    if ("kind" in action && action.kind === "parley") {
+      if (!curLoc.encounter) {
+        return { success: false, message: "No creature here to parley with.", events: [] };
+      }
+      const reactionRes = resolveDmgReactionRoll(this.rng, 1);
+      this.emit({ type: "PARLEY_ATTEMPTED", disposition: reactionRes.reaction, roll: reactionRes.roll });
+      if (reactionRes.reaction === "neutral" || reactionRes.reaction === "friendly") {
+        this.state.flags.set(`encounter-parleyed-${curLoc.encounter.id}`, true);
+        const msg = `Parley succeeded! Rolled ${reactionRes.roll} on 2d6. ${reactionRes.description} Combat averted.`;
+        this.state.actionLog.push(msg);
+        return { success: true, message: msg, events: this.state.emittedEvents.slice(preEventCount) };
+      } else {
+        const msg = `Parley rejected! Rolled ${reactionRes.roll} on 2d6. ${reactionRes.description}`;
+        this.state.actionLog.push(msg);
+        return { success: false, message: msg, events: this.state.emittedEvents.slice(preEventCount) };
+      }
+    }
+
+    // 12. Pickup Item Execution
     if ((action as any).type === "PICKUP_ITEM") {
       const itemId = (action as any).itemId;
       this.state.inventory.add(itemId);

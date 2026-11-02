@@ -120,6 +120,123 @@ export function resolveSimpleCombat(
   };
 }
 
+// --- PHB Exploration Rules: Listen at Door Check ---
+export function resolveListenCheck(
+  rng: SeededRNG,
+  bonus: number = 0,
+  dc: number = 12
+): { success: boolean; roll: number; total: number; message: string } {
+  const roll = rng.rollD20();
+  const total = roll + bonus;
+  const success = roll === 20 || (roll !== 1 && total >= dc);
+  return {
+    success,
+    roll,
+    total,
+    message: success
+      ? `Listen check succeeded (rolled ${total} vs DC ${dc}). Faint movement and breathing detected.`
+      : `Listen check failed (rolled ${total} vs DC ${dc}). You hear only silence beyond the portal.`,
+  };
+}
+
+// --- PHB Exploration Rules: Force Open Stuck / Heavy Doors ---
+export function resolveOpenDoors(
+  rng: SeededRNG,
+  strengthScore: number = 14,
+  forceDC: number = 14
+): { success: boolean; roll: number; message: string } {
+  // AD&D Open Doors on d6 (STR 14 = 1-2 on d6; D20 equivalent DC 14 with +2 mod)
+  const strBonus = Math.floor((strengthScore - 10) / 2);
+  const roll = rng.rollD20();
+  const total = roll + strBonus;
+  const success = roll === 20 || (roll !== 1 && total >= forceDC);
+  return {
+    success,
+    roll: total,
+    message: success
+      ? `With a heave of shoulder, the door shudders and bursts open with a loud wooden crack!`
+      : `You slam against the door, but the warped timber holds fast.`,
+  };
+}
+
+// --- DMG World Rules: Wandering Monster Check ---
+export function resolveDmgWanderingCheck(
+  rng: SeededRNG,
+  chanceOnD6: number = 1,
+  isNoisyAction: boolean = false
+): { triggered: boolean; roll: number; threshold: number } {
+  const roll = rng.rollDice(6);
+  // Noisy actions (forcing a door, combat) increase wandering patrol chances
+  const threshold = isNoisyAction ? Math.min(6, chanceOnD6 + 1) : chanceOnD6;
+  return {
+    triggered: roll <= threshold,
+    roll,
+    threshold,
+  };
+}
+
+// --- DMG Encounter Rules: 2d6 Monster Reaction Roll ---
+export type MonsterDisposition = "hostile" | "cautious" | "neutral" | "friendly";
+
+export function resolveDmgReactionRoll(
+  rng: SeededRNG,
+  charismaMod: number = 0
+): { reaction: MonsterDisposition; roll: number; description: string } {
+  const d1 = rng.rollDice(6);
+  const d2 = rng.rollDice(6);
+  const total = d1 + d2 + charismaMod;
+
+  if (total <= 5) {
+    return { reaction: "hostile", roll: total, description: "Monsters brandish weapons and attack immediately!" };
+  } else if (total <= 8) {
+    return { reaction: "cautious", roll: total, description: "Monsters hold their ground warily with weapons drawn, growling warnings." };
+  } else if (total <= 11) {
+    return { reaction: "neutral", roll: total, description: "Monsters pause, willing to listen to a parley or bribe offer." };
+  } else {
+    return { reaction: "friendly", roll: total, description: "Monsters lower weapons, receptive to negotiation or retreat." };
+  }
+}
+
+// --- DMG Encounter Rules: Morale Check ---
+export function resolveDmgMoraleCheck(
+  rng: SeededRNG,
+  baseMorale: number = 7
+): { breaks: boolean; roll: number; message: string } {
+  const d1 = rng.rollDice(6);
+  const d2 = rng.rollDice(6);
+  const total = d1 + d2;
+  const breaks = total > baseMorale;
+  return {
+    breaks,
+    roll: total,
+    message: breaks
+      ? `Morale broken! Rolled ${total} vs Morale ${baseMorale}. The monsters panic and attempt to flee!`
+      : `Morale holds firm! Rolled ${total} vs Morale ${baseMorale}. They continue fighting.`,
+  };
+}
+
+// --- DMG World Rules: Environmental Hazard Save ---
+export function resolveEnvironmentalHazard(
+  rng: SeededRNG,
+  hazard: { type: string; dc: number; damage?: string },
+  saveBonus: number = 2
+): { avoided: boolean; damageDealt: number; message: string } {
+  const roll = rng.rollD20();
+  const total = roll + saveBonus;
+  const avoided = roll === 20 || (roll !== 1 && total >= hazard.dc);
+  let damageDealt = 0;
+  if (!avoided && hazard.damage) {
+    damageDealt = rng.rollDice(6); // default 1d6
+  }
+  return {
+    avoided,
+    damageDealt,
+    message: avoided
+      ? `Hazard avoided! Rolled ${total} vs DC ${hazard.dc}.`
+      : `Hazard failed! Rolled ${total} vs DC ${hazard.dc}. Suffered ${damageDealt} damage.`,
+  };
+}
+
 // --- RulesProfile Interface ---
 export interface RulesProfile {
   readonly id: string;

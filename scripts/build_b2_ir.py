@@ -1128,6 +1128,155 @@ locations = [
     }
 ]
 
+def enrich_b2_with_phb_dmg_rules(locs):
+    cave_cues = {
+        "cave-a": {
+            "smell": "Stench of wet reptilian scales, sour grease, and rotting root vegetable peelings",
+            "sound": "Nervous hissing clicks, scuttling claws, and high-pitched yapping",
+            "terrain": "rough-cavern"
+        },
+        "cave-b": {
+            "smell": "Rancid tallow, singed boar bristles, and stagnant bilge",
+            "sound": "Guttural shouting, heavy cleaver chops, and clattering iron spit roasting",
+            "terrain": "rough-cavern"
+        },
+        "cave-c": {
+            "smell": "Foul dung heaps, decaying offal, and dog urine",
+            "sound": "Heated bickering in Goblin tongue and bones rolling across damp stone",
+            "terrain": "rough-cavern"
+        },
+        "cave-d": {
+            "smell": "Quenched iron forge steam, lamp oil, and weapon tallow",
+            "sound": "Disciplined military drill paces, rhythmic pike thrusts, and sharp commands",
+            "terrain": "rough-cavern"
+        },
+        "cave-e": {
+            "smell": "Suffocating predator stench, spoiled venison, and bone meal",
+            "sound": "Thunderous snores vibrating loose stalactites from the roof",
+            "terrain": "rough-cavern"
+        },
+        "cave-j": {
+            "smell": "Heavy burning myrrh, brimstone, and bitter funeral herbs",
+            "sound": "Sinister subsonic chanting that makes the breastbone thrum with dread",
+            "terrain": "hewn-stone"
+        }
+    }
+
+    for loc in locs:
+        lid = loc["id"]
+        biome = loc.get("presentation", {}).get("biome", "keep")
+
+        # 1. PHB Action Affordances & DMG World Boundaries
+        if biome == "keep":
+            loc["availableActions"] = ["move", "inspect", "rest", "talk"]
+            loc["boundaries"] = {
+                "terrain": "paved" if ("yard" in lid or "gate" in lid) else "hewn-stone",
+                "acoustics": "normal",
+                "sensoryCues": {
+                    "sound": "Clanking halberds and military boot cadences on the ramparts",
+                    "smell": "Woodsmoke, roasting mutton, and hearth ale",
+                    "draft": "Warm shelter behind 30-foot mortared stone ramparts"
+                }
+            }
+        elif "wild" in lid:
+            loc["availableActions"] = ["move", "listen", "searchTraps", "rest"]
+            loc["boundaries"] = {
+                "terrain": "mud-scree",
+                "acoustics": "echoing",
+                "sensoryCues": {
+                    "sound": "Cawing ravens and eerie winds funneling down the canyon gorge",
+                    "smell": "Faint charcoal smoke and feral musk drifting from hillside clefts",
+                    "draft": "Gusts of chilly highland wind whistling between jagged limestone bluffs"
+                }
+            }
+            if lid == "wild-ravine-entrance":
+                loc["boundaries"]["hazards"] = [
+                    {
+                        "id": "ravine-scree-slope",
+                        "type": "steep-slope",
+                        "dc": 12,
+                        "damage": "1d6",
+                        "description": "Loose shale and crumbling scree along the 40-foot cliff incline leading to the upper cave portals"
+                    }
+                ]
+                loc["wanderingFrequency"] = {
+                    "checkOnRest": True,
+                    "chanceOnD6": 1,
+                    "monsterTemplateId": "orc-warrior"
+                }
+        else:
+            # Caves of Chaos (cave-*)
+            loc["availableActions"] = ["move", "listen", "forceDoor", "searchTraps", "rest", "parley"]
+            matched_cue = next((v for k, v in cave_cues.items() if k in lid), {
+                "smell": "Damp limestone, bat guano, and cold fungal spores",
+                "sound": "Dripping subterranean water and scurrying cave vermin",
+                "terrain": "rough-cavern"
+            })
+            loc["boundaries"] = {
+                "terrain": matched_cue["terrain"],
+                "acoustics": "echoing",
+                "sensoryCues": {
+                    "smell": matched_cue["smell"],
+                    "sound": matched_cue["sound"],
+                    "draft": "Clammy subterranean airflow carrying damp chill from the deep chasms"
+                }
+            }
+
+            if lid == "cave-a-pit-trap":
+                loc["boundaries"]["hazards"] = [
+                    {
+                        "id": "kobold-camouflaged-pit",
+                        "type": "pit-trap",
+                        "dc": 13,
+                        "damage": "1d6",
+                        "description": "10-foot covered pit trap with sharpened bamboo stakes at the bottom"
+                    }
+                ]
+            elif lid == "cave-j-shrine":
+                loc["boundaries"]["hazards"] = [
+                    {
+                        "id": "chaos-censer-fumes",
+                        "type": "noxious-fumes",
+                        "dc": 14,
+                        "damage": "1d6",
+                        "description": "Pernicious unholy altar incense causing coughing fits and blurred vision"
+                    }
+                ]
+
+            loc["wanderingFrequency"] = {
+                "checkOnRest": True,
+                "chanceOnD6": 2,
+                "monsterTemplateId": "goblin-warrior" if "cave-c" in lid else ("kobold-warrior" if "cave-a" in lid else "orc-warrior")
+            }
+
+        # 2. Door Boundaries & Audio Listen Cues on Exits
+        for exit in loc.get("exits", []):
+            eid = exit["id"]
+            if eid == "exit-gate-to-entry-yard":
+                exit["doorType"] = "portcullis"
+                exit["doorState"] = "open"
+                exit["listenNotice"] = "Guards calling out gate tallies and armor rattling as shields are adjusted."
+            elif eid == "exit-entry-yard-to-tavern":
+                exit["doorType"] = "wood"
+                exit["doorState"] = "closed"
+                exit["listenNotice"] = "Lively fiddle tunes, laughter, and heavy pewter tankards banging on wooden trestles."
+            elif eid == "exit-c-guard-to-chieftain":
+                exit["doorType"] = "wood"
+                exit["doorState"] = "stuck"
+                exit["forceDC"] = 13
+                exit["listenNotice"] = "Angry goblin squeals and the menacing low growl of a giant dire rat."
+            elif eid == "exit-d-guard-to-armory":
+                exit["doorType"] = "iron"
+                exit["doorState"] = "barred"
+                exit["forceDC"] = 15
+                exit["listenNotice"] = "Disciplined clink of heavy iron polearms being retrieved from storage racks."
+            elif eid == "exit-cave-b-to-chieftain":
+                exit["doorType"] = "wood"
+                exit["doorState"] = "closed"
+                exit["listenNotice"] = "Deep guttural roars and iron weapon blades striking practice posts."
+
+enrich_b2_with_phb_dmg_rules(locations)
+
 versioned_adventure = {
     "schemaVersion": "0.1",
     "adventure": {
