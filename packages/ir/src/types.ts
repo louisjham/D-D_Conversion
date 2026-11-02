@@ -146,9 +146,51 @@ export const MonsterTemplateSchema = z.object({
   ac: z.number(),
   attackBonus: z.number(),
   damageRoll: z.string(),
+  role: z.enum(["brute", "skirmisher", "soldier", "predator", "caster", "boss"]).optional(),
+  size: z.enum(["tiny", "small", "medium", "large", "huge", "gargantuan"]).optional(),
+  creatureType: z.enum(["humanoid", "monstrosity", "beast", "undead", "dragon", "fiend", "aberration", "elemental"]).optional(),
+  traits: z.array(z.string()).optional(),
+  morale: z.number().min(2).max(12).optional(),
+  speed: z
+    .object({
+      walk: z.number().default(30),
+      swim: z.number().optional(),
+      climb: z.number().optional(),
+      fly: z.number().optional(),
+    })
+    .optional(),
+  senses: z.array(z.string()).optional(),
+  xpValue: z.number().optional(),
   provenance: ProvenanceSchema.optional(),
 });
 export type MonsterTemplate = z.infer<typeof MonsterTemplateSchema>;
+
+// --- Player Character (PHB 2024 / 5e) ---
+export const PlayerCharacterSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  race: z.enum(["human", "elf", "dwarf", "halfling", "gnome"]),
+  class: z.enum(["fighter", "rogue", "cleric", "wizard"]),
+  level: z.number().min(1).max(20).default(1),
+  abilities: z.object({
+    str: z.number().min(1).max(30),
+    dex: z.number().min(1).max(30),
+    con: z.number().min(1).max(30),
+    int: z.number().min(1).max(30),
+    wis: z.number().min(1).max(30),
+    cha: z.number().min(1).max(30),
+  }),
+  hp: z.number(),
+  maxHp: z.number(),
+  ac: z.number(),
+  proficiencyBonus: z.number().default(2),
+  speed: z.number().default(30),
+  traits: z.array(z.string()),
+  classFeatures: z.array(z.string()),
+  inventory: z.array(z.string()).optional(),
+  spentFeatures: z.array(z.string()).optional(),
+});
+export type PlayerCharacter = z.infer<typeof PlayerCharacterSchema>;
 
 export const EncounterSchema = z.object({
   id: z.string(),

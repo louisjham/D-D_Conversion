@@ -79,10 +79,10 @@ describe("B2: The Keep on the Borderlands IR Validation & Simulation", () => {
 
     // --- PHB Action 2 & DMG Boundary: Safe Haven Rest vs Dungeon Rest ---
     // Resting in the Keep is safe
-    engine.state.playerHp = 10;
+    engine.state.playerHp = 4;
     let restRes = engine.executeAction({ kind: "rest" });
     expect(restRes.success).toBe(true);
-    expect(engine.state.playerHp).toBe(18); // Healed +8
+    expect(engine.state.playerHp).toBe(engine.state.playerMaxHp); // Healed up to max HP
 
     // Move to Cave C Guard Room
     engine.state.currentLocationId = "cave-c-guard";

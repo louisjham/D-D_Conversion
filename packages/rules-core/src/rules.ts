@@ -1,4 +1,5 @@
 import { Condition, Effect, MonsterTemplate } from "@grimoire3d/ir";
+import { executeMonsterAI } from "./monsterAI";
 
 // --- Seeded PRNG (Mulberry32) ---
 export class SeededRNG {
@@ -97,11 +98,31 @@ export function resolveSimpleCombat(
 
     if (totalEnemyHp <= 0) break;
 
-    // Enemy Attack
-    const enemyRoll = rng.rollD20();
+    // Enemy Attack using Monster Manual AI
+    const remainingEnemies = Math.ceil(totalEnemyHp / monster.hp);
+    const aiDecision = executeMonsterAI(
+      monster,
+      Math.min(monster.hp, totalEnemyHp),
+      { hp: playerHp, ac: playerStats.ac },
+      remainingEnemies,
+      rng
+    );
+
+    if (aiDecision.breaksMorale) {
+      log.push(`Round ${round}: ${aiDecision.description}`);
+      totalEnemyHp = 0; // Monster broke rank and fled!
+      break;
+    }
+
+    // Roll Enemy Attack (with Advantage if flanking/pack tactics!)
+    let enemyRoll = rng.rollD20();
+    if (aiDecision.hasAdvantage) {
+      enemyRoll = Math.max(enemyRoll, rng.rollD20());
+    }
+
     const enemyHit = enemyRoll === 20 || (enemyRoll !== 1 && enemyRoll + monster.attackBonus >= playerStats.ac);
     if (enemyHit) {
-      const dmg = rng.rollDice(6);
+      const dmg = rng.rollDice(6) + aiDecision.bonusDamage;
       playerHp -= dmg;
       log.push(`Round ${round}: ${monster.name} hits you for ${dmg} damage! (${Math.max(0, playerHp)} HP remaining)`);
     } else {

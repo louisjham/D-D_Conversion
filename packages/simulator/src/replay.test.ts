@@ -75,6 +75,7 @@ describe("Simulator Engine Replayability & Save/Load Round-Trip", () => {
       playerMaxHp: 24,
       playerAc: 14,
       playerAttackBonus: 5,
+      playerCharacter: engine.state.playerCharacter,
       discoveredSecrets: new Set(parsed.discoveredSecrets),
       unlockedExits: new Set(parsed.unlockedExits),
       discoveredRooms: new Set([parsed.currentLocationId]),

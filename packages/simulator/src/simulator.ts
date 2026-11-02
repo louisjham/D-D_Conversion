@@ -1,4 +1,4 @@
-import { VersionedAdventure, Location, Exit, Interactable, Secret, Encounter, RandomTableEntry } from "@grimoire3d/ir";
+import { VersionedAdventure, Location, Exit, Interactable, Secret, Encounter, RandomTableEntry, PlayerCharacter } from "@grimoire3d/ir";
 import {
   SeededRNG,
   resolveCheck,
@@ -9,6 +9,11 @@ import {
   resolveDmgReactionRoll,
   resolveDmgMoraleCheck,
   resolveEnvironmentalHazard,
+  createStandardCharacter,
+  calcAbilityMod,
+  useSecondWind,
+  resolveShortRest,
+  resolveLongRest,
 } from "@grimoire3d/rules-core";
 
 export function parseAndRollDice(diceStr: string, rng: SeededRNG): number {
@@ -63,6 +68,8 @@ export type GameAction =
   | { kind: "combatAction"; action: CombatActionType }
   | { kind: "rollTable"; tableId: string }
   | { kind: "rest" }
+  | { kind: "useSecondWind" }
+  | { kind: "longRest" }
   | { kind: "listen"; exitId?: string; direction?: Direction }
   | { kind: "forceDoor"; exitId?: string; direction?: Direction }
   | { kind: "searchTraps" }
@@ -84,6 +91,7 @@ export type GameState = {
   playerMaxHp: number;
   playerAc: number;
   playerAttackBonus: number;
+  playerCharacter: PlayerCharacter;
   discoveredSecrets: Set<string>;
   unlockedExits: Set<string>;
   discoveredRooms: Set<string>;
@@ -103,13 +111,21 @@ export class SimulatorEngine {
   public rng: SeededRNG;
   private locationMap: Map<string, Location>;
 
-  constructor(vAdventure: VersionedAdventure, seed: number = 42) {
+  constructor(vAdventure: VersionedAdventure, seed: number = 42, customCharacter?: PlayerCharacter) {
     this.adventure = vAdventure;
     this.rng = new SeededRNG(seed);
     this.locationMap = new Map(vAdventure.adventure.locations.map((l) => [l.id, l]));
 
     const startId = vAdventure.adventure.start;
     const startLoc = this.locationMap.get(startId);
+    const character =
+      customCharacter ||
+      createStandardCharacter({
+        name: "Valeros the Bold",
+        race: "human",
+        class: "fighter",
+        level: 1,
+      });
 
     const discoveredRooms = new Set<string>([startId]);
 
@@ -117,10 +133,11 @@ export class SimulatorEngine {
       currentLocationId: startId,
       inventory: new Set<string>(),
       flags: new Map<string, boolean>(),
-      playerHp: 24,
-      playerMaxHp: 24,
-      playerAc: 14,
-      playerAttackBonus: 5,
+      playerHp: character.hp,
+      playerMaxHp: character.maxHp,
+      playerAc: character.ac,
+      playerAttackBonus: 2 + calcAbilityMod(character.abilities.str),
+      playerCharacter: character,
       discoveredSecrets: new Set<string>(),
       unlockedExits: new Set<string>(),
       discoveredRooms,
@@ -545,9 +562,32 @@ export class SimulatorEngine {
       }
 
       this.state.playerHp = Math.min(this.state.playerMaxHp, this.state.playerHp + 8);
+      this.state.playerCharacter.hp = this.state.playerHp;
       const msg = `Rested successfully and recovered HP (Current HP: ${this.state.playerHp}/${this.state.playerMaxHp})`;
       this.state.actionLog.push(msg);
       return { success: true, message: msg, events: [] };
+    }
+
+    // 6b. Second Wind (PHB Fighter Feature)
+    if ("kind" in action && action.kind === "useSecondWind") {
+      const windRes = useSecondWind(this.state.playerCharacter, this.rng);
+      this.state.playerHp = this.state.playerCharacter.hp;
+      this.state.actionLog.push(windRes.message);
+      return { success: windRes.success, message: windRes.message, events: [] };
+    }
+
+    // 6c. Long Rest (DMG Safe Haven 8-Hour Rest)
+    if ("kind" in action && action.kind === "longRest") {
+      const isSafeHaven = curLoc.presentation?.biome === "keep" || curLoc.id.includes("tavern") || curLoc.id.includes("keep");
+      if (!isSafeHaven) {
+        return { success: false, message: "A Long Rest requires an established safe haven (Keep or Inn). Cannot camp long-term in an active dungeon!", events: [] };
+      }
+      const restRes = resolveLongRest(this.state.playerCharacter);
+      this.state.playerHp = this.state.playerCharacter.hp;
+      this.state.playerMaxHp = this.state.playerCharacter.maxHp;
+      this.state.turnCount += 8;
+      this.state.actionLog.push(restRes.message);
+      return { success: true, message: restRes.message, events: [] };
     }
 
     // 7. Roll Table Execution
