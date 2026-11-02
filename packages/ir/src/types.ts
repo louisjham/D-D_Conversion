@@ -126,9 +126,10 @@ export const InteractableSchema = z.object({
   id: z.string(),
   label: z.string(),
   description: z.string(),
+  actionType: z.string().optional(),
   inspectionCheck: z
     .object({
-      ability: z.enum(["perception", "investigation", "arcana", "athletics"]),
+      ability: z.enum(["perception", "investigation", "arcana", "athletics", "sleight-of-hand"]),
       dc: z.number(),
     })
     .optional(),
@@ -173,6 +174,16 @@ export const NPCSchema = z.object({
   locationId: z.string(),
   dialogueText: z.string(),
   provenance: ProvenanceSchema.optional(),
+  state: z.enum(["free", "imprisoned", "recruited"]).optional(),
+  rescueReward: EffectSchema.optional(),
+  combatStats: z
+    .object({
+      hp: z.number(),
+      ac: z.number(),
+      attackBonus: z.number(),
+      damageRoll: z.string(),
+    })
+    .optional(),
 });
 export type NPC = z.infer<typeof NPCSchema>;
 
@@ -209,7 +220,16 @@ export type RoomGeometry = z.infer<typeof RoomGeometrySchema>;
 
 export const EnvironmentalHazardSchema = z.object({
   id: z.string(),
-  type: z.enum(["pit-trap", "steep-slope", "noxious-fumes", "cave-in", "deep-water"]),
+  type: z.enum([
+    "pit-trap",
+    "steep-slope",
+    "noxious-fumes",
+    "cave-in",
+    "deep-water",
+    "petrifying-gaze",
+    "spring-blade",
+    "alarm-summon",
+  ]),
   dc: z.number(),
   damage: z.string().optional(),
   description: z.string(),

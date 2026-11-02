@@ -332,20 +332,31 @@ export class SimulatorEngine {
       let msg = `Inspected '${inter.label}': ${inter.description}`;
 
       if (inter.inspectionCheck) {
-        const res = resolveCheck(inter.inspectionCheck.dc, 3, this.rng);
-        this.emit({
-          type: "CHECK_RESOLVED",
-          ability: inter.inspectionCheck.ability,
-          dc: inter.inspectionCheck.dc,
-          roll: res.roll,
-          success: res.success,
-        });
+        // If player has a key that matches the action or master key, bypass picklock check
+        const hasBypassKey =
+          this.state.inventory.has("master-slave-key") ||
+          this.state.inventory.has("slaver-iron-key") ||
+          this.state.inventory.has("iron-key") ||
+          this.state.inventory.has("bronze-library-key");
 
-        if (!res.success) {
-          msg += ` (Failed ${inter.inspectionCheck.ability} check DC ${inter.inspectionCheck.dc})`;
-          this.state.actionLog.push(msg);
-          const emitted = this.state.emittedEvents.slice(preEventCount);
-          return { success: false, message: msg, events: emitted };
+        if (!hasBypassKey) {
+          const res = resolveCheck(inter.inspectionCheck.dc, 3, this.rng);
+          this.emit({
+            type: "CHECK_RESOLVED",
+            ability: inter.inspectionCheck.ability,
+            dc: inter.inspectionCheck.dc,
+            roll: res.roll,
+            success: res.success,
+          });
+
+          if (!res.success) {
+            msg += ` (Failed ${inter.inspectionCheck.ability} check DC ${inter.inspectionCheck.dc})`;
+            this.state.actionLog.push(msg);
+            const emitted = this.state.emittedEvents.slice(preEventCount);
+            return { success: false, message: msg, events: emitted };
+          }
+        } else {
+          msg += ` (Unlocked with key from inventory)`;
         }
       }
 

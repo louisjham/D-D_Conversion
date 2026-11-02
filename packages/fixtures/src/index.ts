@@ -6,6 +6,7 @@ import brokenAltarAdventure from "../broken-altar-crypt/adventure.v0.1.json" wit
 import secretBranchAdventure from "../secret-branch-crypt/adventure.v0.1.json" with { type: "json" };
 import b2KeepOnTheBorderlands from "./b2KeepOnTheBorderlands.json" with { type: "json" };
 import b1InSearchOfTheUnknown from "./b1InSearchOfTheUnknown.json" with { type: "json" };
+import a1SlavePitsOfTheUndercity from "./a1SlavePitsOfTheUndercity.json" with { type: "json" };
 
 export {
   serpentAltarAdventure,
@@ -15,5 +16,6 @@ export {
   secretBranchAdventure,
   b2KeepOnTheBorderlands,
   b1InSearchOfTheUnknown,
+  a1SlavePitsOfTheUndercity,
 };
 

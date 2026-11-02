@@ -3,7 +3,7 @@ import { useToast } from "./ToastProvider";
 import { useKeyboardShortcuts, ShortcutBinding } from "./useKeyboardShortcuts";
 import { VersionedAdventure, Location } from "@grimoire3d/ir";
 import { validateAdventure } from "@grimoire3d/validator";
-import { serpentAltarAdventure, serpentAltarWalkthrough, b2KeepOnTheBorderlands, b1InSearchOfTheUnknown } from "@grimoire3d/fixtures";
+import { serpentAltarAdventure, serpentAltarWalkthrough, b2KeepOnTheBorderlands, b1InSearchOfTheUnknown, a1SlavePitsOfTheUndercity } from "@grimoire3d/fixtures";
 import {
   AdventureGraphView,
   LocationInspector,
@@ -56,8 +56,12 @@ export function App() {
   const [isAiDirectorOpen, setIsAiDirectorOpen] = useState(false);
   const { addToast } = useToast();
 
-  const handleSelectModule = (modKey: "b1" | "b2" | "serpent") => {
-    if (modKey === "b1") {
+  const handleSelectModule = (modKey: "a1" | "b1" | "b2" | "serpent") => {
+    if (modKey === "a1") {
+      setVAdventure(a1SlavePitsOfTheUndercity as VersionedAdventure);
+      setSelectedLocationId("a1-secret-entrance");
+      setCampaignSession(new CampaignSession(greywatchCampaign, 42));
+    } else if (modKey === "b1") {
       setVAdventure(b1InSearchOfTheUnknown as VersionedAdventure);
       setSelectedLocationId("b1-entrance-alcoves");
       setCampaignSession(new CampaignSession(greywatchCampaign, 42));
@@ -192,15 +196,18 @@ export function App() {
             <BookOpen className="w-3.5 h-3.5 text-amber-400" />
             <select
               value={
-                vAdventure.adventure.id === "b1-in-search-of-the-unknown"
+                vAdventure.adventure.id === "a1-slave-pits-of-the-undercity"
+                  ? "a1"
+                  : vAdventure.adventure.id === "b1-in-search-of-the-unknown"
                   ? "b1"
                   : vAdventure.adventure.id === "b2-keep-on-the-borderlands"
                   ? "b2"
                   : "serpent"
               }
-              onChange={(e) => handleSelectModule(e.target.value as "b1" | "b2" | "serpent")}
+              onChange={(e) => handleSelectModule(e.target.value as "a1" | "b1" | "b2" | "serpent")}
               className="bg-transparent text-slate-100 font-medium text-xs focus:outline-none cursor-pointer"
             >
+              <option value="a1" className="bg-slate-900 text-slate-100">A1: Slave Pits of the Undercity (Ruined Temple & Sewers)</option>
               <option value="b1" className="bg-slate-900 text-slate-100">B1: In Search of the Unknown (Quasqueton Stronghold)</option>
               <option value="b2" className="bg-slate-900 text-slate-100">B2: The Keep on the Borderlands (PDF Imported)</option>
               <option value="serpent" className="bg-slate-900 text-slate-100">The Serpent Altar Crypt (10-Room Dungeon)</option>

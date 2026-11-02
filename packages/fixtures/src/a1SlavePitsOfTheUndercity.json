@@ -1,0 +1,1212 @@
+{
+  "schemaVersion": "0.1",
+  "metadata": {
+    "createdAt": "2026-11-02T07:29:09.854520Z",
+    "updatedAt": "2026-11-02T07:29:09.854520Z",
+    "importedBy": "extractor",
+    "source": "TSR 9039 - A1 Slave Pits of the Undercity (David Cook, 1980)"
+  },
+  "adventure": {
+    "id": "a1-slave-pits-of-the-undercity",
+    "title": "A1: Slave Pits of the Undercity",
+    "systemProfile": "classic-dungeon",
+    "summary": "Infiltrate the ruined temple compound in the despoiled city of Highport. Bypass the spring-trap entrance, navigate the basilisk den, slay the Slaver Captain in the Earth Dragon temple, plunge through the flooded sewers, and liberate the captives.",
+    "start": "a1-secret-entrance",
+    "locations": [
+      {
+        "id": "a1-secret-entrance",
+        "label": "1. Secret Entrance & Spring Trap",
+        "geometry": {
+          "x": 0,
+          "y": 0,
+          "width": 6,
+          "height": 6
+        },
+        "presentation": {
+          "biome": "keep",
+          "lighting": "dark",
+          "ambienceTags": [
+            "ruined-stone",
+            "secret-seam",
+            "tension"
+          ]
+        },
+        "narrative": {
+          "playerFacingDescription": "A narrow 5ft stone vestibule terminating at the rear masonry of the ruined temple. Faint yellow light seeps through hairline cracks around an unpainted wooden door.",
+          "gmNotes": [
+            "Rigged with a spring-loaded spiked bar trap across chest height (3d6 damage on trigger).",
+            "Can be disarmed with Sleight of Hand or cutting the trigger cord through the crack."
+          ]
+        },
+        "exits": [
+          {
+            "id": "exit-secret-to-corridor",
+            "direction": "north",
+            "target": "a1-collapsed-guard",
+            "doorType": "wood",
+            "doorState": "closed",
+            "listenNotice": "Muffled guttural snoring and the scrape of iron against a whetstone."
+          }
+        ],
+        "interactables": [
+          {
+            "id": "spiked-spring-trap",
+            "label": "Spiked Spring-Bar Trap",
+            "description": "A heavy wooden bar bristling with iron spikes and broken bottle glass, drawn back under tremendous tension by a hemp cord.",
+            "actionType": "DISARM",
+            "inspectionCheck": {
+              "ability": "sleight-of-hand",
+              "dc": 13
+            },
+            "onInspectEffects": [
+              {
+                "kind": "setFlag",
+                "flag": "spring-trap-disarmed",
+                "value": true
+              }
+            ]
+          }
+        ],
+        "secrets": [
+          {
+            "id": "sec-temple-outer-panel",
+            "label": "Concealed Outer Masonry Slab",
+            "perceptionDC": 12,
+            "discovered": true
+          }
+        ],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "normal",
+          "hazards": [
+            {
+              "id": "spring-blade-hazard",
+              "type": "spring-blade",
+              "dc": 13,
+              "damage": "2d6",
+              "description": "Snapping iron-spiked timber bar sweeping chest level across the doorway"
+            }
+          ],
+          "sensoryCues": {
+            "smell": "Charred timber, old ash, and wet masonry",
+            "sound": "Distant thumping and coarse humanoid laughter",
+            "draft": "Warm stale air whistling through the door cracks"
+          }
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "searchTraps",
+          "rest"
+        ]
+      },
+      {
+        "id": "a1-collapsed-guard",
+        "label": "3. Collapsed Guard Room",
+        "geometry": {
+          "x": 0,
+          "y": 7,
+          "width": 8,
+          "height": 6
+        },
+        "presentation": {
+          "biome": "keep",
+          "lighting": "torchlit",
+          "ambienceTags": [
+            "scorched-beams",
+            "rubble",
+            "patrol-route"
+          ]
+        },
+        "narrative": {
+          "playerFacingDescription": "Blackened rafters lean against broken stone pillars. Charred tables and shattered pottery lie half-buried under fallen plaster and tiles.",
+          "gmNotes": [
+            "Connects west to the bricked-up basilisk chamber and north into the active slaver barracks."
+          ]
+        },
+        "exits": [
+          {
+            "id": "exit-guard-to-secret",
+            "direction": "south",
+            "target": "a1-secret-entrance"
+          },
+          {
+            "id": "exit-guard-to-bricked",
+            "direction": "west",
+            "target": "a1-bricked-room"
+          },
+          {
+            "id": "exit-guard-to-barracks",
+            "direction": "north",
+            "target": "a1-barracks-hall",
+            "doorType": "wood",
+            "doorState": "closed",
+            "listenNotice": "Harsh commands barked in Orcish and the heavy clang of dice cups on oak."
+          }
+        ],
+        "interactables": [
+          {
+            "id": "charred-debris-pile",
+            "label": "Sift Charred Guard Debris",
+            "description": "Underneath a collapsed beam is a blackened leather satchel containing 15 silver coins and a brass key ring.",
+            "actionType": "LOOT",
+            "onInspectEffects": [
+              {
+                "kind": "grantItem",
+                "itemId": "silver-pouch-15sp"
+              }
+            ]
+          }
+        ],
+        "secrets": [],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Acrid charcoal and stale tobacco smoke",
+            "sound": "Creaking overhead floor joists under shifting weight"
+          }
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "searchTraps",
+          "rest"
+        ]
+      },
+      {
+        "id": "a1-bricked-room",
+        "label": "2. Bricked-up Isolation Cell",
+        "geometry": {
+          "x": -9,
+          "y": 7,
+          "width": 7,
+          "height": 6
+        },
+        "presentation": {
+          "biome": "keep",
+          "lighting": "dark",
+          "ambienceTags": [
+            "fresh-mortar",
+            "warning-glyphs",
+            "stone-quarantine"
+          ]
+        },
+        "narrative": {
+          "playerFacingDescription": "A soot-caked cell sealed off with freshly mortared limestone blocks. Crudely chiseled skull symbols and the word 'PETRIFY' are scratched into the stone face.",
+          "gmNotes": [
+            "Reinforced partition wall containing the two wild basilisks roaming Area 10."
+          ]
+        },
+        "exits": [
+          {
+            "id": "exit-bricked-to-guard",
+            "direction": "east",
+            "target": "a1-collapsed-guard"
+          }
+        ],
+        "interactables": [
+          {
+            "id": "mortar-seam-peephole",
+            "label": "Loose Mortar Inspection Chink",
+            "description": "Peering through a gap in the mortar reveals a courtyard garden with lifelike statues of screaming men frozen in stone.",
+            "actionType": "INSPECT"
+          }
+        ],
+        "secrets": [],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "muffled",
+          "sensoryCues": {
+            "smell": "Dry chalky lime mortar and a dead reptilian musk",
+            "sound": "Scratching stone claws scraping the opposite side of the barrier"
+          }
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "searchTraps",
+          "rest"
+        ]
+      },
+      {
+        "id": "a1-barracks-hall",
+        "label": "4. Slaver Guard Barracks",
+        "geometry": {
+          "x": 0,
+          "y": 14,
+          "width": 10,
+          "height": 8
+        },
+        "presentation": {
+          "biome": "keep",
+          "lighting": "torchlit",
+          "ambienceTags": [
+            "bunkbeds",
+            "alarm-gong",
+            "weapons-rack"
+          ]
+        },
+        "narrative": {
+          "playerFacingDescription": "A large rectangular hall converted into quarters for slaver mercenaries. Double-deck wooden bunks line the walls, and a large embossed bronze alarm gong hangs near the northern archway.",
+          "gmNotes": [
+            "Occupied by 3 Half-Orc Slavers.",
+            "If not eliminated or silenced, one will attempt to ring the gong to summon courtyard reinforcements."
+          ]
+        },
+        "exits": [
+          {
+            "id": "exit-barracks-to-guard",
+            "direction": "south",
+            "target": "a1-collapsed-guard"
+          },
+          {
+            "id": "exit-barracks-to-alcove",
+            "direction": "east",
+            "target": "a1-watch-alcove"
+          },
+          {
+            "id": "exit-barracks-to-courtyard",
+            "direction": "north",
+            "target": "a1-inner-courtyard",
+            "doorType": "wood",
+            "doorState": "closed",
+            "listenNotice": "Wind howling across a wide open flagstone courtyard."
+          }
+        ],
+        "interactables": [
+          {
+            "id": "slaver-alarm-gong",
+            "label": "Bronze Alarm Gong & Mallet",
+            "description": "A heavy beaten bronze disk capable of ringing an alarm across the entire temple complex.",
+            "actionType": "SABOTAGE_ALARM",
+            "inspectionCheck": {
+              "ability": "sleight-of-hand",
+              "dc": 12
+            },
+            "onInspectEffects": [
+              {
+                "kind": "setFlag",
+                "flag": "alarm-gong-sabotaged",
+                "value": true
+              }
+            ]
+          },
+          {
+            "id": "slaver-armory-rack",
+            "label": "Mercenary Weapons Rack",
+            "description": "Holds notched broadswords, light crossbows, and bolts stamped with the Slave Lords' brand.",
+            "actionType": "LOOT",
+            "onInspectEffects": [
+              {
+                "kind": "grantItem",
+                "itemId": "slaver-iron-key"
+              }
+            ]
+          }
+        ],
+        "secrets": [],
+        "encounter": {
+          "id": "enc-slaver-barracks",
+          "trigger": {
+            "kind": "always"
+          },
+          "enemies": [
+            {
+              "monsterTemplateId": "half-orc-slaver",
+              "count": 3
+            }
+          ],
+          "tactics": "One slaver falls back toward the alarm gong while the others draw scimitars and form a defensive screen.",
+          "victoryEffects": [
+            {
+              "kind": "setFlag",
+              "flag": "barracks-cleared",
+              "value": true
+            },
+            {
+              "kind": "grantItem",
+              "itemId": "slaver-iron-key"
+            }
+          ]
+        },
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Sweat, unwashed wool bedding, and tallow candle wax",
+            "sound": "Shouting half-orcs and heavy iron boot treads"
+          }
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest",
+          "parley"
+        ]
+      },
+      {
+        "id": "a1-watch-alcove",
+        "label": "5. Temple Watch Post",
+        "geometry": {
+          "x": 11,
+          "y": 14,
+          "width": 5,
+          "height": 6
+        },
+        "presentation": {
+          "biome": "keep",
+          "lighting": "day",
+          "ambienceTags": [
+            "arrow-slits",
+            "parapet",
+            "vantage"
+          ]
+        },
+        "narrative": {
+          "playerFacingDescription": "A semicircular stone alcove with narrow arrow slits looking out across the burnt city streets of Highport and the inner temple courtyard.",
+          "gmNotes": [
+            "Contains a signal horn and spyglass."
+          ]
+        },
+        "exits": [
+          {
+            "id": "exit-alcove-to-barracks",
+            "direction": "west",
+            "target": "a1-barracks-hall"
+          }
+        ],
+        "interactables": [
+          {
+            "id": "sentry-signal-horn",
+            "label": "Brass Sentry Horn",
+            "description": "A curved brass horn on a leather sling used to signal approaching merchant caravans or hostile incursions.",
+            "actionType": "INSPECT"
+          }
+        ],
+        "secrets": [],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "normal",
+          "sensoryCues": {
+            "draft": "Cool ocean breeze blowing through the defensive arrow embrasures"
+          }
+        },
+        "availableActions": [
+          "move",
+          "inspect",
+          "rest"
+        ]
+      },
+      {
+        "id": "a1-inner-courtyard",
+        "label": "8. Inner Temple Courtyard",
+        "geometry": {
+          "x": 0,
+          "y": 23,
+          "width": 12,
+          "height": 10
+        },
+        "presentation": {
+          "biome": "keep",
+          "lighting": "day",
+          "ambienceTags": [
+            "cracked-flagstones",
+            "overgrown",
+            "central-hub"
+          ]
+        },
+        "narrative": {
+          "playerFacingDescription": "A vast open-air courtyard paved in cracked granite flagstones. To the north rises the imposing pillared facade of the Great Temple of the Earth Dragon. To the east lie tangled overgrown gardens.",
+          "gmNotes": [
+            "Central transit hub of the upper complex. Wandering slaver patrols cross here."
+          ]
+        },
+        "exits": [
+          {
+            "id": "exit-courtyard-to-barracks",
+            "direction": "south",
+            "target": "a1-barracks-hall"
+          },
+          {
+            "id": "exit-courtyard-to-garden",
+            "direction": "east",
+            "target": "a1-overgrown-garden"
+          },
+          {
+            "id": "exit-courtyard-to-dorm",
+            "direction": "west",
+            "target": "a1-burnt-dorm"
+          },
+          {
+            "id": "exit-courtyard-to-temple",
+            "direction": "north",
+            "target": "a1-earth-temple",
+            "doorType": "stone",
+            "doorState": "closed",
+            "listenNotice": "Distant resonant drumming and low ritual chanting in an unknown blasphemous tongue."
+          }
+        ],
+        "interactables": [
+          {
+            "id": "courtyard-fountain",
+            "label": "Dry Stone Dragon Fountain",
+            "description": "A carved draconic maw protruding from a dry stone basin. Sifting through debris uncovers a healing potion vial.",
+            "actionType": "INSPECT",
+            "onInspectEffects": [
+              {
+                "kind": "grantItem",
+                "itemId": "potion-cure-poison"
+              }
+            ]
+          }
+        ],
+        "secrets": [],
+        "wanderingFrequency": {
+          "checkOnRest": true,
+          "chanceOnD6": 2,
+          "monsterTemplateId": "half-orc-slaver"
+        },
+        "boundaries": {
+          "terrain": "paved",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Dust, dry weeds, and distant burning incense from the temple sanctum",
+            "sound": "Cawing gulls circling overhead and echoing boots"
+          }
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "searchTraps",
+          "rest"
+        ]
+      },
+      {
+        "id": "a1-overgrown-garden",
+        "label": "7. Overgrown Garden Path",
+        "geometry": {
+          "x": 13,
+          "y": 23,
+          "width": 8,
+          "height": 8
+        },
+        "presentation": {
+          "biome": "forest",
+          "lighting": "torchlit",
+          "ambienceTags": [
+            "choking-vines",
+            "thorny-brambles",
+            "lurking-danger"
+          ]
+        },
+        "narrative": {
+          "playerFacingDescription": "A choked, unkempt cloister garden where thorny briars and wild climbing vines have overrun stone benches and statuary.",
+          "gmNotes": [
+            "Gated archway leads to the walled Basilisk Den (Area 10)."
+          ]
+        },
+        "exits": [
+          {
+            "id": "exit-garden-to-courtyard",
+            "direction": "west",
+            "target": "a1-inner-courtyard"
+          },
+          {
+            "id": "exit-garden-to-basilisk",
+            "direction": "north",
+            "target": "a1-basilisk-den",
+            "doorType": "iron",
+            "doorState": "barred",
+            "forceDC": 14,
+            "listenNotice": "Heavy scaly bellies dragging slowly over gravel."
+          }
+        ],
+        "interactables": [
+          {
+            "id": "thorny-creeper-patch",
+            "label": "Gnarled Briar Bush",
+            "description": "Dense thorny underbrush that catches on armor and clothes. Clearing it reveals a rusted iron chest.",
+            "actionType": "INSPECT"
+          }
+        ],
+        "secrets": [],
+        "boundaries": {
+          "terrain": "mud-scree",
+          "acoustics": "muffled",
+          "sensoryCues": {
+            "smell": "Dank mulch, blooming nightshade, and bitter resin",
+            "sound": "Insects buzzing and dry branches snapping underfoot"
+          }
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "forceDoor",
+          "searchTraps",
+          "rest"
+        ]
+      },
+      {
+        "id": "a1-basilisk-den",
+        "label": "10. Walled Basilisk Den",
+        "geometry": {
+          "x": 13,
+          "y": 32,
+          "width": 8,
+          "height": 8
+        },
+        "presentation": {
+          "biome": "cavern",
+          "lighting": "day",
+          "ambienceTags": [
+            "petrified-statues",
+            "gravel",
+            "terrifying"
+          ]
+        },
+        "narrative": {
+          "playerFacingDescription": "A secluded walled courtyard littered with gnawed bones and six extraordinarily lifelike stone statues of human adventurers in contorted poses of sheer horror.",
+          "gmNotes": [
+            "Lair of two Lesser Basilisks with deadly petrifying gaze.",
+            "One petrified warrior wears a glowing silver ring of protection."
+          ]
+        },
+        "exits": [
+          {
+            "id": "exit-basilisk-to-garden",
+            "direction": "south",
+            "target": "a1-overgrown-garden"
+          }
+        ],
+        "interactables": [
+          {
+            "id": "petrified-warrior-statue",
+            "label": "Petrified Adventurer with Ring",
+            "description": "A stone statue of an elf warrior shielding his face. On his stone finger glints an intact magical band.",
+            "actionType": "LOOT",
+            "onInspectEffects": [
+              {
+                "kind": "grantItem",
+                "itemId": "ring-protection-a1"
+              }
+            ]
+          }
+        ],
+        "secrets": [],
+        "encounter": {
+          "id": "enc-basilisk-duo",
+          "trigger": {
+            "kind": "always"
+          },
+          "enemies": [
+            {
+              "monsterTemplateId": "lesser-basilisk",
+              "count": 2
+            }
+          ],
+          "tactics": "Basilisks focus their glowing pale eyes on intruders, demanding Constitution saves to avert petrification.",
+          "victoryEffects": [
+            {
+              "kind": "setFlag",
+              "flag": "basilisks-defeated",
+              "value": true
+            }
+          ]
+        },
+        "boundaries": {
+          "terrain": "mud-scree",
+          "acoustics": "normal",
+          "hazards": [
+            {
+              "id": "basilisk-gaze-hazard",
+              "type": "petrifying-gaze",
+              "dc": 14,
+              "damage": "2d6",
+              "description": "Gaze of the Basilisk forcing characters to avert eyes or risk turning to solid stone"
+            }
+          ],
+          "sensoryCues": {
+            "smell": "Sulfur and calcified dust",
+            "sound": "Scaly bellies rasping over coarse gravel"
+          }
+        },
+        "availableActions": [
+          "move",
+          "inspect",
+          "searchTraps"
+        ]
+      },
+      {
+        "id": "a1-burnt-dorm",
+        "label": "11. Burnt Dormitory",
+        "geometry": {
+          "x": -13,
+          "y": 23,
+          "width": 8,
+          "height": 8
+        },
+        "presentation": {
+          "biome": "keep",
+          "lighting": "dark",
+          "ambienceTags": [
+            "collapsed-roof",
+            "charred-pallets",
+            "shadows"
+          ]
+        },
+        "narrative": {
+          "playerFacingDescription": "A gutted longhouse where temple initiates once slept. Sunlight filters through gaping holes in the charred slate roof.",
+          "gmNotes": [
+            "Passage west leads to the suspicious False Slavers' Lair (Area 12)."
+          ]
+        },
+        "exits": [
+          {
+            "id": "exit-dorm-to-courtyard",
+            "direction": "east",
+            "target": "a1-inner-courtyard"
+          },
+          {
+            "id": "exit-dorm-to-false-lair",
+            "direction": "west",
+            "target": "a1-false-lair",
+            "doorType": "wood",
+            "doorState": "closed",
+            "listenNotice": "Pitiful moans and sobbing pleas for rescue."
+          }
+        ],
+        "interactables": [],
+        "secrets": [
+          {
+            "id": "sec-dorm-floor-cache",
+            "label": "Pried Hearth Flagstone",
+            "perceptionDC": 13,
+            "grantsItemId": "potion-healing-a1"
+          }
+        ],
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Charred damp timbers and musty straw",
+            "draft": "Down-drafts from roof holes stirring old soot"
+          }
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "searchTraps",
+          "rest"
+        ]
+      },
+      {
+        "id": "a1-false-lair",
+        "label": "12. False Slavers' Lair (Dopplegangers)",
+        "geometry": {
+          "x": -22,
+          "y": 23,
+          "width": 8,
+          "height": 8
+        },
+        "presentation": {
+          "biome": "keep",
+          "lighting": "torchlit",
+          "ambienceTags": [
+            "deception",
+            "ropes",
+            "ambush"
+          ]
+        },
+        "narrative": {
+          "playerFacingDescription": "Two figures tied to wooden support posts weep and beg for assistance, crying out that the slavers will soon return.",
+          "gmNotes": [
+            "Trap! These are two Doppleganger infiltrators posing as captives to lower the party's guard.",
+            "They strike once untied or when characters turn their backs."
+          ]
+        },
+        "exits": [
+          {
+            "id": "exit-false-lair-to-dorm",
+            "direction": "east",
+            "target": "a1-burnt-dorm"
+          }
+        ],
+        "interactables": [
+          {
+            "id": "tied-dopplegangers",
+            "label": "Bound 'Captives'",
+            "description": "Two disheveled humans in tattered clothes bound with loose hemp ropes. An Insight check detects fraudulent sobs.",
+            "actionType": "INSPECT",
+            "inspectionCheck": {
+              "ability": "investigation",
+              "dc": 14
+            }
+          }
+        ],
+        "secrets": [],
+        "encounter": {
+          "id": "enc-dopplegangers",
+          "trigger": {
+            "kind": "always"
+          },
+          "enemies": [
+            {
+              "monsterTemplateId": "doppleganger-infiltrator",
+              "count": 2
+            }
+          ],
+          "tactics": "The false captives burst from their ropes with inhuman strength, morphing into gray-skinned horrors with razor claws.",
+          "victoryEffects": [
+            {
+              "kind": "setFlag",
+              "flag": "dopplegangers-defeated",
+              "value": true
+            }
+          ]
+        },
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "muffled",
+          "sensoryCues": {
+            "smell": "Ozone and sour sweat",
+            "sound": "Sobbing that stops abruptly when approached"
+          }
+        },
+        "availableActions": [
+          "move",
+          "inspect",
+          "parley"
+        ]
+      },
+      {
+        "id": "a1-earth-temple",
+        "label": "18. Great Temple of the Earth Dragon",
+        "geometry": {
+          "x": 0,
+          "y": 34,
+          "width": 14,
+          "height": 12
+        },
+        "presentation": {
+          "biome": "crypt",
+          "lighting": "torchlit",
+          "ambienceTags": [
+            "dragon-idol",
+            "sacrificial-altar",
+            "slaver-climax"
+          ]
+        },
+        "narrative": {
+          "playerFacingDescription": "A cavernous temple hall dominated by a colossal stone statue of the coiled Earth Dragon with glowing amber eyes. Below the idol stands a blood-stained sacrificial slab, overseen by the Slaver Captain in black plate armor.",
+          "gmNotes": [
+            "Boss encounter of the Temple Level.",
+            "Captain carries the Master Slave Key and the Dragon Brand Crossbow.",
+            "Concealed flagstone trapdoor behind the idol leads down into the Flooded Sewers (Area 15) and Slave Pens (Area 16)."
+          ]
+        },
+        "exits": [
+          {
+            "id": "exit-temple-to-courtyard",
+            "direction": "south",
+            "target": "a1-inner-courtyard"
+          },
+          {
+            "id": "exit-temple-to-sewers",
+            "direction": "down",
+            "target": "a1-flooded-sewer",
+            "doorType": "stone",
+            "doorState": "closed",
+            "listenNotice": "Splashing murky water and distant metallic clanking of slave chains."
+          }
+        ],
+        "interactables": [
+          {
+            "id": "earth-dragon-statue",
+            "label": "Colossal Earth Dragon Idol",
+            "description": "Massive stone carving of a coiled wingless dragon. Its right eye holds a fist-sized amber gemstone that can be pried loose.",
+            "actionType": "LOOT",
+            "inspectionCheck": {
+              "ability": "athletics",
+              "dc": 14
+            },
+            "onInspectEffects": [
+              {
+                "kind": "grantItem",
+                "itemId": "jeweled-dragon-eye"
+              }
+            ]
+          }
+        ],
+        "secrets": [
+          {
+            "id": "sec-temple-trapdoor",
+            "label": "Concealed Altar Trapdoor",
+            "perceptionDC": 13,
+            "revealsExitId": "exit-temple-to-sewers"
+          }
+        ],
+        "encounter": {
+          "id": "enc-slaver-captain",
+          "trigger": {
+            "kind": "always"
+          },
+          "enemies": [
+            {
+              "monsterTemplateId": "slaver-captain",
+              "count": 1
+            },
+            {
+              "monsterTemplateId": "half-orc-slaver",
+              "count": 2
+            }
+          ],
+          "tactics": "The Captain fires his enchanted heavy crossbow from the altar steps while his guards engage in melee.",
+          "victoryEffects": [
+            {
+              "kind": "setFlag",
+              "flag": "slaver-captain-defeated",
+              "value": true
+            },
+            {
+              "kind": "grantItem",
+              "itemId": "master-slave-key"
+            },
+            {
+              "kind": "grantItem",
+              "itemId": "crossbow-plus-one"
+            }
+          ]
+        },
+        "boundaries": {
+          "terrain": "hewn-stone",
+          "acoustics": "echoing",
+          "sensoryCues": {
+            "smell": "Pungent incense, tallow, and dried blood on the altar stone",
+            "sound": "Low reverberating chanting and crackling brazier coals"
+          }
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "searchTraps",
+          "rest",
+          "parley"
+        ]
+      },
+      {
+        "id": "a1-flooded-sewer",
+        "label": "15. Flooded Undercity Sewer",
+        "geometry": {
+          "x": 0,
+          "y": 48,
+          "width": 8,
+          "height": 10
+        },
+        "presentation": {
+          "biome": "cavern",
+          "lighting": "dark",
+          "ambienceTags": [
+            "murky-water",
+            "slimy-walls",
+            "aquatic-danger"
+          ]
+        },
+        "narrative": {
+          "playerFacingDescription": "A vaulted subterranean aqueduct flooded with four feet of black, sluggish wastewater. Debris floats along the current, and slime coats the slippery stone ledges.",
+          "gmNotes": [
+            "Aquatic hazard: water extinguishes non-magical torches dropped below waist level.",
+            "A vicious swamp crocodile lurks beneath the surface."
+          ]
+        },
+        "exits": [
+          {
+            "id": "exit-sewers-to-temple",
+            "direction": "up",
+            "target": "a1-earth-temple"
+          },
+          {
+            "id": "exit-sewers-to-pens",
+            "direction": "north",
+            "target": "a1-slave-pens",
+            "doorType": "iron",
+            "doorState": "locked",
+            "locked": {
+              "keyItemId": "master-slave-key",
+              "pickable": true,
+              "lockpickDC": 15
+            },
+            "listenNotice": "Desperate whispers and the rhythmic clinking of iron prisoner manacles."
+          }
+        ],
+        "interactables": [],
+        "secrets": [],
+        "encounter": {
+          "id": "enc-sewer-croc",
+          "trigger": {
+            "kind": "always"
+          },
+          "enemies": [
+            {
+              "monsterTemplateId": "swamp-crocodile",
+              "count": 1
+            }
+          ],
+          "tactics": "The crocodile lunges from beneath the dark water to drag a character into the deeper canal.",
+          "victoryEffects": [
+            {
+              "kind": "setFlag",
+              "flag": "sewer-croc-defeated",
+              "value": true
+            }
+          ]
+        },
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "echoing",
+          "hazards": [
+            {
+              "id": "deep-wastewater-hazard",
+              "type": "deep-water",
+              "dc": 12,
+              "damage": "1d4",
+              "description": "Waist-deep filthy wastewater concealing slippery drop-offs and jagged debris"
+            }
+          ],
+          "sensoryCues": {
+            "smell": "Stagnant sludge, decaying vegetable matter, and sulfur",
+            "sound": "Sloshing water and dark ripples echoing down the culvert"
+          }
+        },
+        "availableActions": [
+          "move",
+          "listen",
+          "searchTraps"
+        ]
+      },
+      {
+        "id": "a1-slave-pens",
+        "label": "16. Subterranean Slave Pens",
+        "geometry": {
+          "x": 0,
+          "y": 60,
+          "width": 12,
+          "height": 10
+        },
+        "presentation": {
+          "biome": "cavern",
+          "lighting": "torchlit",
+          "ambienceTags": [
+            "iron-cages",
+            "manacles",
+            "rescue-objective"
+          ]
+        },
+        "narrative": {
+          "playerFacingDescription": "A damp cavern lined with heavy iron-barred holding cells. Inside huddled groups of ragged captives look up with fearful eyes, bound in heavy iron manacles.",
+          "gmNotes": [
+            "Primary quest objective: liberate the slaves of Highport.",
+            "Gwenneth the Elven Scout and Merchant Markham are held in Cell 3.",
+            "Unlocking the cages completes the quest and yields loyal NPC allies."
+          ]
+        },
+        "exits": [
+          {
+            "id": "exit-pens-to-sewers",
+            "direction": "south",
+            "target": "a1-flooded-sewer"
+          }
+        ],
+        "interactables": [
+          {
+            "id": "cell-iron-manacles",
+            "label": "Slave Holding Cages & Manacles",
+            "description": "Heavy rusted iron cages holding 18 starving captives. The master slave key opens all cell gates and manacles simultaneously.",
+            "actionType": "FREE_PRISONER",
+            "inspectionCheck": {
+              "ability": "sleight-of-hand",
+              "dc": 14
+            },
+            "onInspectEffects": [
+              {
+                "kind": "grantItem",
+                "itemId": "slave-ledger-scroll"
+              },
+              {
+                "kind": "setFlag",
+                "flag": "slaves-liberated",
+                "value": true
+              }
+            ]
+          }
+        ],
+        "secrets": [],
+        "boundaries": {
+          "terrain": "rough-cavern",
+          "acoustics": "muffled",
+          "sensoryCues": {
+            "smell": "Damp straw, misery, and copper",
+            "sound": "Soft weeping giving way to gasps of hope as cell gates are unlocked"
+          }
+        },
+        "availableActions": [
+          "move",
+          "inspect",
+          "rest",
+          "talk"
+        ]
+      }
+    ],
+    "items": [
+      {
+        "id": "silver-pouch-15sp",
+        "name": "Pouch of 15 Silver Pieces",
+        "type": "treasure",
+        "description": "Salvaged coin pouch containing fifteen minted silver coins.",
+        "valueCoins": 15
+      },
+      {
+        "id": "slaver-iron-key",
+        "name": "Slaver Barracks Key",
+        "type": "key",
+        "description": "Crude heavy iron key carried by the half-orc mercenaries."
+      },
+      {
+        "id": "master-slave-key",
+        "name": "Master Slave Key of Highport",
+        "type": "key",
+        "description": "Elaborate black iron key stamped with the symbol of the Slave Lords. Opens all slave pens."
+      },
+      {
+        "id": "crossbow-plus-one",
+        "name": "Heavy Crossbow +1",
+        "type": "weapon",
+        "description": "Magically reinforced steel crossbow with dark wood stock, deadly accurate at long range.",
+        "valueCoins": 500
+      },
+      {
+        "id": "potion-cure-poison",
+        "name": "Elixir of Neutralize Poison",
+        "type": "potion",
+        "description": "Golden vial of herbal liquid that counters venom and restores vitality."
+      },
+      {
+        "id": "potion-healing-a1",
+        "name": "Potion of Extra Healing",
+        "type": "potion",
+        "description": "Potent restorative draught healing 3d8+3 hit points."
+      },
+      {
+        "id": "ring-protection-a1",
+        "name": "Ring of Protection +1",
+        "type": "armor",
+        "description": "Silver band conferring +1 to AC and all saving throws.",
+        "valueCoins": 600
+      },
+      {
+        "id": "jeweled-dragon-eye",
+        "name": "Jeweled Amber Dragon Eye",
+        "type": "treasure",
+        "description": "Fist-sized flawless amber gemstone pried from the Earth Dragon idol.",
+        "valueCoins": 500
+      },
+      {
+        "id": "slave-ledger-scroll",
+        "name": "Slave Lords' Shipping Manifest",
+        "type": "quest",
+        "description": "Secret parchment detailing slave shipments sent to A2: Secret of the Slavers' Stockade."
+      }
+    ],
+    "monsters": [
+      {
+        "id": "half-orc-slaver",
+        "name": "Half-Orc Slaver Mercenary",
+        "hp": 16,
+        "ac": 15,
+        "attackBonus": 4,
+        "damageRoll": "1d8+2"
+      },
+      {
+        "id": "lesser-basilisk",
+        "name": "Lesser Basilisk",
+        "hp": 24,
+        "ac": 16,
+        "attackBonus": 5,
+        "damageRoll": "1d10+2"
+      },
+      {
+        "id": "doppleganger-infiltrator",
+        "name": "Doppleganger Infiltrator",
+        "hp": 20,
+        "ac": 15,
+        "attackBonus": 4,
+        "damageRoll": "1d12"
+      },
+      {
+        "id": "swamp-crocodile",
+        "name": "Giant Sewer Crocodile",
+        "hp": 18,
+        "ac": 15,
+        "attackBonus": 4,
+        "damageRoll": "1d8+2"
+      },
+      {
+        "id": "slaver-captain",
+        "name": "Slaver Captain of the Earth Temple",
+        "hp": 32,
+        "ac": 17,
+        "attackBonus": 6,
+        "damageRoll": "1d8+3"
+      }
+    ],
+    "npcs": [
+      {
+        "id": "gwenneth-elf",
+        "name": "Gwenneth the Elven Scout",
+        "disposition": "friendly",
+        "locationId": "a1-slave-pens",
+        "dialogueText": "Praise the gods! You broke the captain's iron ring! Hand me a bow and I will guide you straight to their stockade in the hills.",
+        "state": "imprisoned",
+        "combatStats": {
+          "hp": 18,
+          "ac": 14,
+          "attackBonus": 5,
+          "damageRoll": "1d8+2"
+        }
+      },
+      {
+        "id": "markham-merchant",
+        "name": "Merchant Markham",
+        "disposition": "friendly",
+        "locationId": "a1-slave-pens",
+        "dialogueText": "I am Markham of Highport! Get us out of this foul pit and my trade guild will reward you with 200 gold pieces!",
+        "state": "imprisoned"
+      }
+    ],
+    "quests": [
+      {
+        "id": "quest-liberate-highport-slaves",
+        "title": "A1: Liberate the Slave Pits of the Undercity",
+        "description": "Infiltrate the ruined Earth Dragon temple in Highport, defeat the Slaver Captain, obtain the master key, and liberate the captive slaves from the flooded subterranean pens.",
+        "completionCondition": {
+          "kind": "flag",
+          "flag": "slaves-liberated",
+          "equals": true
+        },
+        "rewards": [
+          {
+            "kind": "grantItem",
+            "itemId": "slave-ledger-scroll"
+          },
+          {
+            "kind": "setFlag",
+            "flag": "quest-a1-completed",
+            "value": true
+          }
+        ]
+      }
+    ]
+  }
+}
