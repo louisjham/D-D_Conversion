@@ -1,6 +1,7 @@
 import React from "react";
-import { VersionedAdventure, Location } from "@grimoire3d/ir";
-import { LayoutGrid, DoorClosed, Lock, Eye, Sparkles } from "lucide-react";
+import { VersionedAdventure } from "@grimoire3d/ir";
+import { LayoutGrid, Lock, Eye, Box, Sparkles, Flame, DoorClosed } from "lucide-react";
+import { DungeonTileSvgPatterns, get2dAssetSpec } from "./AssetLibrary";
 
 interface GridMapViewProps {
   vAdventure: VersionedAdventure;
@@ -23,16 +24,20 @@ export const GridMapView: React.FC<GridMapViewProps> = ({
       <div className="px-4 py-3 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <LayoutGrid className="w-5 h-5 text-sky-400" />
-          <h3 className="font-semibold text-slate-100 text-sm tracking-wide">2D Grid Tile Layout</h3>
+          <h3 className="font-semibold text-slate-100 text-sm tracking-wide">2D Grid & Asset Layout</h3>
         </div>
-        <span className="text-xs text-slate-400 bg-slate-800 px-2 py-1 rounded border border-slate-700">
-          Scale: 1 cell = 5ft
-        </span>
+        <div className="flex items-center gap-3 text-xs text-slate-400">
+          <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-emerald-500" /> Start</span>
+          <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-sky-400" /> Selected</span>
+          <span className="bg-slate-800 px-2 py-0.5 rounded border border-slate-700 font-mono">1 cell = 5ft</span>
+        </div>
       </div>
 
       <div className="flex-1 relative overflow-auto p-6 flex justify-center items-center bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px]">
-        <svg className="w-[850px] h-[650px] bg-slate-900/90 rounded-lg border border-slate-800 shadow-inner">
-          {/* Render Room Boundaries */}
+        <svg className="w-full h-full bg-slate-900/90 rounded-lg border border-slate-800 shadow-inner" viewBox="0 0 850 650">
+          <DungeonTileSvgPatterns />
+
+          {/* Render Room Boundaries with Textured Patterns & Recognizable 2D Assets */}
           {locations.map((loc) => {
             const isSelected = loc.id === selectedLocationId;
             const isActivePlayer = loc.id === activePlaytestLocationId;
@@ -43,19 +48,15 @@ export const GridMapView: React.FC<GridMapViewProps> = ({
             const width = loc.geometry.width * gridSize;
             const height = loc.geometry.height * gridSize;
 
-            let stroke = "#334155";
-            let fill = "#0f172a";
+            const biome = loc.presentation?.biome || "crypt";
+            const assetSpec = get2dAssetSpec(biome, "biome");
 
-            if (isSelected) {
-              stroke = "#38bdf8";
-              fill = "#0369a122";
-            } else if (isActivePlayer) {
-              stroke = "#34d399";
-              fill = "#05966922";
-            } else if (isStart) {
-              stroke = "#f59e0b";
-              fill = "#b4530922";
-            }
+            let stroke = assetSpec.secondaryColor;
+            let fill = `url(#${assetSpec.patternId || "pattern-crypt-tiles"})`;
+
+            if (isSelected) stroke = "#38bdf8";
+            else if (isActivePlayer) stroke = "#34d399";
+            else if (isStart) stroke = "#f59e0b";
 
             return (
               <g
@@ -64,6 +65,7 @@ export const GridMapView: React.FC<GridMapViewProps> = ({
                 onClick={() => onSelectLocation(loc.id)}
                 className="cursor-pointer group"
               >
+                {/* Room Floor Texture */}
                 <rect
                   width={width}
                   height={height}
@@ -74,11 +76,21 @@ export const GridMapView: React.FC<GridMapViewProps> = ({
                   className="transition-all duration-200 group-hover:stroke-sky-400"
                 />
 
+                {/* Room Label Header */}
+                <rect
+                  x="2"
+                  y="2"
+                  width={Math.max(60, width - 4)}
+                  height="16"
+                  fill="#020617"
+                  fillOpacity="0.8"
+                  rx="2"
+                />
                 <text
                   x={width / 2}
-                  y={height / 2}
-                  fill={isSelected ? "#38bdf8" : "#94a3b8"}
-                  fontSize="10"
+                  y="13"
+                  fill={isSelected ? "#38bdf8" : "#e2e8f0"}
+                  fontSize="9"
                   fontWeight="bold"
                   textAnchor="middle"
                   className="select-none pointer-events-none"
@@ -86,11 +98,29 @@ export const GridMapView: React.FC<GridMapViewProps> = ({
                   {loc.label}
                 </text>
 
+                {/* 2D Assets inside Room */}
+                <g transform="translate(6, 22)">
+                  {loc.interactables.map((inter, idx) => {
+                    const objSpec = get2dAssetSpec(inter.label || inter.id, "interactable");
+                    return (
+                      <circle
+                        key={inter.id}
+                        cx={idx * 14 + 6}
+                        cy="6"
+                        r="5"
+                        fill={objSpec.primaryColor}
+                        stroke="#ffffff"
+                        strokeWidth="0.8"
+                      />
+                    );
+                  })}
+                </g>
+
                 {/* Player Token */}
                 {isActivePlayer && (
-                  <g transform={`translate(${width / 2}, ${height / 2 + 14})`}>
-                    <circle r="8" fill="#10b981" className="animate-ping opacity-75" />
-                    <circle r="7" fill="#10b981" stroke="#ffffff" strokeWidth="1.5" />
+                  <g transform={`translate(${width / 2}, ${height / 2 + 10})`}>
+                    <circle r="9" fill="#10b981" className="animate-ping opacity-75" />
+                    <circle r="8" fill="#10b981" stroke="#ffffff" strokeWidth="1.5" />
                     <text y="3.5" fill="#ffffff" fontSize="8" fontWeight="bold" textAnchor="middle">
                       P
                     </text>

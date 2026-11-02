@@ -22,6 +22,12 @@ export const PlaytestSimulatorView: React.FC<PlaytestSimulatorViewProps> = ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rendererRef = useRef<WorldRenderer | null>(null);
 
+  useEffect(() => {
+    setEngine(new SimulatorEngine(vAdventure, 42));
+    setWalkthroughResult(null);
+  }, [vAdventure]);
+
+
   // Reset engine when adventure changes
   const handleReset = () => {
     const newEngine = new SimulatorEngine(vAdventure, 42);

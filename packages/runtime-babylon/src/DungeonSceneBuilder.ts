@@ -6,10 +6,13 @@ import {
   MeshBuilder,
   StandardMaterial,
   Color3,
+  Color4,
   PointLight,
   Mesh,
   TransformNode,
   Texture,
+  DynamicTexture,
+  ParticleSystem,
 } from "@babylonjs/core";
 
 export type SceneMeshMap = {
@@ -18,9 +21,31 @@ export type SceneMeshMap = {
   interactableMeshes: Map<string, Mesh>;
   monsterMeshes: Map<string, Mesh>;
   torchLights: PointLight[];
+  particleSystems: ParticleSystem[];
 };
 
 export class DungeonSceneBuilder {
+  /**
+   * Helper to create a procedural glow particle texture in memory
+   * so no external particle image file dependency is required.
+   */
+  private static getOrCreateParticleTexture(scene: Scene): Texture {
+    const existing = scene.getTextureByName("proceduralFlameParticle");
+    if (existing) return existing as Texture;
+
+    const dt = new DynamicTexture("proceduralFlameParticle", 64, scene, false);
+    const ctx = dt.getContext() as CanvasRenderingContext2D;
+    const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, "rgba(255, 240, 200, 1.0)");
+    grad.addColorStop(0.35, "rgba(255, 140, 30, 0.85)");
+    grad.addColorStop(0.7, "rgba(210, 45, 10, 0.45)");
+    grad.addColorStop(1, "rgba(40, 10, 0, 0.0)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 64, 64);
+    dt.update();
+    return dt;
+  }
+
   public static buildScene(
     scene: Scene,
     worldLayout: WorldLayout,
@@ -34,38 +59,69 @@ export class DungeonSceneBuilder {
     const interactableMeshes = new Map<string, Mesh>();
     const monsterMeshes = new Map<string, Mesh>();
     const torchLights: PointLight[] = [];
+    const particleSystems: ParticleSystem[] = [];
 
     const rootNode = new TransformNode("dungeonRoot", scene);
+    const particleTexture = this.getOrCreateParticleTexture(scene);
 
-    // Standard Materials
+    // 1. Textures & Materials
+    const floorTexture = new Texture("/assets/textures/stone_floor.png", scene);
+    const caveFloorTexture = new Texture("/assets/textures/cave_floor.png", scene);
+    const wallTexture = new Texture("/assets/textures/stone_wall.png", scene);
+    const waterTexture = new Texture("/assets/textures/water.png", scene);
+    const woodPlanksTexture = new Texture("/assets/textures/wood_planks.png", scene);
+
+    // Floor Materials
     const floorMat = new StandardMaterial("floorMat", scene);
-    floorMat.diffuseColor = new Color3(0.22, 0.24, 0.28);
-    floorMat.specularColor = new Color3(0.1, 0.1, 0.1);
+    floorMat.diffuseTexture = floorTexture;
+    floorMat.specularColor = new Color3(0.08, 0.08, 0.08);
+
+    const cavernFloorMat = new StandardMaterial("cavernFloorMat", scene);
+    cavernFloorMat.diffuseTexture = caveFloorTexture;
+    cavernFloorMat.specularColor = new Color3(0.12, 0.12, 0.12);
 
     const activeFloorMat = new StandardMaterial("activeFloorMat", scene);
-    activeFloorMat.diffuseColor = new Color3(0.12, 0.38, 0.28);
+    activeFloorMat.diffuseTexture = floorTexture;
+    activeFloorMat.diffuseColor = new Color3(0.9, 1.0, 0.95);
+    activeFloorMat.emissiveColor = new Color3(0.03, 0.08, 0.05);
 
     const waterMat = new StandardMaterial("waterMat", scene);
-    waterMat.diffuseColor = new Color3(0.05, 0.15, 0.35);
-    waterMat.alpha = 0.8;
+    waterMat.diffuseTexture = waterTexture;
+    waterMat.diffuseColor = new Color3(0.2, 0.5, 0.6);
+    waterMat.specularColor = new Color3(0.8, 0.9, 1.0);
+    waterMat.specularPower = 32;
+    waterMat.alpha = 0.88;
 
+    // Wall Material
     const wallMat = new StandardMaterial("wallMat", scene);
-    wallMat.diffuseColor = new Color3(0.16, 0.17, 0.2);
+    wallMat.diffuseTexture = wallTexture;
+    wallMat.specularColor = new Color3(0.05, 0.05, 0.05);
 
+    // Door Materials
     const doorMat = new StandardMaterial("doorMat", scene);
-    doorMat.diffuseColor = new Color3(0.5, 0.3, 0.12);
+    doorMat.diffuseTexture = woodPlanksTexture;
+    doorMat.specularColor = new Color3(0.15, 0.12, 0.08);
 
     const lockedDoorMat = new StandardMaterial("lockedDoorMat", scene);
-    lockedDoorMat.diffuseColor = new Color3(0.6, 0.15, 0.15);
+    lockedDoorMat.diffuseTexture = woodPlanksTexture;
+    lockedDoorMat.diffuseColor = new Color3(0.9, 0.45, 0.45);
+    lockedDoorMat.emissiveColor = new Color3(0.12, 0.02, 0.02);
 
     const secretDoorMat = new StandardMaterial("secretDoorMat", scene);
-    secretDoorMat.diffuseColor = new Color3(0.35, 0.2, 0.45);
+    secretDoorMat.diffuseTexture = wallTexture; // Disguised as stone wall
+    secretDoorMat.diffuseColor = new Color3(0.7, 0.6, 0.8);
+    secretDoorMat.emissiveColor = new Color3(0.08, 0.02, 0.1);
 
+    // Interactable & Monster Materials
     const chestMat = new StandardMaterial("chestMat", scene);
-    chestMat.diffuseColor = new Color3(0.8, 0.6, 0.2);
+    chestMat.diffuseTexture = woodPlanksTexture;
+    chestMat.diffuseColor = new Color3(0.85, 0.65, 0.35);
+    chestMat.specularColor = new Color3(0.4, 0.3, 0.1);
 
     const viperMat = new StandardMaterial("viperMat", scene);
-    viperMat.diffuseColor = new Color3(0.85, 0.15, 0.15);
+    viperMat.diffuseColor = new Color3(0.15, 0.45, 0.25);
+    viperMat.emissiveColor = new Color3(0.1, 0.3, 0.15);
+    viperMat.specularColor = new Color3(0.6, 0.8, 0.6);
 
     // Build Rooms
     for (const room of worldLayout.rooms) {
@@ -73,15 +129,25 @@ export class DungeonSceneBuilder {
       const geom = room.bounds;
       const roomMeshList: Mesh[] = [];
 
-      // Floor Plane
       const isWater = room.biome === "cavern" && room.id === "flooded-vault";
+      const isCavern = room.biome === "cavern";
+
+      // Floor Plane
       const floor = MeshBuilder.CreateGround(
         `floor_${room.id}`,
         { width: geom.width, height: geom.height },
         scene
       );
       floor.position = new Vector3(geom.x + geom.width / 2, 0, geom.y + geom.height / 2);
-      floor.material = isWater ? waterMat : isActive ? activeFloorMat : floorMat;
+
+      // Clone material with per-room texture tiling based on room dimensions
+      const roomFloorMat = (isWater ? waterMat : isCavern ? cavernFloorMat : isActive ? activeFloorMat : floorMat).clone(`floorMat_${room.id}`);
+      if (roomFloorMat.diffuseTexture && "uScale" in roomFloorMat.diffuseTexture) {
+        const tex = roomFloorMat.diffuseTexture as Texture;
+        tex.uScale = Math.max(1, geom.width / 2);
+        tex.vScale = Math.max(1, geom.height / 2);
+      }
+      floor.material = roomFloorMat;
       floor.parent = rootNode;
       roomMeshList.push(floor);
 
@@ -93,7 +159,14 @@ export class DungeonSceneBuilder {
       );
       ceiling.position = new Vector3(geom.x + geom.width / 2, 3.0, geom.y + geom.height / 2);
       ceiling.rotation = new Vector3(Math.PI, 0, 0);
-      ceiling.material = wallMat;
+
+      const roomCeilMat = wallMat.clone(`ceilMat_${room.id}`);
+      if (roomCeilMat.diffuseTexture && "uScale" in roomCeilMat.diffuseTexture) {
+        const tex = roomCeilMat.diffuseTexture as Texture;
+        tex.uScale = Math.max(1, geom.width / 2);
+        tex.vScale = Math.max(1, geom.height / 2);
+      }
+      ceiling.material = roomCeilMat;
       ceiling.parent = rootNode;
 
       // Wall Boundaries (4 walls)
@@ -120,22 +193,49 @@ export class DungeonSceneBuilder {
       wWall.material = wallMat;
       wWall.parent = rootNode;
 
-      // Torches
+      // Torches & Atmospheric Particles
       if (room.lighting === "torchlit") {
-        const torchLight = new PointLight(
-          `torch_${room.id}`,
-          new Vector3(geom.x + geom.width / 2, 2.2, geom.y + geom.height / 2),
-          scene
-        );
-        torchLight.diffuse = new Color3(1.0, 0.65, 0.2);
-        torchLight.intensity = isActive ? 1.6 : 0.7;
+        const torchPos = new Vector3(geom.x + geom.width / 2, 2.2, geom.y + geom.height / 2);
+
+        const torchLight = new PointLight(`torch_${room.id}`, torchPos, scene);
+        torchLight.diffuse = new Color3(1.0, 0.62, 0.22);
+        torchLight.specular = new Color3(0.8, 0.45, 0.1);
+        torchLight.intensity = isActive ? 1.7 : 0.75;
         torchLight.radius = 12;
         torchLights.push(torchLight);
 
         // Torch visual bracket mesh
-        const torchMesh = MeshBuilder.CreateCylinder(`torchMesh_${room.id}`, { diameter: 0.15, height: 0.6 }, scene);
-        torchMesh.position = new Vector3(geom.x + geom.width / 2, 1.8, geom.y + geom.height / 2);
+        const torchMesh = MeshBuilder.CreateCylinder(`torchMesh_${room.id}`, { diameter: 0.12, height: 0.55 }, scene);
+        torchMesh.position = new Vector3(torchPos.x, 1.8, torchPos.z);
         torchMesh.material = chestMat;
+
+        // Particle System for Torch Flame & Embers
+        const flameParticles = new ParticleSystem(`torchFlame_${room.id}`, 80, scene);
+        flameParticles.particleTexture = particleTexture;
+        flameParticles.emitter = new Vector3(torchPos.x, 2.1, torchPos.z);
+        flameParticles.minEmitBox = new Vector3(-0.04, 0, -0.04);
+        flameParticles.maxEmitBox = new Vector3(0.04, 0, 0.04);
+
+        // Warm torch fire colors
+        flameParticles.color1 = new Color4(1.0, 0.7, 0.2, 1.0);
+        flameParticles.color2 = new Color4(0.9, 0.35, 0.05, 0.85);
+        flameParticles.colorDead = new Color4(0.2, 0.05, 0.0, 0.0);
+
+        flameParticles.minSize = 0.12;
+        flameParticles.maxSize = 0.28;
+        flameParticles.minLifeTime = 0.35;
+        flameParticles.maxLifeTime = 0.85;
+        flameParticles.emitRate = 45;
+        flameParticles.blendMode = ParticleSystem.BLENDMODE_ADD;
+        flameParticles.gravity = new Vector3(0, 0.7, 0);
+        flameParticles.direction1 = new Vector3(-0.08, 0.8, -0.08);
+        flameParticles.direction2 = new Vector3(0.08, 1.2, 0.08);
+        flameParticles.minEmitPower = 0.2;
+        flameParticles.maxEmitPower = 0.5;
+        flameParticles.updateSpeed = 0.012;
+
+        flameParticles.start();
+        particleSystems.push(flameParticles);
       }
 
       roomMeshes.set(room.id, roomMeshList);
@@ -199,6 +299,7 @@ export class DungeonSceneBuilder {
       interactableMeshes,
       monsterMeshes,
       torchLights,
+      particleSystems,
     };
   }
 }

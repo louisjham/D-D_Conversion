@@ -1,8 +1,9 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
+import { useToast } from "./ToastProvider";
+import { useKeyboardShortcuts, ShortcutBinding } from "./useKeyboardShortcuts";
 import { VersionedAdventure, Location } from "@grimoire3d/ir";
 import { validateAdventure } from "@grimoire3d/validator";
 import { serpentAltarAdventure, serpentAltarWalkthrough, b2KeepOnTheBorderlands } from "@grimoire3d/fixtures";
-import { FixtureImporter } from "@grimoire3d/importers";
 import {
   AdventureGraphView,
   LocationInspector,
@@ -14,10 +15,14 @@ import {
   ProceduralGeneratorModal,
   VisualLogicEditorView,
   ToolsInspectorView,
+  ModuleImporterView,
+  AiDirectorPanel,
+  TacticalCombatView,
 } from "@grimoire3d/ui-editor";
 import { CampaignHubView } from "@grimoire3d/ui-campaign";
 import { greywatchCampaign, b2Campaign } from "@grimoire3d/fixtures-campaign";
 import { CampaignSession } from "@grimoire3d/campaign-simulator";
+import { ErrorBoundary } from "./ErrorBoundary";
 import {
   Castle,
   Sparkles,
@@ -28,21 +33,28 @@ import {
   ShieldCheck,
   ShieldAlert,
   Download,
-  FileCode,
   AlertCircle,
   RefreshCw,
   BookOpen,
   Dices,
   Zap,
   Wand2,
+  FileText,
+  Boxes,
+  Bot,
+  Swords,
 } from "lucide-react";
 
 export function App() {
   const [vAdventure, setVAdventure] = useState<VersionedAdventure>(() => b2KeepOnTheBorderlands as VersionedAdventure);
   const [selectedLocationId, setSelectedLocationId] = useState<string>("keep-main-gate");
-  const [activeTab, setActiveTab] = useState<"campaign" | "graph" | "explore" | "grid" | "playtest" | "logic" | "tools">("campaign");
+  const [activeTab, setActiveTab] = useState<
+    "import" | "rooms" | "objects" | "logic" | "combat" | "explore" | "playtest" | "campaign" | "tools"
+  >("import");
   const [campaignSession, setCampaignSession] = useState<CampaignSession>(() => new CampaignSession(b2Campaign, 42));
   const [isGeneratorModalOpen, setIsGeneratorModalOpen] = useState(false);
+  const [isAiDirectorOpen, setIsAiDirectorOpen] = useState(false);
+  const { addToast } = useToast();
 
   const handleSelectModule = (modKey: "b2" | "serpent") => {
     if (modKey === "b2") {
@@ -123,7 +135,7 @@ export function App() {
     }));
   };
 
-  const handleExportJson = () => {
+  const handleExportJson = useCallback(() => {
     const jsonStr = JSON.stringify(vAdventure, null, 2);
     const blob = new Blob([jsonStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -131,7 +143,17 @@ export function App() {
     a.href = url;
     a.download = `${vAdventure.adventure.id}.v0.1.json`;
     a.click();
-  };
+    addToast({ type: 'success', title: 'Adventure Exported', message: `${vAdventure.adventure.id}.v0.1.json downloaded` });
+  }, [vAdventure, addToast]);
+
+  // Keyboard shortcuts
+  const tabKeys = ['import', 'rooms', 'objects', 'logic', 'combat', 'explore', 'playtest'] as const;
+  useKeyboardShortcuts([
+    { key: 's', ctrl: true, handler: handleExportJson, description: 'Export adventure JSON' },
+    ...tabKeys.map((tab, i): ShortcutBinding => ({
+      key: String(i + 1), handler: () => setActiveTab(tab), description: `Switch to ${tab} tab`,
+    })),
+  ]);
 
   const handleFocusEntity = (entityId: string, entityType: string) => {
     if (entityType === "location" || entityType === "exit" || entityType === "secret") {
@@ -156,7 +178,7 @@ export function App() {
             </div>
             <div>
               <h1 className="font-extrabold text-base tracking-tight text-white flex items-center gap-2">
-                Grimoire3D <span className="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-1.5 py-0.5 rounded font-mono font-normal">STUDIO v0.1</span>
+                Grimoire3D <span className="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-1.5 py-0.5 rounded font-mono font-normal">STUDIO v0.2</span>
               </h1>
             </div>
           </div>
@@ -176,163 +198,189 @@ export function App() {
           </div>
         </div>
 
-        {/* Tab View Switcher */}
+        {/* Intuitive 6-Step Workflow Tab Switcher */}
         <div className="flex items-center bg-slate-950 p-1 rounded-lg border border-slate-800">
           <button
-            onClick={() => setActiveTab("campaign")}
-            className={`px-3.5 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-2 ${
-              activeTab === "campaign"
-                ? "bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-950"
-                : "text-slate-400 hover:text-slate-200"
-            }`}
-          >
-            <Castle className="w-4 h-4" /> Campaign Expedition 🗺️
-          </button>
-
-          <button
-            onClick={() => setActiveTab("graph")}
-            className={`px-3.5 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-2 ${
-              activeTab === "graph"
+            onClick={() => setActiveTab("import")}
+            className={`px-3 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === "import"
                 ? "bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-950"
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
-            <Compass className="w-4 h-4" /> Adventure Editor & Graph
+            <FileText className="w-3.5 h-3.5" /> 1. Import Module
           </button>
 
           <button
-            onClick={() => setActiveTab("explore")}
-            className={`px-3.5 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-2 ${
-              activeTab === "explore"
+            onClick={() => setActiveTab("rooms")}
+            className={`px-3 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === "rooms"
                 ? "bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-950"
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
-            <Gamepad2 className="w-4 h-4" /> 2D Playable Dungeon Game
+            <Compass className="w-3.5 h-3.5" /> 2. Rooms & Map
           </button>
 
           <button
-            onClick={() => setActiveTab("grid")}
-            className={`px-3.5 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-2 ${
-              activeTab === "grid"
+            onClick={() => setActiveTab("objects")}
+            className={`px-3 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === "objects"
                 ? "bg-sky-500 text-slate-950 font-bold shadow-md shadow-sky-950"
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
-            <LayoutGrid className="w-4 h-4" /> 2D Grid Layout
-          </button>
-
-          <button
-            onClick={() => setActiveTab("playtest")}
-            className={`px-3.5 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-2 ${
-              activeTab === "playtest"
-                ? "bg-indigo-500 text-slate-950 font-bold shadow-md shadow-indigo-950"
-                : "text-slate-400 hover:text-slate-200"
-            }`}
-          >
-            <Play className="w-4 h-4" /> Playtest Workbench
+            <Boxes className="w-3.5 h-3.5" /> 3. Objects & Secrets
           </button>
 
           <button
             onClick={() => setActiveTab("logic")}
-            className={`px-3.5 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-2 ${
+            className={`px-3 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "logic"
                 ? "bg-teal-500 text-slate-950 font-bold shadow-md shadow-teal-950"
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
-            <Zap className="w-4 h-4" /> Visual Logic Node Graph
+            <Zap className="w-3.5 h-3.5" /> 4. Logic & Triggers
           </button>
 
           <button
-            onClick={() => setActiveTab("tools")}
-            className={`px-3.5 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-2 ${
-              activeTab === "tools"
+            onClick={() => setActiveTab("combat")}
+            className={`px-3 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === "combat"
+                ? "bg-red-500 text-slate-950 font-bold shadow-md shadow-red-950"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <Swords className="w-3.5 h-3.5" /> 5. Tactical Combat Grid
+          </button>
+
+          <button
+            onClick={() => setActiveTab("explore")}
+            className={`px-3 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === "explore"
+                ? "bg-indigo-500 text-slate-950 font-bold shadow-md shadow-indigo-950"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <Gamepad2 className="w-3.5 h-3.5" /> 6. Play Game (2D/3D)
+          </button>
+
+          <button
+            onClick={() => setActiveTab("playtest")}
+            className={`px-3 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === "playtest"
                 ? "bg-purple-500 text-slate-950 font-bold shadow-md shadow-purple-950"
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
-            <Wand2 className="w-4 h-4" /> Spells & Dialogue Engine
+            <Play className="w-3.5 h-3.5" /> Playtest Workbench
+          </button>
+
+          <span className="w-px h-5 bg-slate-700 mx-1" />
+
+          <button
+            onClick={() => setActiveTab("campaign")}
+            className={`px-3 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === "campaign"
+                ? "bg-amber-600 text-slate-950 font-bold shadow-md shadow-amber-950"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <Castle className="w-3.5 h-3.5" /> Campaign
+          </button>
+
+          <button
+            onClick={() => setActiveTab("tools")}
+            className={`px-3 py-1.5 text-xs rounded-md font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === "tools"
+                ? "bg-slate-500 text-slate-950 font-bold shadow-md shadow-slate-950"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <Wand2 className="w-3.5 h-3.5" /> Tools
           </button>
         </div>
 
-        {/* Action Buttons */}
+        {/* Action Buttons & AI Director Toggle */}
         <div className="flex items-center gap-2">
           <button
+            onClick={() => setIsAiDirectorOpen((prev) => !prev)}
+            title="Toggle AI Director Drawer (Gemini / OpenRouter Assistant)"
+            className={`px-3 py-1.5 rounded-md text-xs font-bold flex items-center gap-1.5 shadow-md transition-all cursor-pointer ${
+              isAiDirectorOpen
+                ? "bg-amber-400 text-slate-950 shadow-amber-950"
+                : "bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700"
+            }`}
+          >
+            <Bot className="w-4 h-4 text-amber-400" /> AI Director
+          </button>
+
+          <button
             onClick={() => setIsGeneratorModalOpen(true)}
-            title="Open 1-Click Procedural Dungeon & Encounter Generator Wizard"
-            className="px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-slate-950 font-extrabold rounded-md text-xs flex items-center gap-1.5 shadow-md transition-all cursor-pointer"
+            title="Open 1-Click Procedural Dungeon Generator"
+            className="px-2.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-slate-950 font-extrabold rounded-md text-xs flex items-center gap-1 shadow-md transition-all cursor-pointer"
           >
-            <Dices className="w-4 h-4" /> Procedural Generator
-          </button>
-
-          <button
-            onClick={handleInjectError}
-            title="Inject an intentional lock/key error to test the validator"
-            className="px-2.5 py-1.5 bg-red-950/60 hover:bg-red-900 text-red-300 border border-red-800 rounded-md text-xs font-medium flex items-center gap-1.5 transition-colors"
-          >
-            <AlertCircle className="w-3.5 h-3.5" /> Inject Error
-          </button>
-
-          <button
-            onClick={handleResetFixture}
-            title="Reset to canonical fixture"
-            className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-md text-xs font-medium flex items-center gap-1.5 transition-colors"
-          >
-            <RefreshCw className="w-3.5 h-3.5" /> Reload Fixture
+            <Dices className="w-3.5 h-3.5" /> Procedural
           </button>
 
           <button
             onClick={handleExportJson}
             title="Export Versioned Adventure IR JSON"
-            className="px-3 py-1.5 bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-colors"
+            className="px-2.5 py-1.5 bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 rounded-md text-xs font-semibold flex items-center gap-1 transition-colors"
           >
-            <Download className="w-3.5 h-3.5" /> Export IR JSON
+            <Download className="w-3.5 h-3.5" /> Export IR
           </button>
         </div>
       </header>
 
       {/* Main Workspace Layout */}
-      <main className="flex-1 p-4 overflow-hidden relative">
-        {activeTab === "campaign" && (
-          <div className="w-full h-full">
-            <CampaignHubView
-              vCampaign={vAdventure.adventure.id === "b2-keep-on-the-borderlands" ? b2Campaign : greywatchCampaign}
-              session={campaignSession}
-              onDispatchAction={(action) => {
-                campaignSession.executeAction(action);
-                setCampaignSession(Object.assign(Object.create(Object.getPrototypeOf(campaignSession)), campaignSession));
+      <main className="flex-1 p-4 overflow-hidden relative flex">
+        <div className="flex-1 h-full overflow-hidden">
+          <ErrorBoundary onReset={handleResetFixture}>
+            {activeTab === "import" && (
+            <ModuleImporterView
+              onImportComplete={(importedAdv) => {
+                setVAdventure(importedAdv);
+                setSelectedLocationId(importedAdv.adventure.start);
+                setActiveTab("rooms");
               }}
-              onEnterDungeonView={() => setActiveTab("explore")}
             />
-          </div>
-        )}
+          )}
 
-        {activeTab === "graph" && (
-          <div className="w-full h-full grid grid-cols-12 gap-4 overflow-hidden">
-            {/* Center Left: Adventure Topology Graph */}
-            <div className="col-span-7 h-full">
-              <AdventureGraphView
-                vAdventure={vAdventure}
-                selectedLocationId={selectedLocationId}
-                onSelectLocation={setSelectedLocationId}
-                issues={validationResult.issues}
-              />
+          {activeTab === "rooms" && (
+            <div className="w-full h-full grid grid-cols-12 gap-4 overflow-hidden">
+              {/* Left 7 cols: Topology Graph */}
+              <div className="col-span-7 h-full">
+                <AdventureGraphView
+                  vAdventure={vAdventure}
+                  selectedLocationId={selectedLocationId}
+                  onSelectLocation={setSelectedLocationId}
+                  issues={validationResult.issues}
+                />
+              </div>
+
+              {/* Right 5 cols: 2D Grid Layout */}
+              <div className="col-span-5 h-full">
+                <GridMapView
+                  vAdventure={vAdventure}
+                  selectedLocationId={selectedLocationId}
+                  onSelectLocation={setSelectedLocationId}
+                />
+              </div>
             </div>
+          )}
 
-            {/* Right Column: Inspector & Validation Split */}
-            <div className="col-span-5 h-full flex flex-col gap-4 overflow-hidden">
-              {/* Top: Location Inspector */}
-              <div className="h-1/2">
+          {activeTab === "objects" && (
+            <div className="w-full h-full grid grid-cols-12 gap-4 overflow-hidden">
+              <div className="col-span-7 h-full">
                 <LocationInspector
                   vAdventure={vAdventure}
                   locationId={selectedLocationId}
                   onUpdateLocation={handleUpdateLocation}
                 />
               </div>
-
-              {/* Bottom: Provenance & Validation Switcher */}
-              <div className="h-1/2 grid grid-cols-2 gap-4">
+              <div className="col-span-5 h-full flex flex-col gap-4">
                 <ProvenanceInspector
                   provenance={selectedLocation?.provenance}
                   onUpdateReviewStatus={handleUpdateReviewStatus}
@@ -343,57 +391,69 @@ export function App() {
                 />
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {activeTab === "explore" && (
-          <div className="w-full h-full">
-            <ExplorationView2D
-              vAdventure={vAdventure}
-              onLocationChanged={setSelectedLocationId}
-            />
-          </div>
-        )}
+          {activeTab === "logic" && (
+            <div className="w-full h-full">
+              <VisualLogicEditorView />
+            </div>
+          )}
 
-        {activeTab === "grid" && (
-          <div className="w-full h-full grid grid-cols-12 gap-4 overflow-hidden">
-            <div className="col-span-8 h-full">
-              <GridMapView
+          {activeTab === "combat" && (
+            <div className="w-full h-full">
+              <TacticalCombatView />
+            </div>
+          )}
+
+          {activeTab === "explore" && (
+            <div className="w-full h-full">
+              <ExplorationView2D
                 vAdventure={vAdventure}
-                selectedLocationId={selectedLocationId}
-                onSelectLocation={setSelectedLocationId}
+                onLocationChanged={setSelectedLocationId}
               />
             </div>
-            <div className="col-span-4 h-full">
-              <LocationInspector
+          )}
+
+          {activeTab === "playtest" && (
+            <div className="w-full h-full">
+              <PlaytestSimulatorView
                 vAdventure={vAdventure}
-                locationId={selectedLocationId}
-                onUpdateLocation={handleUpdateLocation}
+                walkthroughScript={serpentAltarWalkthrough}
+                onLocationChanged={setSelectedLocationId}
               />
             </div>
-          </div>
-        )}
+          )}
 
-        {activeTab === "playtest" && (
-          <div className="w-full h-full">
-            <PlaytestSimulatorView
-              vAdventure={vAdventure}
-              walkthroughScript={serpentAltarWalkthrough}
-              onLocationChanged={setSelectedLocationId}
-            />
-          </div>
-        )}
+          {activeTab === "campaign" && (
+            <div className="w-full h-full">
+              <CampaignHubView
+                vCampaign={vAdventure.adventure.id === "b2-keep-on-the-borderlands" ? b2Campaign : greywatchCampaign}
+                session={campaignSession}
+                onDispatchAction={(action) => {
+                  campaignSession.executeAction(action);
+                  setCampaignSession(Object.assign(Object.create(Object.getPrototypeOf(campaignSession)), campaignSession));
+                }}
+                onEnterDungeonView={() => setActiveTab("explore")}
+              />
+            </div>
+          )}
 
-        {activeTab === "logic" && (
-          <div className="w-full h-full">
-            <VisualLogicEditorView />
-          </div>
-        )}
+          {activeTab === "tools" && (
+            <div className="w-full h-full">
+              <ToolsInspectorView />
+            </div>
+          )}
+          </ErrorBoundary>
+        </div>
 
-        {activeTab === "tools" && (
-          <div className="w-full h-full">
-            <ToolsInspectorView />
-          </div>
+        {/* AI Director Drawer */}
+        {isAiDirectorOpen && (
+          <AiDirectorPanel
+            vAdventure={vAdventure}
+            selectedLocationId={selectedLocationId}
+            onUpdateAdventure={setVAdventure}
+            onClose={() => setIsAiDirectorOpen(false)}
+          />
         )}
       </main>
 
@@ -427,7 +487,9 @@ export function App() {
         </div>
 
         <div className="flex items-center gap-4 text-[11px] text-slate-500">
-          <span>Local-First Offline Storage</span>
+          <span>AI Engine: {localStorage.getItem("grimoire_ai_provider") || "Google Gemini"}</span>
+          <span>•</span>
+          <span>Tactical D&D 5e Combat System</span>
           <span>•</span>
           <span>D&D SRD 5.1 CC-BY Compliant IR</span>
         </div>

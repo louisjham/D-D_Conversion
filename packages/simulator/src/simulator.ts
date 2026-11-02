@@ -2,7 +2,8 @@ import { VersionedAdventure, Location, Exit, Interactable, Secret, Encounter, Ra
 import { SeededRNG, resolveCheck, resolveSimpleCombat } from "@grimoire3d/rules-core";
 
 export function parseAndRollDice(diceStr: string, rng: SeededRNG): number {
-  const match = /^(\d+)d(\d+)(?:([+-])(\d+))?$/i.exec(diceStr.trim());
+  const cleanStr = diceStr.replace(/\s+/g, '');
+  const match = /^(\d+)d(\d+)(?:([+-])(\d+))?$/i.exec(cleanStr);
   if (!match) return rng.rollDice(6);
   const count = parseInt(match[1], 10);
   const sides = parseInt(match[2], 10);
@@ -235,13 +236,40 @@ export class SimulatorEngine {
       this.state.actionLog.push(msg);
 
       // Check Objective Win Condition
-      if (newLoc.id === "escape-tunnel") {
-        this.state.flags.set("escaped-crypt", true);
+      const isEscapeTunnel = newLoc.id === "escape-tunnel";
+      const isVictoryLocation = isEscapeTunnel || (newLoc as any).tags?.includes("victory") || newLoc.presentation?.ambienceTags?.includes("victory");
+      
+      let questsCompleted = false;
+      const quests = this.adventure.adventure.quests || [];
+      if (quests.length > 0) {
+        questsCompleted = quests.every(q => {
+          const cond = q.completionCondition;
+          if (!cond) return false;
+          if (cond.kind === "always") return true;
+          if (cond.kind === "flag") return !!this.state.flags.get(cond.flag);
+          if (cond.kind === "hasItem") return this.state.inventory.has(cond.itemId);
+          return false;
+        });
+      }
+
+      if (isVictoryLocation || (quests.length > 0 && questsCompleted)) {
+        if (isEscapeTunnel) {
+          this.state.flags.set("escaped-crypt", true);
+        }
         this.state.gameEnded = true;
         this.state.gameOutcome = "victory";
-        this.emit({ type: "QUEST_UPDATED", questId: "escape-crypt", status: "completed" });
+        
+        if (isEscapeTunnel) {
+          this.emit({ type: "QUEST_UPDATED", questId: "escape-crypt", status: "completed" });
+        }
+        quests.forEach(q => {
+          if (questsCompleted) this.emit({ type: "QUEST_UPDATED", questId: q.id, status: "completed" });
+        });
+        
         this.emit({ type: "GAME_ENDED", outcome: "victory" });
-        this.state.actionLog.push("VICTORY! You escaped the Serpent Altar Crypt!");
+        
+        const victoryText = isEscapeTunnel ? "VICTORY! You escaped the Serpent Altar Crypt!" : "VICTORY! You have completed the adventure!";
+        this.state.actionLog.push(victoryText);
       }
 
       const emitted = this.state.emittedEvents.slice(preEventCount);
@@ -455,6 +483,17 @@ export class SimulatorEngine {
         message: res.entry ? `Rolled table '${action.tableId}': result ${res.roll}` : `Table '${action.tableId}' not found`,
         events: emitted,
       };
+    }
+
+    // 8. Pickup Item Execution
+    if ((action as any).type === "PICKUP_ITEM") {
+      const itemId = (action as any).itemId;
+      this.state.inventory.add(itemId);
+      this.emit({ type: "ITEM_GRANTED", itemId, source: "pickup" });
+      const msg = `Picked up item '${itemId}'.`;
+      this.state.actionLog.push(msg);
+      const emitted = this.state.emittedEvents.slice(preEventCount);
+      return { success: true, message: msg, events: emitted };
     }
 
     return { success: false, message: "Unhandled action input.", events: [] };

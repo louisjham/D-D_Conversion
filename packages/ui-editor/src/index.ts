@@ -10,3 +10,7 @@ export * from "./ProceduralGeneratorModal";
 export * from "./AutoPlayControlPanel";
 export * from "./VisualLogicEditorView";
 export * from "./ToolsInspectorView";
+export * from "./ModuleImporterView";
+export * from "./AiDirectorPanel";
+export * from "./TacticalCombatView";
+export * from "./AssetLibrary";

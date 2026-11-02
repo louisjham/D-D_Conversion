@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { VersionedAdventure } from "@grimoire3d/ir";
 import { SimulatorEngine, GameAction, DomainEvent } from "@grimoire3d/simulator";
 import { WorldCompiler, WorldLayout } from "@grimoire3d/world-compiler";
@@ -36,12 +36,27 @@ export const ExplorationView2D: React.FC<ExplorationView2DProps> = ({
   vAdventure,
   onLocationChanged,
 }) => {
-  const [worldLayout] = useState<WorldLayout>(() => WorldCompiler.compile(vAdventure));
+  const worldLayout = useMemo(() => WorldCompiler.compile(vAdventure), [vAdventure]);
   const [engine, setEngine] = useState<SimulatorEngine>(() => new SimulatorEngine(vAdventure, 42));
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [saveEnvelopeJson, setSaveEnvelopeJson] = useState<string>("");
 
+  useEffect(() => {
+    setEngine(new SimulatorEngine(vAdventure, 42));
+  }, [vAdventure]);
+
+  if (vAdventure.adventure.locations.length === 0) {
+    return (
+      <div className="w-full h-full bg-slate-950 border border-slate-800 rounded-xl flex flex-col items-center justify-center p-8">
+        <Box className="w-12 h-12 text-slate-700 mb-4" />
+        <h3 className="text-lg font-medium text-slate-300">No locations in this adventure yet.</h3>
+        <p className="text-sm text-slate-500 mt-2">Import a module or create rooms to get started.</p>
+      </div>
+    );
+  }
+
   const curLoc = engine.getCurrentLocation();
+
 
   const handleAction = (action: GameAction) => {
     engine.executeAction(action);
@@ -166,11 +181,30 @@ export const ExplorationView2D: React.FC<ExplorationView2DProps> = ({
       <div className="flex-1 grid grid-cols-12 gap-4 p-4 overflow-hidden">
         {/* Left Side: 2D Grid Canvas & Movement */}
         <div className="col-span-8 flex flex-col gap-4 overflow-hidden relative">
-          <div className="flex-1 bg-slate-900 border border-slate-800 rounded-lg relative overflow-auto flex items-center justify-center p-6 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px]">
-            <svg className="w-[750px] h-[550px] bg-slate-950/90 rounded-lg border border-slate-800">
-              {worldLayout.rooms.map((room) => {
+          <div className="flex-1 bg-slate-900 border border-slate-800 rounded-lg relative overflow-auto flex items-center justify-center p-6 bg-[radial-gradient(#2e2822_1px,transparent_1px)] [background-size:16px_16px]">
+            <svg className="w-full h-full bg-slate-950/95 rounded-lg border border-slate-800 shadow-inner" viewBox="0 0 750 550">
+              <defs>
+                <pattern id="pat-stone" patternUnits="userSpaceOnUse" width="60" height="60">
+                  <image href="/assets/textures/stone_floor.png" x="0" y="0" width="60" height="60" preserveAspectRatio="none" />
+                </pattern>
+                <pattern id="pat-cave" patternUnits="userSpaceOnUse" width="60" height="60">
+                  <image href="/assets/textures/cave_floor.png" x="0" y="0" width="60" height="60" preserveAspectRatio="none" />
+                </pattern>
+                <pattern id="pat-water" patternUnits="userSpaceOnUse" width="60" height="60">
+                  <image href="/assets/textures/water.png" x="0" y="0" width="60" height="60" preserveAspectRatio="none" />
+                </pattern>
+                <radialGradient id="torchGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.5" />
+                  <stop offset="50%" stopColor="#b45309" stopOpacity="0.2" />
+                  <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+
+              {worldLayout.rooms.map((room: any) => {
                 const isDiscovered = engine.state.discoveredRooms.has(room.id);
                 const isCurrent = room.id === engine.state.currentLocationId;
+                const isWater = room.biome === "cavern" && room.id === "flooded-vault";
+                const isCavern = room.biome === "cavern";
                 const g = room.bounds;
 
                 const x = g.x * 20 + 20;
@@ -186,31 +220,55 @@ export const ExplorationView2D: React.FC<ExplorationView2DProps> = ({
                       y={y}
                       width={width}
                       height={height}
-                      fill="#020617"
-                      stroke="#0f172a"
+                      fill="#0b0d12"
+                      stroke="#1e2430"
                       strokeDasharray="2 2"
                       rx="3"
                     />
                   );
                 }
 
+                const patternFill = isWater ? "url(#pat-water)" : isCavern ? "url(#pat-cave)" : "url(#pat-stone)";
+
                 return (
                   <g key={`room-${room.id}`} transform={`translate(${x}, ${y})`}>
+                    {/* Room Floor Base Texture */}
                     <rect
                       width={width}
                       height={height}
-                      fill={isCurrent ? "#064e3b" : "#0f172a"}
-                      stroke={isCurrent ? "#34d399" : "#334155"}
+                      fill={patternFill}
+                      stroke={isCurrent ? "#f59e0b" : "#433a30"}
                       strokeWidth={isCurrent ? "2.5" : "1.5"}
                       rx="4"
                     />
+
+                    {/* Room Darkening Tint overlay */}
+                    <rect
+                      width={width}
+                      height={height}
+                      fill={isCurrent ? "rgba(16, 185, 129, 0.15)" : "rgba(10, 10, 14, 0.45)"}
+                      rx="4"
+                    />
+
+                    {/* Torchlight soft glow if current */}
+                    {isCurrent && (
+                      <circle
+                        cx={width / 2}
+                        cy={height / 2}
+                        r={Math.max(width, height) * 0.75}
+                        fill="url(#torchGlow)"
+                        pointerEvents="none"
+                      />
+                    )}
+
                     <text
                       x={width / 2}
                       y={height / 2}
-                      fill={isCurrent ? "#34d399" : "#94a3b8"}
+                      fill={isCurrent ? "#fbbf24" : "#d8ccb4"}
                       fontSize="9"
                       fontWeight="bold"
                       textAnchor="middle"
+                      className="font-serif drop-shadow"
                     >
                       {room.label.split(".")[0] || room.id}
                     </text>
@@ -218,8 +276,8 @@ export const ExplorationView2D: React.FC<ExplorationView2DProps> = ({
                     {/* Player Position Token */}
                     {isCurrent && (
                       <g transform={`translate(${width / 2}, ${height / 2 + 12})`}>
-                        <circle r="7" fill="#10b981" className="animate-ping opacity-75" />
-                        <circle r="6" fill="#10b981" stroke="#ffffff" strokeWidth="1.5" />
+                        <circle r="8" fill="#f59e0b" className="animate-ping opacity-60" />
+                        <circle r="6" fill="#10b981" stroke="#fef3c7" strokeWidth="2" />
                       </g>
                     )}
                   </g>
@@ -326,7 +384,7 @@ export const ExplorationView2D: React.FC<ExplorationView2DProps> = ({
                 );
               })}
 
-              {curLoc.encounter && !engine.state.flags.get("altar-viper-defeated") && (
+              {curLoc.encounter && (!curLoc.encounter.victoryEffects || !curLoc.encounter.victoryEffects.some((eff) => eff.kind === "setFlag" && engine.state.flags.get(eff.flag))) && (
                 <button
                   onClick={() => handleAction({ type: "RESOLVE_COMBAT", encounterId: curLoc.encounter!.id })}
                   className="w-full p-2.5 bg-red-950 hover:bg-red-900 border border-red-700 text-red-200 font-bold rounded text-xs flex items-center justify-center gap-2 transition-all animate-pulse"

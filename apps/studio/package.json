@@ -17,6 +17,7 @@
     "@grimoire3d/save-format": "*",
     "@grimoire3d/world-compiler": "*",
     "@grimoire3d/ui-editor": "*",
+    "@grimoire3d/runtime-babylon": "*",
     "@grimoire3d/campaign-ir": "*",
     "@grimoire3d/economy-core": "*",
     "@grimoire3d/faction-director": "*",

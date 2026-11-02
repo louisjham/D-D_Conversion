@@ -41,7 +41,7 @@ export const AdventureGraphView: React.FC<AdventureGraphViewProps> = ({
       </div>
 
       <div className="flex-1 relative overflow-auto p-4 flex justify-center items-center">
-        <svg className="w-[1000px] h-[700px] bg-slate-950/80 rounded-lg">
+        <svg className="w-full h-full bg-slate-950/80 rounded-lg" viewBox="0 0 1000 700">
           <defs>
             <marker id="arrow-normal" viewBox="0 0 10 10" refX="24" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
               <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b" />

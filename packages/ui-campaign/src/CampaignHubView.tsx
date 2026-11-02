@@ -102,6 +102,26 @@ export const CampaignHubView: React.FC<CampaignHubViewProps> = ({
 
           {/* Active Tab Panel Content */}
           <div className="flex-1 bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-auto space-y-4">
+            {isHub && (
+              <div className="relative h-28 rounded-lg overflow-hidden border border-amber-800/40 shadow-lg">
+                <img
+                  src="/assets/scenes/greywatch_keep.png"
+                  alt="Greywatch Keep"
+                  className="w-full h-full object-cover object-center filter brightness-90"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex items-end p-3">
+                  <div>
+                    <h4 className="text-sm font-bold text-amber-300 drop-shadow">
+                      Greywatch Keep Fortress Hub
+                    </h4>
+                    <p className="text-[11px] text-slate-200 drop-shadow">
+                      A lonely stone fortress garrison on the cliffs overlooking the wilderness of Broken Ravine.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {activeTab === "services" && (
               <div className="space-y-4">
                 <h4 className="font-bold text-slate-200 text-sm flex items-center gap-2">
