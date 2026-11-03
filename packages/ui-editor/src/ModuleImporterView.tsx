@@ -25,6 +25,7 @@ import {
   BookOpen,
   Download,
   ScrollText,
+  Copy,
 } from "lucide-react";
 
 interface ModuleImporterViewProps {
@@ -52,7 +53,7 @@ export const ModuleImporterView: React.FC<ModuleImporterViewProps> = ({
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [progressLogs, setProgressLogs] = useState<string[]>([]);
   const [importResult, setImportResult] = useState<AiImportResult | null>(null);
-  const [activeTab, setActiveTab] = useState<"summary" | "report">("summary");
+  const [activeTab, setActiveTab] = useState<"summary" | "report" | "log">("summary");
 
   // Save AI preferences to localStorage
   useEffect(() => {
@@ -339,6 +340,16 @@ Two men-at-arms (AC 3, F 1, hp 5) approach when the drawbridge is lowered.
                     >
                       <ScrollText className="w-3.5 h-3.5" /> AI Conversion Report & Game Loop
                     </button>
+                    <button
+                      onClick={() => setActiveTab("log")}
+                      className={`px-3 py-1 text-xs rounded-md font-medium transition-all flex items-center gap-1.5 ${
+                        activeTab === "log"
+                          ? "bg-indigo-600 text-white font-bold shadow"
+                          : "text-slate-400 hover:text-slate-200"
+                      }`}
+                    >
+                      <FileText className="w-3.5 h-3.5" /> Full Extraction Log
+                    </button>
                   </div>
 
                   <span className="text-xs text-slate-400 font-mono">
@@ -410,7 +421,7 @@ Two men-at-arms (AC 3, F 1, hp 5) approach when the drawbridge is lowered.
                       </div>
                     )}
                   </>
-                ) : (
+                ) : activeTab === "report" ? (
                   /* TAB 2: FULL REPORT & GAME LOOP AUDIT */
                   <div className="flex flex-col gap-3 max-h-80 overflow-y-auto pr-1">
                     {importResult.report ? (
@@ -458,6 +469,43 @@ Two men-at-arms (AC 3, F 1, hp 5) approach when the drawbridge is lowered.
                     ) : (
                       <div className="text-slate-500 italic">No conversion report generated yet.</div>
                     )}
+                  </div>
+                ) : (
+                  /* TAB 3: FULL EXTRACTION LOG */
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-slate-400 font-mono">
+                        {importResult.extractionLog.length} log lines recorded
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            const fullLog = importResult.fullTextLog || importResult.extractionLog.join("\n");
+                            navigator.clipboard.writeText(fullLog);
+                          }}
+                          className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded text-xs font-medium cursor-pointer flex items-center gap-1.5 transition-colors"
+                        >
+                          <Copy className="w-3.5 h-3.5" /> Copy Full Log
+                        </button>
+                        <button
+                          onClick={() => {
+                            const fullLog = importResult.fullTextLog || importResult.extractionLog.join("\n");
+                            const blob = new Blob([fullLog], { type: "text/plain" });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = `extraction-log-${Date.now()}.txt`;
+                            a.click();
+                          }}
+                          className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 rounded text-xs font-medium cursor-pointer flex items-center gap-1.5 transition-colors"
+                        >
+                          <Download className="w-3.5 h-3.5" /> Download Log
+                        </button>
+                      </div>
+                    </div>
+                    <pre className="bg-slate-950 border border-slate-800 rounded-lg p-3 max-h-80 overflow-y-auto font-mono text-[11px] text-slate-300 whitespace-pre-wrap select-text leading-relaxed">
+                      {importResult.fullTextLog || importResult.extractionLog.join("\n")}
+                    </pre>
                   </div>
                 )}
               </div>

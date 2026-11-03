@@ -47,6 +47,7 @@ export interface AiImportResult {
   versionedAdventure?: VersionedAdventure;
   validation: ValidationResult;
   extractionLog: string[];
+  fullTextLog?: string;
   repairPassesRun: number;
   report?: AiConversionReport;
 }
@@ -249,12 +250,16 @@ OUTPUT ONLY VALID RAW JSON MATCHING SCHEMA VERSION "0.1".`;
     onProgress?: (msg: string) => void
   ): Promise<AiImportResult> {
     const log: string[] = [];
-    const addLog = (msg: string) => {
-      log.push(`[${new Date().toLocaleTimeString()}] ${msg}`);
-      if (onProgress) onProgress(msg);
+    const addLog = (msg: string, sendToProgress: boolean = true) => {
+      const entry = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      log.push(entry);
+      if (onProgress && sendToProgress) {
+        onProgress(msg.length > 200 ? msg.slice(0, 197) + "..." : msg);
+      }
     };
 
     addLog(`Initiating AI Module Parser using provider: ${config.provider} (${config.modelName})`);
+    addLog(`=== INPUT MODULE SOURCE TEXT (${rawText.length} characters) ===\n${rawText}\n=== END INPUT MODULE SOURCE TEXT ===`, false);
 
     const systemPrompt = this.getDungeonMasterSystemPrompt();
     const userPrompt = `Convert the following D&D module text into Grimoire3D VersionedAdventure IR JSON:
@@ -263,17 +268,22 @@ OUTPUT ONLY VALID RAW JSON MATCHING SCHEMA VERSION "0.1".`;
 ${rawText.slice(0, 9000)}
 === MODULE TEXT END ===`;
 
+    addLog(`=== DUNGEON MASTER SYSTEM PROMPT ===\n${systemPrompt}\n=== END DUNGEON MASTER SYSTEM PROMPT ===`, false);
+    addLog(`=== USER PROMPT SENT TO MODEL ===\n${userPrompt}\n=== END USER PROMPT ===`, false);
+
     addLog("Sending module extraction prompt to AI model...");
     let rawAiResponse = "";
     try {
       rawAiResponse = await generateAiCompletion(userPrompt, config, systemPrompt);
       addLog("Received AI extraction response. Parsing JSON...");
+      addLog(`=== RAW AI COMPLETION RESPONSE (${rawAiResponse.length} characters) ===\n${rawAiResponse}\n=== END RAW AI COMPLETION RESPONSE ===`, false);
     } catch (err: any) {
       addLog(`AI Completion Failed: ${err?.message || err}`);
       return {
         success: false,
         validation: { valid: false, issues: [{ code: "AI_EXTRACTION_FAILED", message: err?.message || "AI API call failed", severity: "error", entityType: "adventure", entityId: "root" }] },
         extractionLog: log,
+        fullTextLog: log.join("\n"),
         repairPassesRun: 0,
       };
     }
@@ -281,8 +291,9 @@ ${rawText.slice(0, 9000)}
     let parsedJson: any = null;
     try {
       parsedJson = JSON.parse(rawAiResponse);
-    } catch (_firstParseErr) {
-      addLog("AI response was not valid JSON. Attempting sanitized extraction...");
+      addLog("Initial raw JSON parse succeeded.");
+    } catch (firstParseErr: any) {
+      addLog(`AI response was not directly valid JSON (${firstParseErr?.message || firstParseErr}). Attempting sanitized extraction...`);
 
       // Strategy 1: Strip markdown fences (```json ... ```)
       let sanitized = rawAiResponse
@@ -298,14 +309,16 @@ ${rawText.slice(0, 9000)}
         const lastBrace = rawAiResponse.lastIndexOf('}');
         if (firstBrace !== -1 && lastBrace > firstBrace) {
           try {
-            parsedJson = JSON.parse(rawAiResponse.substring(firstBrace, lastBrace + 1));
-            addLog("JSON recovery succeeded via brace extraction.");
-          } catch (_thirdParseErr) {
-            addLog("All JSON recovery strategies failed.");
+            const braceExtracted = rawAiResponse.substring(firstBrace, lastBrace + 1);
+            parsedJson = JSON.parse(braceExtracted);
+            addLog(`JSON recovery succeeded via brace extraction [${firstBrace}..${lastBrace}].`);
+          } catch (thirdParseErr: any) {
+            addLog(`All JSON recovery strategies failed: ${thirdParseErr?.message || thirdParseErr}`);
             return {
               success: false,
               validation: { valid: false, issues: [{ code: "INVALID_JSON", message: "AI response failed all JSON parsing strategies", severity: "error", entityType: "adventure", entityId: "root" }] },
               extractionLog: log,
+              fullTextLog: log.join("\n"),
               repairPassesRun: 0,
             };
           }
@@ -315,6 +328,7 @@ ${rawText.slice(0, 9000)}
             success: false,
             validation: { valid: false, issues: [{ code: "INVALID_JSON", message: "No JSON structure found in AI response", severity: "error", entityType: "adventure", entityId: "root" }] },
             extractionLog: log,
+            fullTextLog: log.join("\n"),
             repairPassesRun: 0,
           };
         }
@@ -326,13 +340,12 @@ ${rawText.slice(0, 9000)}
 
     if (zodResult.success) {
       vAdventure = zodResult.data as VersionedAdventure;
-      addLog("Zod schema validation passed.");
+      addLog(`Zod schema validation passed successfully (schemaVersion: "${vAdventure.schemaVersion}").`);
     } else {
-      const zodErrors = zodResult.error.issues
-        .slice(0, 10)
+      const allZodErrors = zodResult.error.issues
         .map((i: any) => `  - ${i.path.join('.')}: ${i.message}`)
         .join('\n');
-      addLog(`Zod schema validation found ${zodResult.error.issues.length} issue(s):\n${zodErrors}`);
+      addLog(`Zod schema validation found ${zodResult.error.issues.length} issue(s):\n${allZodErrors}`);
 
       // Only proceed if the IR has fundamental structure
       if (parsedJson && parsedJson.adventure && Array.isArray(parsedJson.adventure.locations)) {
@@ -342,16 +355,21 @@ ${rawText.slice(0, 9000)}
         // Attempt AI-driven schema repair if online
         if (config.provider !== "offline-heuristic") {
           addLog("Initiating AI Schema Self-Correction Repair Pass...");
-          const repairPrompt = `The extracted D&D adventure JSON failed Zod schema validation:\n\n${zodErrors}\n\nHere is the current JSON:\n${JSON.stringify(parsedJson, null, 2)}\n\nPlease repair the JSON so it strictly adheres to the schema. Return ONLY the corrected full JSON object.`;
+          const repairPrompt = `The extracted D&D adventure JSON failed Zod schema validation:\n\n${allZodErrors}\n\nHere is the current JSON:\n${JSON.stringify(parsedJson, null, 2)}\n\nPlease repair the JSON so it strictly adheres to the schema. Return ONLY the corrected full JSON object.`;
+          addLog(`=== SCHEMA REPAIR PROMPT ===\n${repairPrompt}\n=== END SCHEMA REPAIR PROMPT ===`, false);
           try {
             const repairedRaw = await generateAiCompletion(repairPrompt, config, systemPrompt);
+            addLog(`=== RAW SCHEMA REPAIR RESPONSE (${repairedRaw.length} characters) ===\n${repairedRaw}\n=== END RAW SCHEMA REPAIR RESPONSE ===`, false);
             const repairedJson = JSON.parse(repairedRaw);
             const repairedZod = VersionedAdventureSchema.safeParse(repairedJson);
             if (repairedZod.success) {
               vAdventure = repairedZod.data as VersionedAdventure;
               addLog("Schema self-correction succeeded.");
             } else {
-              addLog("Schema repair pass still has Zod issues. Continuing with best-effort IR.");
+              const remainingZodErrors = repairedZod.error.issues
+                .map((i: any) => `  - ${i.path.join('.')}: ${i.message}`)
+                .join('\n');
+              addLog(`Schema repair pass still has Zod issues:\n${remainingZodErrors}\nContinuing with best-effort IR.`);
             }
           } catch (repairErr: any) {
             addLog(`Schema repair pass failed: ${repairErr?.message || repairErr}`);
@@ -363,6 +381,7 @@ ${rawText.slice(0, 9000)}
           success: false,
           validation: { valid: false, issues: [{ code: "SCHEMA_VALIDATION_FAILED", message: `Schema validation failed: IR missing required structure`, severity: "error", entityType: "adventure", entityId: "root" }] },
           extractionLog: log,
+          fullTextLog: log.join("\n"),
           repairPassesRun: 0,
         };
       }
@@ -371,6 +390,14 @@ ${rawText.slice(0, 9000)}
     addLog("Running Grimoire3D state-space reachability and solver validator...");
     let validation = validateAdventure(vAdventure);
     let repairPasses = 0;
+
+    addLog(`Grimoire3D solver validator completed: valid=${validation.valid}, issuesCount=${validation.issues.length}`);
+    if (validation.issues.length > 0) {
+      const issueDetails = validation.issues
+        .map((iss) => `  - [${iss.severity.toUpperCase()}] ${iss.code}: ${iss.message} (Entity: ${iss.entityId || "N/A"}, Type: ${iss.entityType})`)
+        .join('\n');
+      addLog(`Validation issues detected:\n${issueDetails}`);
+    }
 
     if (!validation.valid && config.provider !== "offline-heuristic") {
       addLog(`Validator found ${validation.issues.length} solver issue(s). Initiating AI Self-Correction Repair Pass...`);
@@ -390,14 +417,25 @@ ${JSON.stringify(vAdventure, null, 2)}
 Please repair the JSON so that exit targets match room IDs and keys are obtainable.
 Return ONLY the corrected full JSON object.`;
 
+      addLog(`=== SOLVER REPAIR PROMPT ===\n${repairPrompt}\n=== END SOLVER REPAIR PROMPT ===`, false);
+
       try {
         const repairedRaw = await generateAiCompletion(repairPrompt, config, systemPrompt);
+        addLog(`=== RAW SOLVER REPAIR RESPONSE (${repairedRaw.length} characters) ===\n${repairedRaw}\n=== END RAW SOLVER REPAIR RESPONSE ===`, false);
         const repairedJson = JSON.parse(repairedRaw);
         const repairedZod = VersionedAdventureSchema.safeParse(repairedJson);
         if (repairedZod.success) {
           vAdventure = repairedZod.data as VersionedAdventure;
           validation = validateAdventure(vAdventure);
           addLog(`Self-correction complete. Validation status: ${validation.valid ? "VALIDATED" : "ISSUES REMAIN"}`);
+          if (!validation.valid) {
+            const recheckIssues = validation.issues
+              .map((iss) => `  - [${iss.severity.toUpperCase()}] ${iss.code}: ${iss.message} (Entity: ${iss.entityId || "N/A"})`)
+              .join('\n');
+            addLog(`Issues remaining after solver repair:\n${recheckIssues}`);
+          }
+        } else {
+          addLog(`Repaired JSON from solver pass failed Zod validation: ${repairedZod.error.message}`);
         }
       } catch (err: any) {
         addLog(`Self-Correction Repair Pass failed: ${err?.message || err}`);
@@ -406,12 +444,15 @@ Return ONLY the corrected full JSON object.`;
 
     addLog("Generating Comprehensive AI Module Conversion & Game Loop Report...");
     const report = this.generateConversionReport(vAdventure, validation);
+    addLog(`=== CONVERSION REPORT SUMMARY ===\n${report.gameLoopDescription}\n=== END CONVERSION REPORT SUMMARY ===`, false);
+    addLog(`AI Module Extraction Pipeline Complete. Valid: ${validation.valid}, Total Locations: ${vAdventure.adventure.locations.length}.`);
 
     return {
       success: validation.valid,
       versionedAdventure: vAdventure,
       validation,
       extractionLog: log,
+      fullTextLog: log.join("\n"),
       repairPassesRun: repairPasses,
       report,
     };
@@ -424,14 +465,18 @@ Return ONLY the corrected full JSON object.`;
     onProgress?: (msg: string) => void
   ): Promise<AiImportResult> {
     const log: string[] = [];
-    const addLog = (msg: string) => {
-      log.push(`[${new Date().toLocaleTimeString()}] ${msg}`);
-      if (onProgress) onProgress(msg);
+    const addLog = (msg: string, sendToProgress: boolean = true) => {
+      const entry = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      log.push(entry);
+      if (onProgress && sendToProgress) {
+        onProgress(msg.length > 200 ? msg.slice(0, 197) + "..." : msg);
+      }
     };
 
     addLog(`Re-invoking AI Module Doctor using provider: ${config.provider} (${config.modelName})...`);
 
     const currentValidation = validateAdventure(existingAdventure);
+    addLog(`Initial adventure has ${existingAdventure.adventure.locations.length} locations, initial valid: ${currentValidation.valid}`);
     const systemPrompt = this.getDungeonMasterSystemPrompt();
 
     const userPrompt = `Re-examine, repair, and enhance the following D&D adventure JSON:
@@ -446,29 +491,42 @@ REQUIREMENTS:
 2. Separate DM Secret Notes into narrative.gmNotes and Player Read-Aloud into narrative.playerFacingDescription.
 3. Return ONLY valid JSON matching schemaVersion "0.1".`;
 
+    addLog(`=== DUNGEON MASTER SYSTEM PROMPT ===\n${systemPrompt}\n=== END DUNGEON MASTER SYSTEM PROMPT ===`, false);
+    addLog(`=== USER RECOMPILE PROMPT SENT TO MODEL ===\n${userPrompt}\n=== END USER RECOMPILE PROMPT ===`, false);
+
     try {
       const repairedRaw = await generateAiCompletion(userPrompt, config, systemPrompt);
+      addLog(`=== RAW AI RECOMPILE RESPONSE (${repairedRaw.length} characters) ===\n${repairedRaw}\n=== END RAW AI RECOMPILE RESPONSE ===`, false);
       const repairedJson = JSON.parse(repairedRaw);
       const repairedZod = VersionedAdventureSchema.safeParse(repairedJson);
 
       let vAdventure: VersionedAdventure;
       if (repairedZod.success) {
         vAdventure = repairedZod.data as VersionedAdventure;
+        addLog(`Re-compiled adventure parsed and passed Zod schema validation successfully.`);
       } else {
-        const errorMsg = repairedZod.error.errors.map((e: any) => `${e.path.join('.')}: ${e.message}`).join(', ');
-        addLog(`Re-compiled JSON failed Zod schema validation: ${errorMsg}`);
+        const errorMsg = repairedZod.error.issues.map((e: any) => `${e.path.join('.')}: ${e.message}`).join(', ');
+        addLog(`Re-compiled JSON failed Zod schema validation:\n${errorMsg}`);
         throw new Error(`Zod schema validation failed: ${errorMsg}`);
       }
 
       let validation = validateAdventure(vAdventure);
+      addLog(`Re-compiled adventure Grimoire3D solver validation: valid=${validation.valid}, issuesCount=${validation.issues.length}`);
+      if (validation.issues.length > 0) {
+        const issList = validation.issues.map((i) => `  - [${i.severity.toUpperCase()}] ${i.code}: ${i.message}`).join('\n');
+        addLog(`Validation issues remaining:\n${issList}`);
+      }
+
       addLog("Generating updated AI Module Conversion Report...");
       const report = this.generateConversionReport(vAdventure, validation);
+      addLog(`=== RECOMPILE CONVERSION REPORT SUMMARY ===\n${report.gameLoopDescription}\n=== END RECOMPILE CONVERSION REPORT SUMMARY ===`, false);
 
       return {
         success: validation.valid,
         versionedAdventure: vAdventure,
         validation,
         extractionLog: log,
+        fullTextLog: log.join("\n"),
         repairPassesRun: 1,
         report,
       };
@@ -480,6 +538,7 @@ REQUIREMENTS:
         versionedAdventure: existingAdventure,
         validation: currentValidation,
         extractionLog: log,
+        fullTextLog: log.join("\n"),
         repairPassesRun: 1,
         report,
       };
