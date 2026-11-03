@@ -183,4 +183,31 @@ describe("AI Module Importer Test Suite", () => {
       globalThis.fetch = originalFetch;
     }
   });
+
+  it("7. Offline heuristic extracts all rooms from Title Case and varied D&D formatting without limiting to 2 rooms", async () => {
+    const rawModuleText = `
+    1. Main Gate: Flanked by two towers. Guards are posted here.
+    2. Flanking Towers: Four crossbowmen are stationed at the top of each tower. Inside is a chest with a key.
+    3. Entry Yard: Paved yard where entrants dismount.
+    4. Stables: Large wooden stable holding 20 horses. Secret door in hayloft.
+    5. Common Stables: Drovers attend mules.
+    6. Guard Barracks: Thirty off-duty guards.
+    `;
+
+    const config = DEFAULT_AI_CONFIGS["offline-heuristic"];
+    const result = await AiModuleParser.parseModuleTextToIR(rawModuleText, config);
+
+    expect(result.success).toBe(true);
+    expect(result.versionedAdventure).toBeDefined();
+    expect(result.versionedAdventure?.adventure.locations.length).toBe(6);
+    expect(result.validation.valid).toBe(true);
+
+    const labels = result.versionedAdventure?.adventure.locations.map((l) => l.label);
+    expect(labels).toContain("1. Main Gate");
+    expect(labels).toContain("2. Flanking Towers");
+    expect(labels).toContain("3. Entry Yard");
+    expect(labels).toContain("4. Stables");
+    expect(labels).toContain("5. Common Stables");
+    expect(labels).toContain("6. Guard Barracks");
+  });
 });

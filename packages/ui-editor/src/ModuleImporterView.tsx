@@ -143,11 +143,14 @@ export const ModuleImporterView: React.FC<ModuleImporterViewProps> = ({
 
   const handleLoadB2Sample = () => {
     setRawText(`AREAS OF THE KEEP
-1. MAIN GATE: Two towers 30' high with battlements, flank a gatehouse 20' high. All have holes for bow and crossbow fire. A deep crevice in front of the place is spanned by a drawbridge (usually up). There is a portcullis at the entry and large gates at the far end of the passage.
-Two men-at-arms (AC 3, F 1, hp 5) approach when the drawbridge is lowered.
+1. MAIN GATE: Two towers 30' high with battlements, flank a gatehouse 20' high. All have holes for bow and crossbow fire. A deep crevice in front of the place is spanned by a drawbridge (usually up). There is a portcullis at the entry and large gates at the far end of the passage. Two men-at-arms (AC 3, F 1, hp 5) approach when the drawbridge is lowered.
 2. FLANKING TOWERS: Atop each tower are four crossbowmen with crossbows cocked and ready to fire. Inside each tower are 12 other men-at-arms. Inside is a locked chest containing an iron key.
 3. ENTRY YARD: This narrow place is paved. All entrants save those of the garrison will be required to dismount. Corporal of the watch is here with a +1 magic sword.
-4. STABLES: Large wooden stable holding 20 horses. Hayloft above contains a secret hidden compartment.`);
+4. STABLES: Large wooden stable holding 20 horses. Hayloft above contains a secret hidden compartment.
+5. COMMON STABLES: Stable boys and drovers attend horses of traveling merchants and adventurers. A suspicious chest sits behind the hay bales.
+6. INNER GATEHOUSE & COURTYARD: A fortified gateway connects to the upper bailey. Two guards stand vigilant with halberds.
+7. BARRACKS & GUARD ROOM: Thirty guards dwell here in off-duty shifts. Weapon racks hold longswords, spears, and heavy crossbows.
+8. KEEP TOWER & CAPTAIN'S QUARTERS: The high stone citadel of the Castellan. An iron gate stands locked, protecting the war room and treasure vault.`);
     setSourceName("B2: Keep on the Borderlands (Sample Extract)");
   };
 
@@ -157,13 +160,26 @@ Two men-at-arms (AC 3, F 1, hp 5) approach when the drawbridge is lowered.
       return;
     }
 
+    let activeProvider = provider;
+    if (activeProvider !== "offline-heuristic" && !apiKey.trim()) {
+      const confirmOffline = window.confirm(
+        `No API key provided for ${activeProvider === "google-gemini" ? "Google Gemini" : "OpenRouter"}.\n\nWould you like to convert using the built-in Offline Rules Engine instead?`
+      );
+      if (confirmOffline) {
+        activeProvider = "offline-heuristic";
+        setProvider("offline-heuristic");
+      } else {
+        return;
+      }
+    }
+
     setIsProcessing(true);
     setProgressLogs([]);
     setImportResult(null);
 
     const config: AiClientConfig = {
-      provider,
-      apiKey,
+      provider: activeProvider,
+      apiKey: activeProvider === "offline-heuristic" ? "" : apiKey,
       modelName,
     };
 

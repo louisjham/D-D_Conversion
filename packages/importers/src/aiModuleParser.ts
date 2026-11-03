@@ -240,6 +240,11 @@ SSI GOLD BOX PARADIGM & GAMEPLAY LOOP ARCHITECTURE:
    - Every locked exit key requirement MUST be obtainable from an interactable in an accessible room.
    - Create a tight, rewarding game loop: Start Entry -> Room Exploration & Clues -> Key Hunting / Secret Unlocking -> Tactical Monster Encounters -> Boss Chamber / Climax.
 
+4. MANDATORY COMPREHENSIVE LOCATION EXTRACTION (CRITICAL):
+   - You MUST extract and convert EVERY SINGLE room, chamber, hall, building, or area mentioned in the source module into an entry in "adventure.locations".
+   - NEVER truncate, omit, or limit your output to a small 2-room or 3-room sample. If the module has 10, 20, or 35 rooms, extract all 10, 20, or 35 rooms!
+   - Every room must include its full read-aloud flavor text, tactical exits connecting to adjacent rooms, and all interactables/monsters found in that room.
+
 OUTPUT ONLY VALID RAW JSON MATCHING SCHEMA VERSION "0.1".`;
   }
 
@@ -259,13 +264,29 @@ OUTPUT ONLY VALID RAW JSON MATCHING SCHEMA VERSION "0.1".`;
     };
 
     addLog(`Initiating AI Module Parser using provider: ${config.provider} (${config.modelName})`);
+    if (config.provider !== "offline-heuristic" && !config.apiKey) {
+      addLog(`⚠️ No API key specified for ${config.provider}. Running built-in Offline Rules Engine.`);
+    }
     addLog(`=== INPUT MODULE SOURCE TEXT (${rawText.length} characters) ===\n${rawText}\n=== END INPUT MODULE SOURCE TEXT ===`, false);
+
+    const maxChars = config.provider === "google-gemini"
+      ? 350000
+      : config.provider === "openrouter"
+      ? 100000
+      : 350000;
+    const textToSend = rawText.slice(0, maxChars);
 
     const systemPrompt = this.getDungeonMasterSystemPrompt();
     const userPrompt = `Convert the following D&D module text into Grimoire3D VersionedAdventure IR JSON:
 
+CRITICAL EXTRACTION REQUIREMENTS:
+1. EXTRACT ALL ROOMS: You MUST convert EVERY SINGLE room, chamber, hall, and area in the text into its own distinct Location object in "adventure.locations". DO NOT summarize or truncate to only 2 or 3 rooms. If the text has 10, 20, or 35 rooms, extract ALL of them!
+2. CONNECTIVITY: Connect rooms with exits so that all rooms are reachable from "start".
+3. DETAILS: Extract the player read-aloud description, DM notes, monsters, items/keys, and secrets for every room.
+4. Output ONLY valid raw JSON matching schemaVersion "0.1".
+
 === MODULE TEXT START ===
-${rawText.slice(0, 9000)}
+${textToSend}
 === MODULE TEXT END ===`;
 
     addLog(`=== DUNGEON MASTER SYSTEM PROMPT ===\n${systemPrompt}\n=== END DUNGEON MASTER SYSTEM PROMPT ===`, false);

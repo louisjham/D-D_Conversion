@@ -272,106 +272,260 @@ function cleanJsonMarkdown(text: string): string {
 }
 
 function generateOfflineHeuristicResponse(prompt: string): string {
-  // Extract room names/numbers from prompt if available
-  const areaMatches = Array.from(prompt.matchAll(/(\d+)\.\s+([A-Z\s]{3,30}):?/g));
-  const locations = [];
+  // Extract module text from prompt wrapper if present
+  let moduleText = prompt;
+  const startMarker = "=== MODULE TEXT START ===";
+  const endMarker = "=== MODULE TEXT END ===";
+  if (prompt.includes(startMarker)) {
+    const startIdx = prompt.indexOf(startMarker) + startMarker.length;
+    const endIdx = prompt.includes(endMarker) ? prompt.indexOf(endMarker) : prompt.length;
+    moduleText = prompt.slice(startIdx, endIdx).trim();
+  }
 
-  if (areaMatches.length > 0) {
-    for (let i = 0; i < areaMatches.length; i++) {
-      const match = areaMatches[i];
-      const num = match[1];
-      const titleName = match[2].trim();
-      const slugName = titleName.toLowerCase().replace(/[^a-z0-9]/g, "-");
-      const id = `area-${num}-${slugName}`;
-      const nextMatch = areaMatches[i + 1];
-      const nextId = nextMatch
-        ? `area-${nextMatch[1]}-${nextMatch[2].trim().toLowerCase().replace(/[^a-z0-9]/g, "-")}`
-        : null;
+  interface DetectedArea {
+    num: string;
+    title: string;
+    startIndex: number;
+    headerLength: number;
+  }
 
-      const exits = [];
-      if (nextId) {
-        exits.push({
-          id: `exit-${id}-to-${nextId}`,
-          label: `Passage to ${nextMatch[2].trim()}`,
-          direction: "north",
-          target: nextId,
-        });
-      }
-      if (i > 0) {
-        const prevMatch = areaMatches[i - 1];
-        const prevId = `area-${prevMatch[1]}-${prevMatch[2].trim().toLowerCase().replace(/[^a-z0-9]/g, "-")}`;
-        exits.push({
-          id: `exit-${id}-to-${prevId}`,
-          label: `Passage back to ${prevMatch[2].trim()}`,
-          direction: "south",
-          target: prevId,
-        });
-      }
+  const detectedAreas: DetectedArea[] = [];
 
-      locations.push({
-        id,
-        label: `${num}. ${titleName}`,
-        description: `Extracted section for ${titleName}. Contains tactical positions and exploration hazards.`,
-        geometry: { x: (i % 5) * 4, y: Math.floor(i / 5) * 4, width: 3, height: 3 },
-        presentation: { biome: "keep", lighting: "torchlit", ambienceTags: ["stone", "dark"] },
-        narrative: {
-          readAloud: `You enter ${titleName}.`,
-          playerFacingDescription: `The area of ${titleName} stretches out before you.`,
-          gmNotes: ["Tactical positioning room."],
-        },
-        exits,
-        interactables: [
-          {
-            id: `chest-${id}`,
-            label: "Iron Chest",
-            description: "A heavy reinforced chest resting in the corner.",
-            actionType: "INSPECT",
-          },
-        ],
-        secrets: [],
+  // Strategy 1: Standard numbered D&D room headers (e.g., "1. MAIN GATE:", "Area 1: Crypt", "Room 2 - Armory", "3. Stables.")
+  const numberedHeaderRegex = /(?:^|\n)\s*(?:#{1,4}\s*)?(?:\*\*)?(?:(?:Area|Room|Chamber|Location|Section|Level)\s+)?(\d{1,3}|[A-Z])[\.\:\)\-]\s+([^\n\r\:]{2,60})(?:\*\*)?(?:[:\.\-]|\n|$)/gi;
+  let match: RegExpExecArray | null;
+
+  while ((match = numberedHeaderRegex.exec(moduleText)) !== null) {
+    const num = match[1];
+    const rawTitle = match[2].trim();
+    // Exclude false positives like bullet points "1. You see..."
+    if (rawTitle.length > 1 && !rawTitle.toLowerCase().startsWith("you ") && !rawTitle.toLowerCase().startsWith("the ")) {
+      detectedAreas.push({
+        num,
+        title: rawTitle,
+        startIndex: match.index,
+        headerLength: match[0].length,
       });
     }
-  } else {
-    locations.push(
-      {
-        id: "imported-entry",
-        label: "Module Entry Hall",
-        description: "The main entrance room parsed from the module source text.",
-        geometry: { x: 0, y: 0, width: 4, height: 4 },
-        presentation: { biome: "keep", lighting: "torchlit", ambienceTags: ["stone", "echoes"] },
-        narrative: {
-          readAloud: "You stand at the threshold of an ancient subterranean structure.",
-          playerFacingDescription: "A imposing archway opens into a damp stone hall.",
-          gmNotes: ["Starting entry room."],
-        },
-        exits: [
-          { id: "exit-entry-to-inner", label: "Archway", direction: "north", target: "imported-inner" },
-        ],
-        interactables: [],
-        secrets: [],
-      },
-      {
-        id: "imported-inner",
-        label: "Inner Chamber",
-        description: "A central hall filled with ancient carvings.",
-        geometry: { x: 0, y: 5, width: 4, height: 4 },
-        presentation: { biome: "crypt", lighting: "torchlit", ambienceTags: ["runes", "magic"] },
-        narrative: {
-          readAloud: "Ancient runes pulse with faint magical luminescence along the stone pillars.",
-          playerFacingDescription: "The air hums with faint residual magic in this chamber.",
-          gmNotes: ["Inner sanctum."],
-        },
-        exits: [
-          { id: "exit-inner-to-entry", label: "Archway Back", direction: "south", target: "imported-entry" },
-        ],
-        interactables: [],
-        secrets: [],
+  }
+
+  // Strategy 2: If Strategy 1 found < 2 rooms, try ALL-CAPS standalone lines with colon (e.g., "MAIN GATE:", "FLANKING TOWERS:")
+  if (detectedAreas.length < 2) {
+    detectedAreas.length = 0;
+    const allCapsRegex = /(?:^|\n)\s*(?:\*\*)?([A-Z0-9\s'\-&/]{3,40})(?:\*\*)?:\s*(?:\n|$)/g;
+    let capIdx = 1;
+    while ((match = allCapsRegex.exec(moduleText)) !== null) {
+      const rawTitle = match[1].trim();
+      const lower = rawTitle.toLowerCase();
+      // Filter non-room labels
+      if (!lower.includes("module text") && !lower.includes("system") && !lower.includes("schema") && !lower.includes("prompt")) {
+        detectedAreas.push({
+          num: String(capIdx++),
+          title: rawTitle,
+          startIndex: match.index,
+          headerLength: match[0].length,
+        });
       }
+    }
+  }
+
+  // Strategy 3: If still < 2 rooms, split into paragraphs if multi-paragraph text is provided
+  if (detectedAreas.length < 2) {
+    detectedAreas.length = 0;
+    const paragraphs = moduleText
+      .split(/\n\s*\n+/)
+      .map((p) => p.trim())
+      .filter((p) => p.length > 35 && !p.startsWith("===") && !p.startsWith("Convert the following"));
+
+    if (paragraphs.length >= 2) {
+      for (let i = 0; i < Math.min(paragraphs.length, 25); i++) {
+        const para = paragraphs[i];
+        // Generate a concise title from the first words
+        const firstLine = para.split("\n")[0].slice(0, 35).replace(/[.:-]/g, "").trim();
+        detectedAreas.push({
+          num: String(i + 1),
+          title: firstLine || `Chamber ${i + 1}`,
+          startIndex: moduleText.indexOf(para),
+          headerLength: 0,
+        });
+      }
+    }
+  }
+
+  // Fallback default: If nothing could be extracted at all, provide 3 foundational rooms
+  if (detectedAreas.length === 0) {
+    detectedAreas.push(
+      { num: "1", title: "Entrance Hall", startIndex: 0, headerLength: 0 },
+      { num: "2", title: "Great Hall", startIndex: 0, headerLength: 0 },
+      { num: "3", title: "Inner Sanctum", startIndex: 0, headerLength: 0 }
     );
   }
 
+  const locations = [];
+  const adventureItems: Array<{ id: string; name: string; type: string; description: string }> = [];
+  const adventureMonsters: Array<{ id: string; name: string; hp: number; ac: number; attackBonus: number; damageRoll: string; xpValue: number }> = [];
 
-  const startId = locations[0]?.id || "imported-entry";
+  let keyGenerated = false;
+
+  for (let i = 0; i < detectedAreas.length; i++) {
+    const area = detectedAreas[i];
+    const num = area.num;
+    const titleName = area.title.replace(/[.:-]$/, "").trim();
+    const slugName = titleName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const id = `area-${num}-${slugName || "room"}`;
+
+    // Extract room body text between this header and the next header
+    const nextArea = detectedAreas[i + 1];
+    const bodyStart = area.startIndex + area.headerLength;
+    const bodyEnd = nextArea ? nextArea.startIndex : moduleText.length;
+    const rawBody = moduleText.slice(bodyStart, bodyEnd).trim();
+
+    // Clean player-facing description
+    const cleanedBody = rawBody
+      .replace(/^[:\.\-\s]+/, "")
+      .replace(/\n\s*\n+/g, " ")
+      .trim();
+
+    const firstSentence = cleanedBody.split(/(?<=[.?!])\s+/)[0] || "";
+    const playerFacingDesc = cleanedBody.length > 10
+      ? cleanedBody.slice(0, 320) + (cleanedBody.length > 320 ? "..." : "")
+      : `The area of ${titleName} stretches out before you, illuminated by dim torchlight.`;
+
+    const readAloud = `You enter ${titleName}. ${firstSentence || "Dust hangs thick in the cool air."}`;
+
+    // Generate connected exits (adjacent rooms connected bidirectionally)
+    const exits = [];
+    if (nextArea) {
+      const nextTitle = nextArea.title.replace(/[.:-]$/, "").trim();
+      const nextSlug = nextTitle.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      const nextId = `area-${nextArea.num}-${nextSlug || "room"}`;
+
+      // Check if this room has a locked door leading forward
+      const isLocked = !keyGenerated && i > 1 && (cleanedBody.toLowerCase().includes("lock") || cleanedBody.toLowerCase().includes("gate") || cleanedBody.toLowerCase().includes("portcullis"));
+      if (isLocked) {
+        keyGenerated = true;
+      }
+
+      exits.push({
+        id: `exit-${id}-to-${nextId}`,
+        label: `Passage to ${nextTitle}`,
+        direction: i % 2 === 0 ? "north" : "east",
+        target: nextId,
+        locked: isLocked ? { keyItemId: "iron-key", pickable: true, lockpickDC: 15 } : undefined,
+      });
+    }
+
+    if (i > 0) {
+      const prevArea = detectedAreas[i - 1];
+      const prevTitle = prevArea.title.replace(/[.:-]$/, "").trim();
+      const prevSlug = prevTitle.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      const prevId = `area-${prevArea.num}-${prevSlug || "room"}`;
+
+      exits.push({
+        id: `exit-${id}-to-${prevId}`,
+        label: `Passage back to ${prevTitle}`,
+        direction: (i - 1) % 2 === 0 ? "south" : "west",
+        target: prevId,
+      });
+    }
+
+    // Detect interactables, chests, and keys
+    const interactables: any[] = [];
+    const lowerBody = cleanedBody.toLowerCase();
+
+    if (lowerBody.includes("chest") || lowerBody.includes("box") || lowerBody.includes("key") || lowerBody.includes("urn")) {
+      const hasKey = lowerBody.includes("key") || i === 1;
+      const itemId = hasKey ? "iron-key" : undefined;
+
+      if (hasKey && !adventureItems.some((it) => it.id === "iron-key")) {
+        adventureItems.push({
+          id: "iron-key",
+          name: "Heavy Iron Key",
+          type: "key",
+          description: "An ornate wrought iron key found inside the dungeon.",
+        });
+      }
+
+      interactables.push({
+        id: `chest-${id}`,
+        label: hasKey ? "Iron Chest (Contains Key)" : "Sturdy Wooden Chest",
+        description: `A reinforced chest resting in ${titleName}.`,
+        actionType: "INSPECT",
+        grantsItemId: itemId,
+        onInspectEffects: hasKey ? [{ kind: "grantItem", itemId: "iron-key" }] : undefined,
+      });
+    } else {
+      interactables.push({
+        id: `inspect-${id}`,
+        label: `Examine ${titleName}`,
+        description: `A detailed inspection of the masonry and contents of ${titleName}.`,
+        actionType: "INSPECT",
+      });
+    }
+
+    // Detect monsters and tactical combat encounters
+    const monsterMatch = lowerBody.match(/(guard|crossbowm[ae]n|orc|goblin|ogre|skeleton|zombie|bandit|spider|rat|wolf|viper|snake|lizard|ghoul|wight|dragon|boss|men-at-arms)/i);
+    if (monsterMatch) {
+      const monsterName = monsterMatch[1].charAt(0).toUpperCase() + monsterMatch[1].slice(1).toLowerCase();
+      const monsterId = `monster-${id}-${monsterMatch[1].toLowerCase()}`;
+
+      // Extract HP/AC if present (e.g. "AC 3, F 1, hp 5" or "hp 12")
+      const hpMatch = lowerBody.match(/hp\s*[:=]?\s*(\d+)/i);
+      const acMatch = lowerBody.match(/ac\s*[:=]?\s*(\d+)/i);
+      const hp = hpMatch ? parseInt(hpMatch[1], 10) : 10;
+      const ac = acMatch ? parseInt(acMatch[1], 10) : 12;
+
+      adventureMonsters.push({
+        id: monsterId,
+        name: monsterName,
+        hp,
+        ac,
+        attackBonus: 3,
+        damageRoll: "1d6+1",
+        xpValue: 50,
+      });
+
+      interactables.push({
+        id: `encounter-${id}`,
+        label: `Hostile ${monsterName} Encounter`,
+        description: `Tactical combat encounter against hostile ${monsterName}.`,
+        actionType: "INTERACT",
+      });
+    }
+
+    // Detect secrets
+    const secrets: any[] = [];
+    if (lowerBody.includes("secret") || lowerBody.includes("hidden") || lowerBody.includes("concealed")) {
+      secrets.push({
+        id: `secret-${id}`,
+        label: "Hidden Compartment",
+        description: `A cleverly concealed stone latch discovered in ${titleName}.`,
+        perceptionDC: 12,
+      });
+    }
+
+    locations.push({
+      id,
+      label: `${num}. ${titleName}`,
+      description: cleanedBody || `Tactical area for ${titleName}.`,
+      geometry: { x: (i % 6) * 4, y: Math.floor(i / 6) * 4, width: 3, height: 3 },
+      presentation: {
+        biome: i === 0 ? "keep" : i % 2 === 0 ? "cavern" : "crypt",
+        lighting: "torchlit",
+        ambienceTags: ["stone", "dark", "dungeon"],
+      },
+      narrative: {
+        readAloud,
+        playerFacingDescription: playerFacingDesc,
+        gmNotes: [`Area ${num} DM notes: ${cleanedBody.slice(0, 150) || "Tactical positioning area."}`],
+      },
+      exits,
+      interactables,
+      secrets,
+    });
+  }
+
+  const startId = locations[0]?.id || "area-1-room";
 
   const result = {
     schemaVersion: "0.1",
@@ -384,16 +538,15 @@ function generateOfflineHeuristicResponse(prompt: string): string {
       id: "ai-extracted-adventure",
       title: "Extracted D&D Module",
       systemProfile: "classic-dungeon",
-      summary: "D&D Adventure converted into playable IR format via AI Pipeline.",
+      summary: `D&D Adventure with ${locations.length} converted locations mapped to Grimoire3D IR.`,
       start: startId,
-      items: [],
+      items: adventureItems,
       npcs: [],
-      monsters: [],
+      monsters: adventureMonsters,
       quests: [],
       locations,
     },
   };
-
 
   return JSON.stringify(result, null, 2);
 }
