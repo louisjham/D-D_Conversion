@@ -6,6 +6,7 @@ import {
   AVAILABLE_MODELS,
   AiModelOption,
   fetchAvailableGeminiModels,
+  fetchAvailableOpenRouterModels,
   AiModuleParser,
   AiImportResult,
   PdfTextExtractor,
@@ -70,29 +71,58 @@ export const ModuleImporterView: React.FC<ModuleImporterViewProps> = ({
     return AVAILABLE_MODELS["google-gemini"];
   });
 
+  const [openRouterModels, setOpenRouterModels] = useState<AiModelOption[]>(() => {
+    try {
+      const saved = localStorage.getItem("grimoire_available_models_openrouter");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {
+      // fallback
+    }
+    return AVAILABLE_MODELS.openrouter;
+  });
+
   const [isRefreshingModels, setIsRefreshingModels] = useState<boolean>(false);
   const [modelRefreshFeedback, setModelRefreshFeedback] = useState<string | null>(null);
 
-  const handleRefreshGeminiModels = async (keyToUse?: string) => {
+  const handleRefreshModels = async (provToUse?: "google-gemini" | "openrouter", keyToUse?: string) => {
+    const targetProvider = provToUse || (provider as "google-gemini" | "openrouter");
     const key = (keyToUse !== undefined ? keyToUse : apiKey).trim();
-    if (!key) {
+
+    if (targetProvider === "google-gemini" && !key) {
       setModelRefreshFeedback("⚠️ Please enter a Google Gemini API key first.");
       setTimeout(() => setModelRefreshFeedback(null), 4000);
       return;
     }
 
     setIsRefreshingModels(true);
-    setModelRefreshFeedback("Connecting to Google Gemini API...");
-    try {
-      const liveModels = await fetchAvailableGeminiModels(key);
-      setGeminiModels(liveModels);
-      localStorage.setItem("grimoire_available_models_google-gemini", JSON.stringify(liveModels));
+    setModelRefreshFeedback(
+      targetProvider === "google-gemini"
+        ? "Connecting to Google Gemini API..."
+        : "Connecting to OpenRouter API..."
+    );
 
-      // If current model is not among live models, switch to top recommended
-      if (!liveModels.some((m) => m.id === modelName) && liveModels.length > 0) {
-        setModelName(liveModels[0].id);
+    try {
+      if (targetProvider === "google-gemini") {
+        const liveModels = await fetchAvailableGeminiModels(key);
+        setGeminiModels(liveModels);
+        localStorage.setItem("grimoire_available_models_google-gemini", JSON.stringify(liveModels));
+        if (!liveModels.some((m) => m.id === modelName) && liveModels.length > 0) {
+          setModelName(liveModels[0].id);
+        }
+        setModelRefreshFeedback(`✅ Loaded ${liveModels.length} Gemini models`);
+      } else {
+        const liveModels = await fetchAvailableOpenRouterModels(key);
+        setOpenRouterModels(liveModels);
+        localStorage.setItem("grimoire_available_models_openrouter", JSON.stringify(liveModels));
+        if (!liveModels.some((m) => m.id === modelName) && liveModels.length > 0) {
+          setModelName(liveModels[0].id);
+        }
+        const freeCount = liveModels.filter((m) => m.id.endsWith(":free")).length;
+        setModelRefreshFeedback(`✅ Loaded ${liveModels.length} OpenRouter models (${freeCount} free)`);
       }
-      setModelRefreshFeedback(`✅ Loaded ${liveModels.length} Gemini models`);
       setTimeout(() => setModelRefreshFeedback(null), 4000);
     } catch (err: any) {
       setModelRefreshFeedback(`❌ ${err?.message || "Failed to load models"}`);
@@ -104,7 +134,9 @@ export const ModuleImporterView: React.FC<ModuleImporterViewProps> = ({
 
   useEffect(() => {
     if (provider === "google-gemini" && apiKey.trim().length > 15 && !localStorage.getItem("grimoire_available_models_google-gemini")) {
-      handleRefreshGeminiModels(apiKey);
+      handleRefreshModels("google-gemini", apiKey);
+    } else if (provider === "openrouter" && !localStorage.getItem("grimoire_available_models_openrouter")) {
+      handleRefreshModels("openrouter", apiKey);
     }
   }, []);
 
@@ -281,7 +313,9 @@ export const ModuleImporterView: React.FC<ModuleImporterViewProps> = ({
                   onChange={(e) => setApiKey(e.target.value)}
                   onBlur={() => {
                     if (provider === "google-gemini" && apiKey.trim().length > 15 && !isRefreshingModels) {
-                      handleRefreshGeminiModels(apiKey);
+                      handleRefreshModels("google-gemini", apiKey);
+                    } else if (provider === "openrouter" && apiKey.trim().length > 10 && !isRefreshingModels) {
+                      handleRefreshModels("openrouter", apiKey);
                     }
                   }}
                   placeholder={provider === "google-gemini" ? "AIzaSy..." : "sk-or-v1-..."}
@@ -299,13 +333,13 @@ export const ModuleImporterView: React.FC<ModuleImporterViewProps> = ({
                 <label className="text-xs text-slate-300 font-medium">
                   Target Model
                 </label>
-                {provider === "google-gemini" && (
+                {(provider === "google-gemini" || provider === "openrouter") && (
                   <button
                     type="button"
-                    onClick={() => handleRefreshGeminiModels()}
+                    onClick={() => handleRefreshModels()}
                     disabled={isRefreshingModels}
                     className="text-[11px] text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
-                    title="Refresh available models from Google Gemini API"
+                    title={`Refresh available models from ${provider === "google-gemini" ? "Google Gemini" : "OpenRouter"} API`}
                   >
                     <RefreshCw className={`w-3 h-3 ${isRefreshingModels ? "animate-spin text-amber-400" : ""}`} />
                     {isRefreshingModels ? "Fetching..." : "Refresh Models"}
@@ -332,7 +366,13 @@ export const ModuleImporterView: React.FC<ModuleImporterViewProps> = ({
                 onChange={(e) => setModelName(e.target.value)}
                 className="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-md px-3 py-2 text-xs text-slate-100 focus:outline-none cursor-pointer"
               >
-                {(provider === "google-gemini" ? geminiModels : AVAILABLE_MODELS[provider]).map((m) => (
+                {(
+                  provider === "google-gemini"
+                    ? geminiModels
+                    : provider === "openrouter"
+                    ? openRouterModels
+                    : AVAILABLE_MODELS["offline-heuristic"]
+                ).map((m) => (
                   <option key={m.id} value={m.id} className="bg-slate-900 text-slate-100">
                     {m.name}
                   </option>

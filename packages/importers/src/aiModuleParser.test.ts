@@ -5,6 +5,7 @@ import {
   AVAILABLE_MODELS,
   generateAiCompletion,
   fetchAvailableGeminiModels,
+  fetchAvailableOpenRouterModels,
   fetchAvailableAiModels,
 } from "./aiProvider";
 import { VersionedAdventure } from "@grimoire3d/ir";
@@ -209,5 +210,65 @@ describe("AI Module Importer Test Suite", () => {
     expect(labels).toContain("4. Stables");
     expect(labels).toContain("5. Common Stables");
     expect(labels).toContain("6. Guard Barracks");
+  });
+
+  it("8. fetchAvailableOpenRouterModels queries openrouter API and sorts free models first", async () => {
+    const mockOpenRouterResponse = {
+      data: [
+        {
+          id: "openai/gpt-4o",
+          name: "OpenAI: GPT-4o",
+          description: "Flagship versatile multimodal model",
+          context_length: 128000,
+          pricing: { prompt: "0.000005", completion: "0.000015" },
+        },
+        {
+          id: "google/gemini-2.0-flash-exp:free",
+          name: "Google: Gemini 2.0 Flash Experimental (free)",
+          description: "Next gen Gemini model for free",
+          context_length: 1048576,
+          pricing: { prompt: "0", completion: "0" },
+        },
+        {
+          id: "meta-llama/llama-3.3-70b-instruct:free",
+          name: "Meta: Llama 3.3 70B Instruct (free)",
+          description: "Open source powerhouse for free",
+          context_length: 131072,
+          pricing: { prompt: "0", completion: "0" },
+        },
+      ],
+    };
+
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => mockOpenRouterResponse,
+    } as any);
+
+    try {
+      const models = await fetchAvailableOpenRouterModels("sk-or-test-key");
+      expect(globalThis.fetch).toHaveBeenCalledWith(
+        "https://openrouter.ai/api/v1/models",
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            Authorization: "Bearer sk-or-test-key",
+          }),
+        })
+      );
+
+      expect(models.length).toBe(3);
+      // Free models sorted first
+      expect(models[0].id).toBe("google/gemini-2.0-flash-exp:free");
+      expect(models[1].id).toBe("meta-llama/llama-3.3-70b-instruct:free");
+      expect(models[2].id).toBe("openai/gpt-4o");
+
+      // Verify fetchAvailableAiModels routing
+      const aiModels = await fetchAvailableAiModels("openrouter", "sk-or-test-key");
+      expect(aiModels.length).toBe(3);
+      expect(aiModels[0].id).toContain(":free");
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
   });
 });

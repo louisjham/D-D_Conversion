@@ -122,6 +122,76 @@ export async function fetchAvailableGeminiModels(apiKey: string): Promise<AiMode
 }
 
 /**
+ * Queries OpenRouter's models endpoint to discover all available models.
+ * Prioritizes free models (:free) and popular high-performance models.
+ */
+export async function fetchAvailableOpenRouterModels(apiKey?: string): Promise<AiModelOption[]> {
+  const url = "https://openrouter.ai/api/v1/models";
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (apiKey && apiKey.trim()) {
+    headers["Authorization"] = `Bearer ${apiKey.trim()}`;
+  }
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers,
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`OpenRouter API Error (${response.status}): ${errorText}`);
+  }
+
+  const data = await response.json();
+  if (!data || !Array.isArray(data.data)) {
+    throw new Error("Invalid response from OpenRouter API: missing data list");
+  }
+
+  const models: any[] = data.data;
+
+  const formatted: AiModelOption[] = models.map((m: any) => {
+    const isFree = m.id?.endsWith(":free") || (m.pricing?.prompt === "0" && m.pricing?.completion === "0");
+    const baseName = m.name || m.id;
+    const displayName = isFree && !baseName.toLowerCase().includes("free") ? `${baseName} (Free)` : baseName;
+
+    return {
+      id: m.id,
+      name: displayName,
+      description: m.description,
+      inputTokenLimit: m.context_length,
+      outputTokenLimit: m.top_provider?.max_completion_tokens,
+    };
+  });
+
+  if (formatted.length === 0) {
+    return AVAILABLE_MODELS.openrouter;
+  }
+
+  // Sort: Put free models first, then rank by popular flagship architectures
+  formatted.sort((a, b) => {
+    const aFree = a.id.endsWith(":free") ? 100 : 0;
+    const bFree = b.id.endsWith(":free") ? 100 : 0;
+    if (aFree !== bFree) return bFree - aFree;
+
+    const getScore = (id: string) => {
+      let score = 0;
+      if (id.includes("gemini-2.0")) score += 30;
+      else if (id.includes("deepseek-r1")) score += 28;
+      else if (id.includes("llama-3.3-70b")) score += 25;
+      else if (id.includes("qwen-2.5-72b")) score += 22;
+      else if (id.includes("mistral")) score += 20;
+      else if (id.includes("claude-3-5")) score += 18;
+      return score;
+    };
+    return getScore(b.id) - getScore(a.id);
+  });
+
+  return formatted;
+}
+
+/**
  * Discovers available models for a given AI provider.
  */
 export async function fetchAvailableAiModels(
@@ -132,7 +202,7 @@ export async function fetchAvailableAiModels(
     return fetchAvailableGeminiModels(apiKey);
   }
   if (provider === "openrouter") {
-    return AVAILABLE_MODELS.openrouter;
+    return fetchAvailableOpenRouterModels(apiKey);
   }
   return AVAILABLE_MODELS["offline-heuristic"];
 }
