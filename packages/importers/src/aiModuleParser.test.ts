@@ -1,6 +1,12 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { AiModuleParser } from "./aiModuleParser";
-import { DEFAULT_AI_CONFIGS, generateAiCompletion } from "./aiProvider";
+import {
+  DEFAULT_AI_CONFIGS,
+  AVAILABLE_MODELS,
+  generateAiCompletion,
+  fetchAvailableGeminiModels,
+  fetchAvailableAiModels,
+} from "./aiProvider";
 import { VersionedAdventure } from "@grimoire3d/ir";
 
 describe("AI Module Importer Test Suite", () => {
@@ -100,5 +106,81 @@ describe("AI Module Importer Test Suite", () => {
     expect(combinedLog).toContain("Enhance narrative descriptions");
     expect(combinedLog).toContain("=== RAW AI RECOMPILE RESPONSE");
     expect(recompileResult.fullTextLog).toBe(recompileResult.extractionLog.join("\n"));
+  });
+
+  it("5. fetchAvailableGeminiModels validates API key and handles empty input", async () => {
+    await expect(fetchAvailableGeminiModels("")).rejects.toThrow(
+      "Gemini API key is required"
+    );
+    await expect(fetchAvailableGeminiModels("   ")).rejects.toThrow(
+      "Gemini API key is required"
+    );
+  });
+
+  it("6. fetchAvailableGeminiModels fetches, filters, and formats live models", async () => {
+    const mockApiResponse = {
+      models: [
+        {
+          name: "models/gemini-2.0-flash",
+          displayName: "Gemini 2.0 Flash",
+          description: "Next-gen multimodal workhorse",
+          supportedGenerationMethods: ["generateContent", "countTokens"],
+        },
+        {
+          name: "models/gemini-1.5-pro",
+          displayName: "Gemini 1.5 Pro",
+          description: "High-reasoning multimodal model",
+          supportedGenerationMethods: ["generateContent", "countTokens"],
+        },
+        {
+          name: "models/text-embedding-004",
+          displayName: "Text Embedding 004",
+          description: "Embedding only",
+          supportedGenerationMethods: ["embedContent"],
+        },
+        {
+          name: "models/aqa",
+          displayName: "Attributed Question Answering",
+          supportedGenerationMethods: ["generateAnswer"],
+        },
+      ],
+    };
+
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => mockApiResponse,
+    } as any);
+
+    try {
+      const models = await fetchAvailableGeminiModels("test-fake-key-123");
+
+      expect(globalThis.fetch).toHaveBeenCalledWith(
+        expect.stringContaining("https://generativelanguage.googleapis.com/v1beta/models?key=test-fake-key-123"),
+        expect.objectContaining({ method: "GET" })
+      );
+
+      // Verify filtered out non-generation models
+      expect(models.length).toBe(2);
+      expect(models.some((m) => m.id === "gemini-2.0-flash")).toBe(true);
+      expect(models.some((m) => m.id === "gemini-1.5-pro")).toBe(true);
+      expect(models.some((m) => m.id === "text-embedding-004")).toBe(false);
+      expect(models.some((m) => m.id === "aqa")).toBe(false);
+
+      // Verify stripped 'models/' prefix and formatted display name
+      const flashModel = models.find((m) => m.id === "gemini-2.0-flash");
+      expect(flashModel?.name).toBe("Gemini 2.0 Flash (gemini-2.0-flash)");
+      expect(flashModel?.description).toBe("Next-gen multimodal workhorse");
+
+      // Verify fetchAvailableAiModels integration
+      const aiModels = await fetchAvailableAiModels("google-gemini", "test-fake-key-123");
+      expect(aiModels.length).toBe(2);
+
+      const offlineModels = await fetchAvailableAiModels("offline-heuristic", "");
+      expect(offlineModels[0].id).toBe("local-heuristic-v1");
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
   });
 });

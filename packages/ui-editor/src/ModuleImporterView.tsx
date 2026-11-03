@@ -4,6 +4,8 @@ import {
   AiClientConfig,
   DEFAULT_AI_CONFIGS,
   AVAILABLE_MODELS,
+  AiModelOption,
+  fetchAvailableGeminiModels,
   AiModuleParser,
   AiImportResult,
   PdfTextExtractor,
@@ -54,6 +56,57 @@ export const ModuleImporterView: React.FC<ModuleImporterViewProps> = ({
   const [progressLogs, setProgressLogs] = useState<string[]>([]);
   const [importResult, setImportResult] = useState<AiImportResult | null>(null);
   const [activeTab, setActiveTab] = useState<"summary" | "report" | "log">("summary");
+
+  const [geminiModels, setGeminiModels] = useState<AiModelOption[]>(() => {
+    try {
+      const saved = localStorage.getItem("grimoire_available_models_google-gemini");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {
+      // fallback
+    }
+    return AVAILABLE_MODELS["google-gemini"];
+  });
+
+  const [isRefreshingModels, setIsRefreshingModels] = useState<boolean>(false);
+  const [modelRefreshFeedback, setModelRefreshFeedback] = useState<string | null>(null);
+
+  const handleRefreshGeminiModels = async (keyToUse?: string) => {
+    const key = (keyToUse !== undefined ? keyToUse : apiKey).trim();
+    if (!key) {
+      setModelRefreshFeedback("⚠️ Please enter a Google Gemini API key first.");
+      setTimeout(() => setModelRefreshFeedback(null), 4000);
+      return;
+    }
+
+    setIsRefreshingModels(true);
+    setModelRefreshFeedback("Connecting to Google Gemini API...");
+    try {
+      const liveModels = await fetchAvailableGeminiModels(key);
+      setGeminiModels(liveModels);
+      localStorage.setItem("grimoire_available_models_google-gemini", JSON.stringify(liveModels));
+
+      // If current model is not among live models, switch to top recommended
+      if (!liveModels.some((m) => m.id === modelName) && liveModels.length > 0) {
+        setModelName(liveModels[0].id);
+      }
+      setModelRefreshFeedback(`✅ Loaded ${liveModels.length} Gemini models`);
+      setTimeout(() => setModelRefreshFeedback(null), 4000);
+    } catch (err: any) {
+      setModelRefreshFeedback(`❌ ${err?.message || "Failed to load models"}`);
+      setTimeout(() => setModelRefreshFeedback(null), 6000);
+    } finally {
+      setIsRefreshingModels(false);
+    }
+  };
+
+  useEffect(() => {
+    if (provider === "google-gemini" && apiKey.trim().length > 15 && !localStorage.getItem("grimoire_available_models_google-gemini")) {
+      handleRefreshGeminiModels(apiKey);
+    }
+  }, []);
 
   // Save AI preferences to localStorage
   useEffect(() => {
@@ -210,6 +263,11 @@ Two men-at-arms (AC 3, F 1, hp 5) approach when the drawbridge is lowered.
                   type="password"
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
+                  onBlur={() => {
+                    if (provider === "google-gemini" && apiKey.trim().length > 15 && !isRefreshingModels) {
+                      handleRefreshGeminiModels(apiKey);
+                    }
+                  }}
                   placeholder={provider === "google-gemini" ? "AIzaSy..." : "sk-or-v1-..."}
                   className="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-md px-3 py-2 text-xs text-slate-100 placeholder-slate-600 focus:outline-none"
                 />
@@ -221,15 +279,44 @@ Two men-at-arms (AC 3, F 1, hp 5) approach when the drawbridge is lowered.
 
             {/* Model Selector */}
             <div>
-              <label className="block text-xs text-slate-300 font-medium mb-1">
-                Target Model
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-xs text-slate-300 font-medium">
+                  Target Model
+                </label>
+                {provider === "google-gemini" && (
+                  <button
+                    type="button"
+                    onClick={() => handleRefreshGeminiModels()}
+                    disabled={isRefreshingModels}
+                    className="text-[11px] text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
+                    title="Refresh available models from Google Gemini API"
+                  >
+                    <RefreshCw className={`w-3 h-3 ${isRefreshingModels ? "animate-spin text-amber-400" : ""}`} />
+                    {isRefreshingModels ? "Fetching..." : "Refresh Models"}
+                  </button>
+                )}
+              </div>
+
+              {modelRefreshFeedback && (
+                <div
+                  className={`text-[11px] mb-1.5 px-2 py-0.5 rounded font-mono ${
+                    modelRefreshFeedback.startsWith("❌")
+                      ? "text-red-400 bg-red-950/60 border border-red-900"
+                      : modelRefreshFeedback.startsWith("⚠️")
+                      ? "text-amber-400 bg-amber-950/60 border border-amber-900"
+                      : "text-emerald-400 bg-emerald-950/60 border border-emerald-900"
+                  }`}
+                >
+                  {modelRefreshFeedback}
+                </div>
+              )}
+
               <select
                 value={modelName}
                 onChange={(e) => setModelName(e.target.value)}
                 className="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-md px-3 py-2 text-xs text-slate-100 focus:outline-none cursor-pointer"
               >
-                {AVAILABLE_MODELS[provider].map((m) => (
+                {(provider === "google-gemini" ? geminiModels : AVAILABLE_MODELS[provider]).map((m) => (
                   <option key={m.id} value={m.id} className="bg-slate-900 text-slate-100">
                     {m.name}
                   </option>

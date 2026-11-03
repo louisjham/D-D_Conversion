@@ -7,11 +7,19 @@ export interface AiClientConfig {
   baseUrl?: string;
 }
 
+export interface AiModelOption {
+  id: string;
+  name: string;
+  description?: string;
+  inputTokenLimit?: number;
+  outputTokenLimit?: number;
+}
+
 export const DEFAULT_AI_CONFIGS: Record<AiProviderType, AiClientConfig> = {
   "google-gemini": {
     provider: "google-gemini",
     apiKey: "",
-    modelName: "gemini-1.5-flash",
+    modelName: "gemini-2.0-flash",
   },
   openrouter: {
     provider: "openrouter",
@@ -25,11 +33,12 @@ export const DEFAULT_AI_CONFIGS: Record<AiProviderType, AiClientConfig> = {
   },
 };
 
-export const AVAILABLE_MODELS = {
+export const AVAILABLE_MODELS: Record<AiProviderType, AiModelOption[]> = {
   "google-gemini": [
+    { id: "gemini-2.0-flash", name: "Google Gemini 2.0 Flash (Fast & Modern)" },
+    { id: "gemini-2.0-flash-exp", name: "Google Gemini 2.0 Flash Experimental" },
     { id: "gemini-1.5-pro", name: "Google Gemini 1.5 Pro (High Accuracy)" },
     { id: "gemini-1.5-flash", name: "Google Gemini 1.5 Flash (Fast)" },
-    { id: "gemini-2.0-flash-exp", name: "Google Gemini 2.0 Flash Experimental" },
   ],
   openrouter: [
     { id: "google/gemini-2.0-flash-exp:free", name: "Google Gemini 2.0 Flash (Free)" },
@@ -42,6 +51,91 @@ export const AVAILABLE_MODELS = {
     { id: "local-heuristic-v1", name: "Offline Rules Engine (No API Key Required)" },
   ],
 };
+
+/**
+ * Queries Google Gemini's models endpoint to discover all available models supporting content generation.
+ */
+export async function fetchAvailableGeminiModels(apiKey: string): Promise<AiModelOption[]> {
+  const cleanKey = apiKey ? apiKey.trim() : "";
+  if (!cleanKey) {
+    throw new Error("Gemini API key is required to refresh available models.");
+  }
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(cleanKey)}`;
+  const response = await fetch(url, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Google Gemini API Error (${response.status}): ${errorText}`);
+  }
+
+  const data = await response.json();
+  if (!data || !Array.isArray(data.models)) {
+    throw new Error("Invalid response from Gemini API: missing models list");
+  }
+
+  // Filter for models supporting content generation (excluding embeddings-only or specialized non-text models)
+  const contentModels = data.models.filter((m: any) => {
+    const methods: string[] = m.supportedGenerationMethods || [];
+    const isGenerateContent = methods.includes("generateContent");
+    const name: string = m.name || "";
+    const isExcluded = name.includes("embedding") || name.includes("aqa") || name.includes("imagen");
+    return isGenerateContent && !isExcluded;
+  });
+
+  const formatted: AiModelOption[] = contentModels.map((m: any) => {
+    const rawId: string = m.name || "";
+    const cleanId = rawId.replace(/^models\//, "");
+    const displayName = m.displayName ? `${m.displayName} (${cleanId})` : cleanId;
+    return {
+      id: cleanId,
+      name: displayName,
+      description: m.description,
+      inputTokenLimit: m.inputTokenLimit,
+      outputTokenLimit: m.outputTokenLimit,
+    };
+  });
+
+  if (formatted.length === 0) {
+    return AVAILABLE_MODELS["google-gemini"];
+  }
+
+  // Sort: prioritize 2.5 > 2.0 > 1.5, with flash first for speed
+  formatted.sort((a, b) => {
+    const getScore = (id: string) => {
+      let score = 0;
+      if (id.includes("2.5")) score += 40;
+      else if (id.includes("2.0")) score += 30;
+      else if (id.includes("1.5")) score += 20;
+
+      if (id.includes("flash")) score += 5;
+      else if (id.includes("pro")) score += 3;
+      return score;
+    };
+    return getScore(b.id) - getScore(a.id);
+  });
+
+  return formatted;
+}
+
+/**
+ * Discovers available models for a given AI provider.
+ */
+export async function fetchAvailableAiModels(
+  provider: AiProviderType,
+  apiKey: string
+): Promise<AiModelOption[]> {
+  if (provider === "google-gemini") {
+    return fetchAvailableGeminiModels(apiKey);
+  }
+  if (provider === "openrouter") {
+    return AVAILABLE_MODELS.openrouter;
+  }
+  return AVAILABLE_MODELS["offline-heuristic"];
+}
 
 /**
  * Executes an AI text completion request against Google Gemini, OpenRouter, or local offline fallback.
@@ -71,7 +165,8 @@ async function callGoogleGeminiApi(
   config: AiClientConfig,
   systemInstruction?: string
 ): Promise<string> {
-  const model = config.modelName || "gemini-1.5-flash";
+  const rawModel = config.modelName || "gemini-2.0-flash";
+  const model = rawModel.replace(/^models\//, "");
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(
     config.apiKey
   )}`;
